@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+        <title>PMS - {{ title }}</title>
+    {% else %}
+        <title>PMS</title>
+    {% endif %}
+</head>
+<body>
+    <h1>Patient Details</h1>
+    {% for patient in patients %}
+        <h3>Name: {{ patient.name }}</h3>
+        <h4>DOB: {{ patient.dob }}</h4>
+        <h4>Prescriptions: {{ patient.prescriptions }}</h4>
+    {% endfor %}
+</body>
+</html>
