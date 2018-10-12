@@ -1,0 +1,9 @@
+/*Put any CSS styling here*/
+
+* {
+    background-color: blanchedalmond;
+}
+
+.nav {
+    display: inline;
+}

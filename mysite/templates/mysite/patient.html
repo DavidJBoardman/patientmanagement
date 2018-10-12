@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% if title %}
-        <title>PMS - {{ title }}</title>
-    {% else %}
-        <title>PMS</title>
-    {% endif %}
-</head>
-<body>
+{% extends "mysite/base.html" %}
+{% block content %}
     <h1>Patient Details</h1>
     {% for patient in patients %}
-        <h3>Name: {{ patient.name }}</h3>
-        <h4>DOB: {{ patient.dob }}</h4>
-        <h4>Prescriptions: {{ patient.prescriptions }}</h4>
+        <h3>Name: {{ patient.patientname }}</h3>
+        <h4>DOB: {{ patient.dateofbirth|date:"d F y" }}</h4>
+        <h4>Gender: {{ patient.gender }}</h4>
+        <h4>Address: {{ patient.address }}</h4>
+        <h4>Phone Number: {{ patient.phonenumber }}</h4>
+        <h4>Email: {{ patient.email }}</h4>
+        <h4>Photo: {{ patient.photo }}</h4>
     {% endfor %}
-</body>
-</html>
+{% endblock content %}

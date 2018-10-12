@@ -1,0 +1,23 @@
+{#Load static is needed to load static files such as css, js etc.#}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'mysite/main.css' %}">
+    {% if title %}
+        <title>PMS - {{ title }}</title>
+    {% else %}
+        <title>PMS</title>
+    {% endif %}
+</head>
+<body>
+{# Always use the url tag to link pages, don't hardcode incase url routes change *these are found in urls.py* #}
+<a class="nav" href="{% url 'mysite-home' %}">Home</a>
+<a class="nav" href="{% url 'mysite-patient' %}">Patient view</a>
+<a class="nav" href="#">Login</a>
+<a class="nav" href="#">Register</a>
+{# This can be replaced by any page to display the current pages view #}
+    {% block content %}{% endblock %}
+</body>
+</html>
