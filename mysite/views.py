@@ -11,7 +11,8 @@ def home(request):
 # Patient details page
 def patient(request):
     context = {
-        'patients': PersonalDetails.objects.all()
+        'patients': PersonalDetails.objects.all(),
+        'title': 'Patient Details'
     }
     return render(request, 'mysite/patient.html', context)
 
