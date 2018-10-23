@@ -1,2 +1,9 @@
 .idea
+.venv
+.env
 venv/
+
+#Django stuff
+db.sqlite3
+*.log
+local_settings.py
