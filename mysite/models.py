@@ -14,6 +14,9 @@ class TableData(models.Model):
     RowCount = models.IntegerField()
     ImportDataDateTime = models.DateTimeField()
 
+    def __str__(self):
+        return self.TableName
+
 
 class TableError(models.Model):
     TableName = models.AutoField(primary_key=True)
@@ -21,6 +24,9 @@ class TableError(models.Model):
     Error = models.CharField(max_length=256)
     ErrorDescription = models.CharField(max_length=256)
     ImportDataDateTime = models.DateTimeField()
+
+    def __str__(self):
+        return self.TableName
 
 
 # MedicationInformationMedications-------------------------
@@ -33,6 +39,9 @@ class MedicationTable(models.Model):
     MedicationQuantity = models.CharField(max_length=256)
     MedicationSchedule = models.CharField(max_length=256)
 
+    def __str__(self):
+        return self.MedicationName
+
 
 class InjectionTable(models.Model):
     PatientID = models.AutoField(primary_key=True)
@@ -42,6 +51,9 @@ class InjectionTable(models.Model):
     InjectionDose = models.CharField(max_length=256)
     InjectionPriority = models.CharField(max_length=256)
 
+    def __str__(self):
+        return self.InjectionName
+
 
 class ImmunisationTable(models.Model):
     PatientID = models.AutoField(primary_key=True)
@@ -50,6 +62,9 @@ class ImmunisationTable(models.Model):
     VaccineDose = models.CharField(max_length=256)
     VaccineReason = models.CharField(max_length=256)
     ImmunisationPriority = models.IntegerField()
+
+    def __str__(self):
+        return self.VaccineName
 
 
 # MedicationInformationAllergies-------------------------
@@ -62,6 +77,9 @@ class AllergyDetails(models.Model):
     AllergyInfoSource = models.CharField(max_length=256)
     AllergyStatus = models.CharField(max_length=256)
     AllergyRecordDateTime = models.DateTimeField()
+
+    def __str__(self):
+        return self.AllergyType
 
 
 # PersonalDetails----------------------------------------
@@ -84,6 +102,9 @@ class PersonalDetails(models.Model):
     WardLocation = models.CharField(max_length=256)
     Photo = models.CharField(max_length=256)
 
+    def __str__(self):
+        return self.PatientFirstName
+
 
 class GuardianDetails(models.Model):
     PatientID = models.AutoField(primary_key=True)
@@ -94,6 +115,9 @@ class GuardianDetails(models.Model):
     Address = models.CharField(max_length=256)
     PhoneNumber = models.CharField(max_length=256)
     Email = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.PatientID
 
 
 class DoctorDetails(models.Model):
@@ -106,6 +130,5 @@ class DoctorDetails(models.Model):
     PhoneNumber = models.CharField(max_length=256)
     Email = models.CharField(max_length=256)
 
-
-def __str__(self):
-    return self.patientname
+    def __str__(self):
+        return self.DoctorID
