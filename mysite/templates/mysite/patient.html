@@ -1,13 +1,19 @@
 {% extends "mysite/base.html" %}
 {% block content %}
     <h1>Patient Details</h1>
-    {% for patient in patients %}
-        <h3>Name: {{ patient.patientname }}</h3>
-        <h4>DOB: {{ patient.dateofbirth|date:"d F y" }}</h4>
-        <h4>Gender: {{ patient.gender }}</h4>
-        <h4>Address: {{ patient.address }}</h4>
-        <h4>Phone Number: {{ patient.phonenumber }}</h4>
-        <h4>Email: {{ patient.email }}</h4>
-        <h4>Photo: {{ patient.photo }}</h4>
-    {% endfor %}
+        <h3>Title: {{ personaldetails.PatientTitle }}</h3>
+        <h3>First Name: {{ personaldetails.PatientFirstName }}</h3>
+        <h3>Last Name: {{ personaldetails.PatientLastName }}</h3>
+        <h3>Preferred Name: {{ personaldetails.PatientPreferredName }}</h3>
+        <h4>DOB: {{ personaldetails.DateOfBirth|date:"d F y" }}</h4>
+        <h4>Gender: {{ personaldetails.Gender }}</h4>
+        <h4>Occupation: {{ personaldetails.Occupation }}</h4>
+        <h4>Weight (kg): {{ personaldetails.Weight }}</h4>
+        <h4>Height (cm): {{ personaldetails.Height }}</h4>
+        <h4>BMI: {{ personaldetails.BMI }}</h4>
+        <h4>Address: {{ personaldetails.Address }}</h4>
+        <h4>Phone Number: {{ personaldetails.PhoneNumber }}</h4>
+        <h4>Email: {{ personaldetails.Email }}</h4>
+        <h4>Ward Location: {{ personaldetails.WardLocation }}</h4>
+        <h4>Photo: {{ personaldetails.Photo }}</h4>
 {% endblock content %}
