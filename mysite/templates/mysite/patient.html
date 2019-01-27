@@ -96,15 +96,15 @@
                         {% for inj in injection %}
                             <dl class="row">
                                 <dt class="col-sm-3">Injection Name:</dt>
-                                <dd class="col-sm-9">{{ inj.InjectionName }}</dd>
+                                <dd class="col-sm-9">{{ inj.injectionname }}</dd>
                                 <dt class="col-sm-3">Injection Date:</dt>
-                                <dd class="col-sm-9">{{ inj.InjectionDateTime }}</dd>
+                                <dd class="col-sm-9">{{ inj.injectiondatetime }}</dd>
                                 <dt class="col-sm-3">Injection Reason:</dt>
-                                <dd class="col-sm-9">{{ inj.InjectionReason }}</dd>
+                                <dd class="col-sm-9">{{ inj.injectionreason }}</dd>
                                 <dt class="col-sm-3">Injection Dose:</dt>
-                                <dd class="col-sm-9">{{ inj.InjectionDose }}</dd>
+                                <dd class="col-sm-9">{{ inj.injectiondose }}</dd>
                                 <dt class="col-sm-3">Injection Priority:</dt>
-                                <dd class="col-sm-9">{{ inj.InjectionPriority }}</dd>
+                                <dd class="col-sm-9">{{ inj.injectionpriority }}</dd>
                             </dl>
                         {% endfor %}
                     {% else %}
@@ -135,7 +135,7 @@
                 </div>
                 <div class="tab-pane fade" id="list-allergies" role="tabpanel" aria-labelledby="list-allergies-list">
                     <h4>Allergies</h4>
-                    {% if immunisation|length > 0 %}
+                    {% if allergies|length > 0 %}
                         {% for allgery in allergies %}
                             <p>Allergy: {{ allgery.allergytype }}</p>
                             <p>Agent: {{ allgery.allergyagent }}</p>
@@ -150,7 +150,7 @@
                 </div>
                 <div class="tab-pane fade" id="list-guardian" role="tabpanel" aria-labelledby="list-guardian-list">
                     <h4>Guardian Details</h4>
-                    {% if immunisation|length > 0 %}
+                    {% if guardian|length > 0 %}
                         {% for guard in guardian %}
                             <p>Title: {{ guard.guardiantitle }}</p>
                             <p>First Name: {{ guard.guardianfirstname }}</p>

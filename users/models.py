@@ -129,7 +129,7 @@ class GuardianDetails(models.Model):
     email = models.CharField(max_length=256)
 
     def __str__(self):
-        return self.patientid
+        return self.id
 
 
 class DoctorDetails(models.Model):

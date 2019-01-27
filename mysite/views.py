@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, ListView
 from users.models import *
@@ -36,7 +37,8 @@ def home(request):
 
 # # Patient details page
 
-class Patient(DetailView):
+
+class Patient(LoginRequiredMixin, DetailView):
     template_name = 'mysite/patient.html'
     context_object_name = 'patient_list'
     #queryset = PersonalDetails.objects.all()
@@ -47,10 +49,12 @@ class Patient(DetailView):
 
     def get_context_data(self, **kwargs):
         id_ = self.kwargs.get("id")
+
         context = super(Patient, self).get_context_data(**kwargs)
         context['medication'] = MedicationTable.objects.filter(personaldetails_id=id_)
         context['injection'] = InjectionTable.objects.filter(personaldetails_id=id_)
         context['immunisation'] = ImmunisationTable.objects.filter(personaldetails_id=id_)
         context['allergies'] = AllergyDetails.objects.filter(personaldetails_id=id_)
         context['guardian'] = GuardianDetails.objects.filter(personaldetails_id=id_)
+        context['title'] = ('Patient %s' % id_)
         return context
