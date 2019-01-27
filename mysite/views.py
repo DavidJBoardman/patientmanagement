@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, TemplateView
 from users.models import *
 from django.contrib.auth.decorators import login_required
+from mysite.forms import AddPatient
 # Create your views here.
 
 
@@ -58,3 +59,11 @@ class Patient(LoginRequiredMixin, DetailView):
         context['guardian'] = GuardianDetails.objects.filter(personaldetails_id=id_)
         context['title'] = ('Patient %s' % id_)
         return context
+
+
+class AddPatientView(TemplateView):
+    template_name = 'mysite/add_patient.html'
+
+    def get(self, request):
+        form = AddPatient()
+        return render(request, self.template_name, {'form': form})
