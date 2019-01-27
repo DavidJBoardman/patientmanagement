@@ -1,19 +1,170 @@
 {% extends "mysite/base.html" %}
 {% block content %}
-    <h1>Patient Details</h1>
-        <h3>Title: {{ personaldetails.PatientTitle }}</h3>
-        <h3>First Name: {{ personaldetails.PatientFirstName }}</h3>
-        <h3>Last Name: {{ personaldetails.PatientLastName }}</h3>
-        <h3>Preferred Name: {{ personaldetails.PatientPreferredName }}</h3>
-        <h4>DOB: {{ personaldetails.DateOfBirth|date:"d F y" }}</h4>
-        <h4>Gender: {{ personaldetails.Gender }}</h4>
-        <h4>Occupation: {{ personaldetails.Occupation }}</h4>
-        <h4>Weight (kg): {{ personaldetails.Weight }}</h4>
-        <h4>Height (cm): {{ personaldetails.Height }}</h4>
-        <h4>BMI: {{ personaldetails.BMI }}</h4>
-        <h4>Address: {{ personaldetails.Address }}</h4>
-        <h4>Phone Number: {{ personaldetails.PhoneNumber }}</h4>
-        <h4>Email: {{ personaldetails.Email }}</h4>
-        <h4>Ward Location: {{ personaldetails.WardLocation }}</h4>
-        <h4>Photo: {{ personaldetails.Photo }}</h4>
+    <br>
+    <ul class="nav nav-tabs nav-fill">
+        <li class="nav-item">
+            <a class="nav-link active" id="list-medication-list" data-toggle="list" href="#list-medication" role="tab"
+               aria-controls="Medication">Medication</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="list-injections-list" data-toggle="list" href="#list-injections" role="tab"
+               aria-controls="Injections">Injections</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="list-immunisations-list" data-toggle="list" href="#list-immunisations" role="tab"
+               aria-controls="Immunisations">Immunisations</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="list-allergies-list" data-toggle="list" href="#list-allergies" role="tab"
+               aria-controls="Allergies">Allergies</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="list-guardian-list" data-toggle="list" href="#list-guardian" role="tab"
+               aria-controls="Guardian">Guardian Details</a>
+        </li>
+    </ul>
+    <br>
+    <div class="row">
+        <div class="col-sm-4">
+            <h4>Patient Details</h4>
+            <dl class="row">
+                <dt class="col-sm-3">Title:</dt>
+                <dd class="col-sm-9">{{ patient_list.patienttitle }}</dd>
+                <dt class="col-sm-3">First Name:</dt>
+                <dd class="col-sm-9">{{ patient_list.patientfirstname }}</dd>
+                <dt class="col-sm-3">Last Name:</dt>
+                <dd class="col-sm-9">{{ patient_list.patientlastname }}</dd>
+                <dt class="col-sm-3">Preferred Name:</dt>
+                <dd class="col-sm-9">{{ patient_list.patientpreferredname }}</dd>
+                <dt class="col-sm-3">DOB:</dt>
+                <dd class="col-sm-9">{{ patient_list.dateofbirth|date:"d F y" }}</dd>
+                <dt class="col-sm-3">Gender:</dt>
+                <dd class="col-sm-9">{{ patient_list.gender }}</dd>
+                <dt class="col-sm-3">Occupation:</dt>
+                <dd class="col-sm-9">{{ patient_list.occupation }}</dd>
+                <dt class="col-sm-3">Weight (kg):</dt>
+                <dd class="col-sm-9">{{ patient_list.weight }}</dd>
+                <dt class="col-sm-3">Height (cm):</dt>
+                <dd class="col-sm-9">{{ patient_list.height }}</dd>
+                <dt class="col-sm-3">BMI:</dt>
+                <dd class="col-sm-9">{{ patient_list.bmi }}</dd>
+                <dt class="col-sm-3">Address:</dt>
+                <dd class="col-sm-9">{{ patient_list.address }}</dd>
+                <dt class="col-sm-3">Phone Number:</dt>
+                <dd class="col-sm-9">{{ patient_list.phonenumber }}</dd>
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">{{ patient_list.email }}</dd>
+                <dt class="col-sm-3">Ward Location:</dt>
+                <dd class="col-sm-9">{{ patient_list.wardlocation }}</dd>
+                <dt class="col-sm-3">Photo:</dt>
+                <dd class="col-sm-9"><img class="img-thumbnail" src="{{ patient_list.photo.url }}"></dd>
+            </dl>
+        </div>
+
+        <div class="col-sm-8">
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="list-medication" role="tabpanel"
+                     aria-labelledby="list-medication-list">
+                    <h4>Medication</h4>
+
+                    {% if medication|length > 0 %}
+                        {% for med in medication %}
+                            <dl class="row">
+                                <dt class="col-sm-3">Medication Name:</dt>
+                                <dd class="col-sm-9">{{ med.medicationname }}</dd>
+                                <dt class="col-sm-3">Medication Start Date:</dt>
+                                <dd class="col-sm-9">{{ med.medstartdatetime }}</dd>
+                                <dt class="col-sm-3">Medication End Date:</dt>
+                                <dd class="col-sm-9">{{ med.medenddatetime }}</dd>
+                                <dt class="col-sm-3">Medication Duration:</dt>
+                                <dd class="col-sm-9">{{ med.medicationduration }}</dd>
+                                <dt class="col-sm-3">Medication Quantity:</dt>
+                                <dd class="col-sm-9">{{ med.medicationquantity }}</dd>
+                                <dt class="col-sm-3">Medication Schedule:</dt>
+                                <dd class="col-sm-9">{{ med.medicationschedule }}</dd>
+                                <hr style="width: 100%;"/>
+                            </dl>
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+
+                </div>
+                <div class="tab-pane fade" id="list-injections" role="tabpanel" aria-labelledby="list-injections-list">
+                    <h4>Injections</h4>
+                    {% if injection|length > 0 %}
+                        {% for inj in injection %}
+                            <dl class="row">
+                                <dt class="col-sm-3">Injection Name:</dt>
+                                <dd class="col-sm-9">{{ inj.InjectionName }}</dd>
+                                <dt class="col-sm-3">Injection Date:</dt>
+                                <dd class="col-sm-9">{{ inj.InjectionDateTime }}</dd>
+                                <dt class="col-sm-3">Injection Reason:</dt>
+                                <dd class="col-sm-9">{{ inj.InjectionReason }}</dd>
+                                <dt class="col-sm-3">Injection Dose:</dt>
+                                <dd class="col-sm-9">{{ inj.InjectionDose }}</dd>
+                                <dt class="col-sm-3">Injection Priority:</dt>
+                                <dd class="col-sm-9">{{ inj.InjectionPriority }}</dd>
+                            </dl>
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="list-immunisations" role="tabpanel"
+                     aria-labelledby="list-immunisations-list">
+                    <h4>Immunisations</h4>
+                    {% if immunisation|length > 0 %}
+                        {% for imu in immunisation %}
+                            <dl class="row">
+                                <dt class="col-sm-3">Vacccine Name:</dt>
+                                <dd class="col-sm-9">{{ imu.vaccinename }}</dd>
+                                <dt class="col-sm-3">Dose:</dt>
+                                <dd class="col-sm-9">{{ imu.vaccinedose }}</dd>
+                                <dt class="col-sm-3">Reason:</dt>
+                                <dd class="col-sm-9">{{ imu.vaccinereason }}</dd>
+                                <dt class="col-sm-3">Date administered:</dt>
+                                <dd class="col-sm-9">{{ imu.vaccinedatetime }}</dd>
+                                <dt class="col-sm-3">Priority:</dt>
+                                <dd class="col-sm-9">{{ imu.immunisationpriority }}</dd>
+                            </dl>
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="list-allergies" role="tabpanel" aria-labelledby="list-allergies-list">
+                    <h4>Allergies</h4>
+                    {% if immunisation|length > 0 %}
+                        {% for allgery in allergies %}
+                            <p>Allergy: {{ allgery.allergytype }}</p>
+                            <p>Agent: {{ allgery.allergyagent }}</p>
+                            <p>Reaction: {{ allgery.allergyreaction }}</p>
+                            <p>Info source: {{ allgery.allergyinfosource }}</p>
+                            <p>Recorded Date: {{ allgery.allergyrecorddatetime }}</p>
+                            <p>Status: {{ allgery.allergystatus }}</p>
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="list-guardian" role="tabpanel" aria-labelledby="list-guardian-list">
+                    <h4>Guardian Details</h4>
+                    {% if immunisation|length > 0 %}
+                        {% for guard in guardian %}
+                            <p>Title: {{ guard.guardiantitle }}</p>
+                            <p>First Name: {{ guard.guardianfirstname }}</p>
+                            <p>Surname: {{ guard.guardianlastname }}</p>
+                            <p>Relation: {{ guard.patientrelation }}</p>
+                            <p>Phone number: {{ guard.phonenumber }}</p>
+                            <p>Address: {{ guard.address }}</p>
+                            <p>Email: {{ guard.email }}</p>
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
