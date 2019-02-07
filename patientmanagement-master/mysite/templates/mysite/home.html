@@ -1,0 +1,31 @@
+{% extends "mysite/base.html" %}
+{% block content %}
+    <br>
+        <div class="row">
+            <div class="col-sm">
+            <h2>Patient List</h2>
+                <div class="list-group">
+                    {% for patient in patients %}
+                        <a href="{{patient.id}}" class="list-group-item list-group-item-action">{{ patient.patientfirstname }} {{ patient.patientlastname }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-sm">
+                <h2>Search</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Patient Id">
+                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Patient Name">
+                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="D.O.B">
+                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Postcode">
+                    <br>
+                    <button type="button" class="btn btn-secondary btn-lg btn-block">Search</button>
+                </div>
+            </div>
+            <div class="col-sm">
+                <h2>Tools</h2>
+                <a class="btn btn-secondary btn-lg btn-block" href="{% url 'add-patient' %}">Add Patient
+                </a>
+            </div>
+        </div>
+
+{% endblock content %}
