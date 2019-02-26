@@ -17,131 +17,176 @@ class Profile(models.Model):
 
 
 # handle database requests
-# Meta----------------------------------------------------
-
-
+# Meta ----------------------------------------------------
 class TableData(models.Model):
-    tablename = models.AutoField(primary_key=True)
-    tabledescription = models.CharField(max_length=256)
-    rowcount = models.IntegerField()
-    importdatadatetime = models.DateTimeField()
+    TableName = models.AutoField(primary_key=True)
+    TableDescription = models.CharField(max_length=256)
+    RowCount = models.IntegerField()
+    ImportDataDatetime = models.DateTimeField()
 
     def __str__(self):
         return self.tablename
 
 
 class TableError(models.Model):
-    tablename = models.AutoField(primary_key=True)
-    tabledescription = models.CharField(max_length=256)
-    error = models.CharField(max_length=256)
-    errordescription = models.CharField(max_length=256)
-    importdatadatetime = models.DateTimeField()
+    TableName = models.AutoField(primary_key=True)
+    TableDescription = models.CharField(max_length=256)
+    Error = models.CharField(max_length=256)
+    ErrorDescription = models.CharField(max_length=256)
+    ErrorDataDatetime = models.DateTimeField()
 
     def __str__(self):
         return self.tablename
 
 
-# MedicationInformationMedications-------------------------
-
-
+# Personal Details -------------------------
 class PersonalDetails(models.Model):
-    patienttitle = models.CharField(max_length=256)
-    patientfirstname = models.CharField(max_length=256)
-    patientlastname = models.CharField(max_length=256)
-    patientpreferredname = models.CharField(max_length=256)
-    dateofbirth = models.DateTimeField()
-    gender = models.CharField(max_length=256)
-    occupation = models.CharField(max_length=256)
-    weight = models.CharField(max_length=256)
-    height = models.CharField(max_length=256)
-    address = models.CharField(max_length=256)
-    bmi = models.CharField(max_length=256)
-    phonenumber = models.CharField(max_length=256)
-    email = models.CharField(max_length=256)
-    dnr = models.NullBooleanField
-    wardlocation = models.CharField(max_length=256)
-    photo = models.ImageField(default='default.png', upload_to='profile_pics')
+    PatientID = models.AutoField(primary_key=True)
+    PatientTitle = models.CharField(max_length=256)
+    PatientFirstName = models.CharField(max_length=256)
+    PatientLastName = models.CharField(max_length=256)
+    DateOfBirth = models.DateTimeField()
+    Gender = models.CharField(max_length=256)
+    Weight = models.CharField(max_length=256)
+    Height = models.CharField(max_length=256)
+    Address = models.CharField(max_length=256)
+    BMI = models.CharField(max_length=256)
+    PhoneNumber = models.CharField(max_length=256)
+    Email = models.CharField(max_length=256)
+    DNR = models.NullBooleanField
+    WardLocation = models.CharField(max_length=256)
+    Photo = models.ImageField(default='default.png', upload_to='profile_pics')
+    Notes = models.ImageField(default='default.png', upload_to='note_pics')
 
     def __str__(self):
         return self.patientfirstname
 
-
-class InjectionTable(models.Model):
-    personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    injectionname = models.CharField(max_length=256)
-    injectiondatetime = models.DateTimeField()
-    injectionreason = models.CharField(max_length=256)
-    injectiondose = models.CharField(max_length=256)
-    injectionpriority = models.CharField(max_length=256)
-
-    def __str__(self):
-        return self.injectionname
-
-
-class ImmunisationTable(models.Model):
-    personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    vaccinename = models.CharField(max_length=256)
-    vaccinedatetime = models.DateTimeField()
-    vaccinedose = models.CharField(max_length=256)
-    vaccinereason = models.CharField(max_length=256)
-    immunisationpriority = models.IntegerField()
+class GuardianDetails(models.Model):
+    PatientID = models.AutoField(primary_key=True)
+    GuardianTitle = models.CharField(max_length=256)
+    GuardianFirstName = models.CharField(max_length=256)
+    GuardianLastName = models.CharField(max_length=256)
+    PatientRelations = models.DateTimeField()
+    Address = models.CharField(max_length=256)
+    PhoneNumber = models.CharField(max_length=256)
+    Email = models.CharField(max_length=256)
 
     def __str__(self):
-        return self.vaccinename
+        return self.id
+
+class DoctorDetails(models.Model):
+    PatientID = models.AutoField(primary_key=True)
+    DoctorID = models.AutoField(primary_key=True)
+    DoctorTitle = models.CharField(max_length=256)
+    DoctorFirstName = models.CharField(max_length=256)
+    DoctorLastName = models.CharField(max_length=256)
+    Specialty = models.CharField(max_length=256)
+    WardLocation = models.CharField(max_length=256)
+    PhoneNumber = models.CharField(max_length=256)
+    Email = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.doctorid
+
+class SocialDetails(models.Model):
+    PatientID = models.AutoField(primary_key=True)
+    CurrentOccupation = models.CharField(max_length=256)
+    Smoking = models.CharField(max_length=256)
+    Drinking = models.CharField(max_length=256)
+    SexualOrientation = models.CharField(max_length=256)
+    SocialDrugUse = models.CharField(max_length=256)
+    Handicaps = models.CharField(max_length=256)
+    CurrentlySexuallyActive = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.doctorid
+
+class FamilyHistory(models.Model):
+    PatientID = models.AutoField(primary_key=True)
+    HeartDisease = models.CharField(max_length=256)
+    Diabetes = models.CharField(max_length=256)
+    CoroneyArteryDisease = models.CharField(max_length=256)
+    HighBloodPressure = models.CharField(max_length=256)
+    Eczma = models.CharField(max_length=256)
+    Asthma = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.doctorid
+
+class DiagnosisHistory(models.Model):
+    PatientID = models.AutoField(primary_key=True)
+    PreviousDiagnosis = models.CharField(max_length=256)
+    DiagnosedDateTime = models.DateTimeField()
+    Treatment= models.CharField(max_length=256)
+    TreatmentDateTime = models.DateTimeField()
+    Result = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.doctorid
 
 
-# MedicationInformationAllergies-------------------------
+# Medication Information Allergies -------------------------
 class AllergyDetails(models.Model):
-    personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    allergytype = models.CharField(max_length=256)
-    allergyagent = models.CharField(max_length=256)
-    allergyreaction = models.CharField(max_length=256)
-    reactionseverity = models.CharField(max_length=256)
-    allergyinfosource = models.CharField(max_length=256)
-    allergystatus = models.CharField(max_length=256)
-    allergyrecorddatetime = models.DateTimeField()
+    PatientID = models.AutoField(primary_key=True)
+    PersonalDetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
+    AllergyType = models.CharField(max_length=256)
+    AllergyAgent = models.CharField(max_length=256)
+    AllergyReaction = models.CharField(max_length=256)
+    ReactionSeverity = models.CharField(max_length=256)
+    AllergyInfoSource = models.CharField(max_length=256)
+    AllergyStatus = models.CharField(max_length=256)
+    AllergyRecordDatetime = models.DateTimeField()
 
     def __str__(self):
         return self.allergytype
 
 
+# Medication Information Medications -------------------------
 class MedicationTable(models.Model):
-    personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    medicationname = models.CharField(max_length=256)
-    medstartdatetime = models.DateTimeField()
-    medenddatetime = models.DateTimeField()
-    medicationduration = models.IntegerField()
-    medicationquantity = models.CharField(max_length=256)
-    medicationschedule = models.CharField(max_length=256)
+    PatientID = models.AutoField(primary_key=True)
+    PersonalDetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
+    MedicationName = models.CharField(max_length=256)
+    MedStartDatetime = models.DateTimeField()
+    MedEndDatetime = models.DateTimeField()
+    MedicationDuration = models.IntegerField()
+    MedicationQuantity = models.CharField(max_length=256)
+    MedicationSchedule = models.CharField(max_length=256)
 
     def __str__(self):
         return self.medicationname
 
-
-class GuardianDetails(models.Model):
-    personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    guardiantitle = models.CharField(max_length=256)
-    guardianfirstname = models.CharField(max_length=256)
-    guardianlastname = models.CharField(max_length=256)
-    patientrelation = models.DateTimeField()
-    address = models.CharField(max_length=256)
-    phonenumber = models.CharField(max_length=256)
-    email = models.CharField(max_length=256)
+class InjectionTable(models.Model):
+    PatientID = models.AutoField(primary_key=True)
+    PersonalDetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
+    InjectionName = models.CharField(max_length=256)
+    InjectionDatetime = models.DateTimeField()
+    InjectionReason = models.CharField(max_length=256)
+    InjectionDose = models.CharField(max_length=256)
+    InjectionPriority = models.CharField(max_length=256)
 
     def __str__(self):
-        return self.id
+        return self.injectionname
 
-
-class DoctorDetails(models.Model):
-    doctorid = models.AutoField(primary_key=True)
-    doctortitle = models.CharField(max_length=256)
-    doctorfirstname = models.CharField(max_length=256)
-    doctorlastname = models.CharField(max_length=256)
-    specialty = models.CharField(max_length=256)
-    wardlocation = models.CharField(max_length=256)
-    phonenumber = models.CharField(max_length=256)
-    email = models.CharField(max_length=256)
+class ImmunisationTable(models.Model):
+    PatientID = models.AutoField(primary_key=True)
+    PersonalDetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
+    VaccineName = models.CharField(max_length=256)
+    VaccineDatetime = models.DateTimeField()
+    VaccineDose = models.CharField(max_length=256)
+    VaccineReason = models.CharField(max_length=256)
+    ImmunisationPriority = models.IntegerField()
 
     def __str__(self):
-        return self.doctorid
+        return self.vaccinename
 
+class NationalEarlyWarningScore(models.Model):
+    PatientID = models.AutoField(primary_key=True)
+    PersonalDetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
+    RespirationRate = models.CharField(max_length=256)
+    OxygenSaturation = models.CharField(max_length=256)
+    SystolicBloodPressure = models.CharField(max_length=256)
+    LevelOfConsciousnessNewConfusion = models.CharField(max_length=256)
+    Temperature = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.vaccinename
