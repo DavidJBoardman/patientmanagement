@@ -22,6 +22,22 @@
             <a class="nav-link" id="list-guardian-list" data-toggle="list" href="#list-guardian" role="tab"
                aria-controls="Guardian">Guardian Details</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="list-notes-list" data-toggle="list" href="#list-notes" role="tab"
+               aria-controls="Notes">Notes</a>
+        </li>
+    <li class="nav-item">
+            <a class="nav-link" id="list-social-list" data-toggle="list" href="#list-social" role="tab"
+               aria-controls="Social">Social History</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="list-familyhist-list" data-toggle="list" href="#list-familyhist" role="tab"
+               aria-controls="Family">Family History</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="list-diagnosishistory-list" data-toggle="list" href="#list-diagnosishistory" role="tab"
+               aria-controls="Diagnosis">Diagnosis</a>
+        </li>
     </ul>
     <br>
     <div class="row">
@@ -40,8 +56,6 @@
                 <dd class="col-sm-9">{{ patient_list.dateofbirth|date:"d F y" }}</dd>
                 <dt class="col-sm-3">Gender:</dt>
                 <dd class="col-sm-9">{{ patient_list.gender }}</dd>
-                <dt class="col-sm-3">Occupation:</dt>
-                <dd class="col-sm-9">{{ patient_list.occupation }}</dd>
                 <dt class="col-sm-3">Weight (kg):</dt>
                 <dd class="col-sm-9">{{ patient_list.weight }}</dd>
                 <dt class="col-sm-3">Height (cm):</dt>
@@ -59,6 +73,7 @@
                 <dt class="col-sm-3">Photo:</dt>
                 <dd class="col-sm-9"><img class="img-thumbnail" src="{{ patient_list.photo.url }}"></dd>
             </dl>
+
         </div>
 
         <div class="col-sm-8">
@@ -135,6 +150,8 @@
                 </div>
                 <div class="tab-pane fade" id="list-allergies" role="tabpanel" aria-labelledby="list-allergies-list">
                     <h4>Allergies</h4>
+                    <a class="btn btn-primary btn-lg" href="{% url 'add-allergy' id=patient_list.id %}">Add Allergy</a>
+
                     {% if allergies|length > 0 %}
                         {% for allgery in allergies %}
                             <p>Allergy: {{ allgery.allergytype }}</p>
@@ -145,8 +162,9 @@
                             <p>Status: {{ allgery.allergystatus }}</p>
                         {% endfor %}
                     {% else %}
-                        None
+                        <p>No Allergies</p>
                     {% endif %}
+
                 </div>
                 <div class="tab-pane fade" id="list-guardian" role="tabpanel" aria-labelledby="list-guardian-list">
                     <h4>Guardian Details</h4>
@@ -156,13 +174,85 @@
                             <p>First Name: {{ guard.guardianfirstname }}</p>
                             <p>Surname: {{ guard.guardianlastname }}</p>
                             <p>Relation: {{ guard.patientrelation }}</p>
-                            <p>Phone number: {{ guard.phonenumber }}</p>
+                            <p>Phone number: {{ guard.contactnumber }}</p>
                             <p>Address: {{ guard.address }}</p>
                             <p>Email: {{ guard.email }}</p>
                         {% endfor %}
                     {% else %}
-                        None
+                        <p>No guardian details</p>
                     {% endif %}
+                <a class="btn btn-primary btn-lg" href="{% url 'add-guardian' id=patient_list.id %}">Add Guardian Details</a>
+                </div>
+                <div class="tab-pane fade" id="list-notes" role="tabpanel" aria-labelledby="list-notes-list">
+                    <h4>Notes</h4>
+                    <a class="btn btn-primary btn-lg" href="{% url 'add-note' id=patient_list.id %}">Upload note</a>
+                    {% if notesandscans|length > 0 %}
+                        {% for note in notesandscans %}
+                            <p>Note: {{ note.note_name }}</p>
+                            <img class="img-thumbnail" src="{{ note.notes.url }}">
+                        {% endfor %}
+                    {% else %}
+                        <p>No Notes</p>
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="list-social" role="tabpanel" aria-labelledby="list-social-list">
+                    <h4>Notes</h4>
+                    {% if social|length > 0 %}
+                        {% for detail in social %}
+                            <p>Occupation: {{ detail.occupation }}</p>
+                            <p>Smoker: {{ detail.smoking }}</p>
+                            <p>Drink: {{ detail.drink }}</p>
+                            <p>sexual Orientation: {{ detail.sexualorientation }}</p>
+                            <p>Social drug use: {{ detail.socialdruguse }}</p>
+                            <p>Handicaps: {{ detail.handicaps }}</p>
+                            <p>Sexually Active: {{ detail.sexuallyactive }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Social history</p>
+                    {% endif %}
+                <a class="btn btn-primary btn-lg" href="{% url 'add-social' id=patient_list.id %}">Add Social History</a>
+                </div>
+                <div class="tab-pane fade" id="list-familyhist" role="tabpanel" aria-labelledby="list-familyhist-list">
+                    <h4>Notes</h4>
+                    {% if familyhistory|length > 0 %}
+                        {% for family in familyhistory %}
+                            <p>Allgergies: {{ family.allgergies }}</p>
+                            <p>Asthma: {{ family.asthma }}</p>
+                            <p>Arthritis: {{ family.arthritis }}</p>
+                            <p>Glaucoma: {{ family.glaucoma }}</p>
+                            <p>Cancer: {{ family.cancer }}</p>
+                            <p>Tuberculosis: {{ family.tuberculosis }}</p>
+                            <p>Diabetes: {{ family.diabetes }}</p>
+                            <p>Heart Problems: {{ family.hearttrouble }}</p>
+                            <p>High Blood Pressure: {{ family.highbloodpressure }}</p>
+                            <p>Stroke: {{ family.stroke }}</p>
+                            <p>Epilepsy: {{ family.epilepsy }}</p>
+                            <p>Substance Abuse: {{ family.substanceabuse }}</p>
+                            <p>Depression: {{ family.depression }}</p>
+                            <p>Emotional Problems: {{ family.emotionalproblems }}</p>
+                            <p>Suicide: {{ family.suicide }}</p>
+                            <p>Tidney Trouble: {{ family.kidneytrouble }}</p>
+                            <p>Thyroid Disease: {{ family.thyroiddisease }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Social history</p>
+                    {% endif %}
+                <a class="btn btn-primary btn-lg" href="{% url 'add-family-hist' id=patient_list.id %}">Add Family History</a>
+                </div>
+                <div class="tab-pane fade" id="list-diagnosishistory" role="tabpanel" aria-labelledby="list-diagnosishistory-list">
+                    <h4>Diagnosis History</h4>
+                    {% if diagnosis|length > 0 %}
+                        {% for diag in diagnosis %}
+                            <p>Previous Diagnosis: {{ diag.previousdiagnosis }}</p>
+                            <p>Diagnosed Date/Time: {{ detail.diagnoseddatetime }}</p>
+                            <p>Treatment: {{ detail.treatment }}</p>
+                            <p>Treatment Date/Time: {{ detail.treatmentdatetime }}</p>
+                            <p>Result: {{ detail.result }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Diagnosis history</p>
+                    {% endif %}
+                <a class="btn btn-primary btn-lg" href="{% url 'add-diag-hist' id=patient_list.id %}">Add Diagnosis</a>
                 </div>
             </div>
         </div>

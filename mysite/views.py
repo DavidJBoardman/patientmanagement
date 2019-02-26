@@ -3,7 +3,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView, TemplateView, CreateView
 
-from mysite.forms import AddPatientForm
+from mysite.forms import AddPatientForm, AddNotesForm, AddGuardianForm, AddSocialDetailsForm, AddFamilyHistoryForm, \
+    AddDiagnosisHistoryForm, AddAllergyDetailsForm
 from users.models import *
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -54,18 +55,22 @@ class Patient(LoginRequiredMixin, DetailView):
         id_ = self.kwargs.get("id")
 
         context = super(Patient, self).get_context_data(**kwargs)
-        context['medication'] = MedicationTable.objects.filter(personaldetails_id=id_)
-        context['injection'] = InjectionTable.objects.filter(personaldetails_id=id_)
-        context['immunisation'] = ImmunisationTable.objects.filter(personaldetails_id=id_)
-        context['allergies'] = AllergyDetails.objects.filter(personaldetails_id=id_)
+        context['notesandscans'] = NotesAndScans.objects.filter(personaldetails_id=id_)
         context['guardian'] = GuardianDetails.objects.filter(personaldetails_id=id_)
+        context['social'] = SocialDetails.objects.filter(personaldetails_id=id_)
+        context['familyhistory'] = FamilyHistory.objects.filter(personaldetails_id=id_)
+        context['diagnosis'] = DiagnosisHistory.objects.filter(personaldetails_id=id_)
+        context['allergies'] = AllergyDetails.objects.filter(personaldetails_id=id_)
+        context['medication'] = Medication.objects.filter(personaldetails_id=id_)
+        context['injection'] = Injection.objects.filter(personaldetails_id=id_)
+        context['immunisation'] = Immunisation.objects.filter(personaldetails_id=id_)
+        context['news'] = NationalEarlyWarningScore.objects.filter(personaldetails_id=id_)
         context['title'] = ('Patient %s' % id_)
         return context
 
 
 class AddPatientView(TemplateView):
     template_name = 'mysite/add_patient.html'
-
 
     def get(self, request):
         form = AddPatientForm()
@@ -77,4 +82,94 @@ class AddPatientView(TemplateView):
             form.save()
             return HttpResponseRedirect('/home')
         return render(request, self.template_name, {'form': form})
+
+
+def addnoteview(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddNotesForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddNotesForm()
+    return render(request, 'mysite/add_note.html', {'form': form})
+
+
+def addguardianview(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddGuardianForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddGuardianForm()
+    return render(request, 'mysite/add_guardian.html', {'form': form})
+
+
+def addsocialview(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddSocialDetailsForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddSocialDetailsForm()
+    return render(request, 'mysite/add_social.html', {'form': form})
+
+
+def addfamilyhistview(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddFamilyHistoryForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddFamilyHistoryForm()
+    return render(request, 'mysite/add_family_hist.html', {'form': form})
+
+
+def adddiagnosishistview(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddDiagnosisHistoryForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddDiagnosisHistoryForm()
+    return render(request, 'mysite/add_diagnosis_hist.html', {'form': form})
+
+
+def addallgergyview(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddAllergyDetailsForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddAllergyDetailsForm()
+    return render(request, 'mysite/add_allergy.html', {'form': form})
 

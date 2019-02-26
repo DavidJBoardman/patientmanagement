@@ -10,6 +10,12 @@ from users.models import PersonalDetails
 urlpatterns = [
     path('', views.home, name ='mysite-home'),
     path('add_patient', AddPatientView.as_view(), name ='add-patient'),
+    path('patient/<int:id>', Patient.as_view(), name="patient_list"),
+    path('patient/<int:id>/add_note', views.addnoteview, name='add-note'),
+    path('patient/<int:id>/add_guardian', views.addguardianview, name='add-guardian'),
+    path('patient/<int:id>/add_social', views.addsocialview, name='add-social'),
+    path('patient/<int:id>/add_family_hist', views.addfamilyhistview, name='add-family-hist'),
+    path('patient/<int:id>/add_diagnosis_hist', views.adddiagnosishistview, name='add-diag-hist'),
+    path('patient/<int:id>/add_allergy', views.addallgergyview, name='add-allergy'),
     #path('patient/', views.patient, name ='mysite-patient'),
-    path('<int:id>', Patient.as_view(), name="patient_list"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

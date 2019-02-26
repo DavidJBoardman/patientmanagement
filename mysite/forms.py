@@ -2,10 +2,14 @@ from django import forms
 #
 from django.forms import fields, ModelForm
 
-from users.models import PersonalDetails
+from users.models import PersonalDetails, NotesAndScans, GuardianDetails, SocialDetails, FamilyHistory, \
+    DiagnosisHistory, AllergyDetails
 
 
 class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class DateTimeInput(forms.DateTimeInput):
     input_type = 'date'
 
 
@@ -38,8 +42,56 @@ class AddPatientForm(ModelForm):
     class Meta:
         model = PersonalDetails
         fields = ['patienttitle', 'patientfirstname', 'patientlastname', 'patientpreferredname', 'dateofbirth',
-                      'gender', 'occupation', 'weight', 'height', 'address', 'bmi', 'phonenumber', 'email', 'dnr', 'wardlocation',
+                      'gender', 'weight', 'height', 'address', 'bmi', 'phonenumber', 'email', 'dnr', 'wardlocation',
                       'photo']
         widgets = {
                      'dateofbirth': DateInput(),
                  }
+
+
+class AddNotesForm(ModelForm):
+    class Meta:
+        model = NotesAndScans
+        fields = ['note_name', 'notes']
+
+
+class AddGuardianForm(ModelForm):
+    class Meta:
+        model = GuardianDetails
+        fields = ['guardiantitle', 'guardianfirstname', 'guardianlastname', 'patientrelation', 'address',
+                  'contactnumber', 'email']
+
+
+class AddSocialDetailsForm(ModelForm):
+    class Meta:
+        model = SocialDetails
+        fields = ['occupation', 'smoking', 'drink', 'sexualorientation', 'socialdruguse',
+                  'handicaps', 'sexuallyactive']
+
+
+class AddFamilyHistoryForm(ModelForm):
+    class Meta:
+        model = FamilyHistory
+        fields = ['allgergies', 'asthma', 'arthritis', 'glaucoma', 'cancer', 'tuberculosis',
+                  'diabetes', 'hearttrouble', 'highbloodpressure', 'stroke', 'epilepsy', 'substanceabuse',
+                  'depression', 'emotionalproblems', 'suicide', 'kidneytrouble', 'thyroiddisease']
+
+
+class AddDiagnosisHistoryForm(ModelForm):
+    class Meta:
+        model = DiagnosisHistory
+        fields = ['previousdiagnosis', 'diagnoseddatetime', 'treatment', 'treatmentdatetime', 'result']
+
+    widgets = {
+        'diagnoseddatetime': DateTimeInput(),
+    }
+
+
+class AddAllergyDetailsForm(ModelForm):
+    class Meta:
+        model = AllergyDetails
+        fields = ['allergytype', 'allergyagent', 'allergyreaction', 'reactionseverity', 'allergyinfosource', 'allergystatus', 'allergyrecorddatetime']
+
+    widgets = {
+        'allergyrecorddatetime': DateTimeInput(),
+    }
