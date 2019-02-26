@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView, ListView, TemplateView
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import DetailView, ListView, TemplateView, CreateView
+
+from mysite.forms import AddPatientForm
 from users.models import *
 from django.contrib.auth.decorators import login_required
-from mysite.forms import AddPatient
 # Create your views here.
 
 
@@ -64,6 +66,15 @@ class Patient(LoginRequiredMixin, DetailView):
 class AddPatientView(TemplateView):
     template_name = 'mysite/add_patient.html'
 
+
     def get(self, request):
-        form = AddPatient()
+        form = AddPatientForm()
         return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = AddPatientForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/home')
+        return render(request, self.template_name, {'form': form})
+

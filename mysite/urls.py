@@ -12,6 +12,4 @@ urlpatterns = [
     path('add_patient', AddPatientView.as_view(), name ='add-patient'),
     #path('patient/', views.patient, name ='mysite-patient'),
     path('<int:id>', Patient.as_view(), name="patient_list"),
-    #url(r'^(?P<pk>\d+)$', DetailView.as_view(model=PersonalDetails,
-    #                                         template_name='mysite/patient.html'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
