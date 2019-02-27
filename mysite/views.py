@@ -4,7 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView, TemplateView, CreateView
 
 from mysite.forms import AddPatientForm, AddNotesForm, AddGuardianForm, AddSocialDetailsForm, AddFamilyHistoryForm, \
-    AddDiagnosisHistoryForm, AddAllergyDetailsForm
+    AddDiagnosisHistoryForm, AddAllergyDetailsForm, AddMedicationForm, AddInjectionForm, AddImmunisationForm, \
+    AddNewsForm
 from users.models import *
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -69,7 +70,7 @@ class Patient(LoginRequiredMixin, DetailView):
         return context
 
 
-class AddPatientView(TemplateView):
+class AddPatientView(LoginRequiredMixin, TemplateView):
     template_name = 'mysite/add_patient.html'
 
     def get(self, request):
@@ -83,7 +84,7 @@ class AddPatientView(TemplateView):
             return HttpResponseRedirect('/home')
         return render(request, self.template_name, {'form': form})
 
-
+@login_required()
 def addnoteview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
     if request.method == "POST":
@@ -98,7 +99,7 @@ def addnoteview(request, id):
         form = AddNotesForm()
     return render(request, 'mysite/add_note.html', {'form': form})
 
-
+@login_required()
 def addguardianview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
     if request.method == "POST":
@@ -113,7 +114,7 @@ def addguardianview(request, id):
         form = AddGuardianForm()
     return render(request, 'mysite/add_guardian.html', {'form': form})
 
-
+@login_required()
 def addsocialview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
     if request.method == "POST":
@@ -128,7 +129,7 @@ def addsocialview(request, id):
         form = AddSocialDetailsForm()
     return render(request, 'mysite/add_social.html', {'form': form})
 
-
+@login_required()
 def addfamilyhistview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
     if request.method == "POST":
@@ -143,7 +144,7 @@ def addfamilyhistview(request, id):
         form = AddFamilyHistoryForm()
     return render(request, 'mysite/add_family_hist.html', {'form': form})
 
-
+@login_required()
 def adddiagnosishistview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
     if request.method == "POST":
@@ -158,7 +159,7 @@ def adddiagnosishistview(request, id):
         form = AddDiagnosisHistoryForm()
     return render(request, 'mysite/add_diagnosis_hist.html', {'form': form})
 
-
+@login_required()
 def addallgergyview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
     if request.method == "POST":
@@ -172,4 +173,64 @@ def addallgergyview(request, id):
     else:
         form = AddAllergyDetailsForm()
     return render(request, 'mysite/add_allergy.html', {'form': form})
+
+@login_required()
+def addmedicationview(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddMedicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddMedicationForm()
+    return render(request, 'mysite/add_medication.html', {'form': form})
+
+@login_required()
+def addInjectionView(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddInjectionForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddInjectionForm()
+    return render(request, 'mysite/add_injection.html', {'form': form})
+
+@login_required()
+def addImmunisationView(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddImmunisationForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddImmunisationForm()
+    return render(request, 'mysite/add_immunisation.html', {'form': form})
+
+@login_required()
+def addNewsView(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == "POST":
+        form = AddNewsForm(request.POST, request.FILES)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.patient = patient
+            form.instance.personaldetails_id = id
+            notes.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = AddNewsForm()
+    return render(request, 'mysite/add_news.html', {'form': form})
 

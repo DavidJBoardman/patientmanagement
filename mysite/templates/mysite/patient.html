@@ -38,6 +38,10 @@
             <a class="nav-link" id="list-diagnosishistory-list" data-toggle="list" href="#list-diagnosishistory" role="tab"
                aria-controls="Diagnosis">Diagnosis</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="list-news-list" data-toggle="list" href="#list-news" role="tab"
+               aria-controls="News">N.E.W.S</a>
+        </li>
     </ul>
     <br>
     <div class="row">
@@ -81,6 +85,7 @@
                 <div class="tab-pane fade show active" id="list-medication" role="tabpanel"
                      aria-labelledby="list-medication-list">
                     <h4>Medication</h4>
+                    <a class="btn btn-primary btn-lg" href="{% url 'add-medication' id=patient_list.id %}">Add Medication</a>
 
                     {% if medication|length > 0 %}
                         {% for med in medication %}
@@ -101,12 +106,14 @@
                             </dl>
                         {% endfor %}
                     {% else %}
-                        None
+                        <p>No Medications Prescribed.</p>
                     {% endif %}
 
                 </div>
                 <div class="tab-pane fade" id="list-injections" role="tabpanel" aria-labelledby="list-injections-list">
                     <h4>Injections</h4>
+                    <a class="btn btn-primary btn-lg" href="{% url 'add-injection' id=patient_list.id %}">Add Injections</a>
+
                     {% if injection|length > 0 %}
                         {% for inj in injection %}
                             <dl class="row">
@@ -123,12 +130,14 @@
                             </dl>
                         {% endfor %}
                     {% else %}
-                        None
+                        <p>No Injections Found.</p>
                     {% endif %}
                 </div>
                 <div class="tab-pane fade" id="list-immunisations" role="tabpanel"
                      aria-labelledby="list-immunisations-list">
                     <h4>Immunisations</h4>
+                     <a class="btn btn-primary btn-lg" href="{% url 'add-immunisation' id=patient_list.id %}">Add Immunisation</a>
+
                     {% if immunisation|length > 0 %}
                         {% for imu in immunisation %}
                             <dl class="row">
@@ -145,7 +154,7 @@
                             </dl>
                         {% endfor %}
                     {% else %}
-                        None
+                        <p>No Vaccines Found.</p>
                     {% endif %}
                 </div>
                 <div class="tab-pane fade" id="list-allergies" role="tabpanel" aria-labelledby="list-allergies-list">
@@ -244,15 +253,31 @@
                     {% if diagnosis|length > 0 %}
                         {% for diag in diagnosis %}
                             <p>Previous Diagnosis: {{ diag.previousdiagnosis }}</p>
-                            <p>Diagnosed Date/Time: {{ detail.diagnoseddatetime }}</p>
-                            <p>Treatment: {{ detail.treatment }}</p>
-                            <p>Treatment Date/Time: {{ detail.treatmentdatetime }}</p>
-                            <p>Result: {{ detail.result }}</p>
+                            <p>Diagnosed Date/Time: {{ diag.diagnoseddatetime }}</p>
+                            <p>Treatment: {{ diag.treatment }}</p>
+                            <p>Treatment Date/Time: {{ diag.treatmentdatetime }}</p>
+                            <p>Result: {{ diag.result }}</p>
                         {% endfor %}
                     {% else %}
                         <p>No Diagnosis history</p>
                     {% endif %}
                 <a class="btn btn-primary btn-lg" href="{% url 'add-diag-hist' id=patient_list.id %}">Add Diagnosis</a>
+                </div>
+                <div class="tab-pane fade" id="list-news" role="tabpanel" aria-labelledby="list-news-list">
+                    <h4>Nation Early Warning Score</h4>
+                    {% if news|length > 0 %}
+                        {% for n in news %}
+                            <p>Date: {{ n.date }}</p>
+                            <p>Respiration Rate: {{ n.respirationrate }}</p>
+                            <p>Oxygen Saturation: {{ n.oxygensaturation }}</p>
+                            <p>Systolic Blood Pressure: {{ n.systolicbloodpressure }}</p>
+                            <p>Level of Consciousness & Confusion: {{ n.levelofconsciousnessnewconfusion }}</p>
+                            <p>Temperature: {{ n.temperature }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No National early warning score history</p>
+                    {% endif %}
+                <a class="btn btn-primary btn-lg" href="{% url 'add-news' id=patient_list.id %}">Add N.E.W.S</a>
                 </div>
             </div>
         </div>

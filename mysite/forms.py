@@ -3,11 +3,12 @@ from django import forms
 from django.forms import fields, ModelForm
 
 from users.models import PersonalDetails, NotesAndScans, GuardianDetails, SocialDetails, FamilyHistory, \
-    DiagnosisHistory, AllergyDetails
+    DiagnosisHistory, AllergyDetails, Medication, Injection, Immunisation, NationalEarlyWarningScore
 
 
 class DateInput(forms.DateInput):
     input_type = 'date'
+
 
 class DateTimeInput(forms.DateTimeInput):
     input_type = 'date'
@@ -82,9 +83,10 @@ class AddDiagnosisHistoryForm(ModelForm):
         model = DiagnosisHistory
         fields = ['previousdiagnosis', 'diagnoseddatetime', 'treatment', 'treatmentdatetime', 'result']
 
-    widgets = {
+        widgets = {
         'diagnoseddatetime': DateTimeInput(),
-    }
+        }
+
 
 
 class AddAllergyDetailsForm(ModelForm):
@@ -92,6 +94,47 @@ class AddAllergyDetailsForm(ModelForm):
         model = AllergyDetails
         fields = ['allergytype', 'allergyagent', 'allergyreaction', 'reactionseverity', 'allergyinfosource', 'allergystatus', 'allergyrecorddatetime']
 
-    widgets = {
-        'allergyrecorddatetime': DateTimeInput(),
-    }
+        widgets = {
+            'allergyrecorddatetime': DateTimeInput(),
+        }
+
+
+class AddMedicationForm(ModelForm):
+    class Meta:
+        model = Medication
+        fields = ['medicationname', 'medstartdatetime', 'medenddatetime', 'medicationduration', 'medicationquantity', 'medicationschedule']
+
+        widgets = {
+            'medstartdatetime': DateTimeInput(),
+            'medenddatetime': DateTimeInput(),
+        }
+
+
+class AddInjectionForm(ModelForm):
+    class Meta:
+        model = Injection
+        fields = ['injectionname', 'injectiondatetime', 'injectionreason', 'injectiondose', 'injectionpriority']
+
+        widgets = {
+            'injectiondatetime': DateTimeInput(),
+        }
+
+
+class AddImmunisationForm(ModelForm):
+    class Meta:
+        model = Immunisation
+        fields = ['vaccinename', 'vaccinedatetime', 'vaccinedose', 'vaccinereason', 'immunisationpriority']
+
+        widgets = {
+            'vaccinedatetime': DateTimeInput(),
+        }
+
+
+class AddNewsForm(ModelForm):
+    class Meta:
+        model = NationalEarlyWarningScore
+        fields = ['date', 'respirationrate', 'oxygensaturation', 'systolicbloodpressure', 'levelofconsciousnessnewconfusion', 'temperature']
+
+        widgets = {
+            'date': DateTimeInput(),
+        }
