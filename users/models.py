@@ -67,8 +67,6 @@ class TableError(models.Model):
 
 
 # Personal Details-------------------------
-
-
 class PersonalDetails(models.Model):
     patienttitle = models.CharField(max_length=4, choices=TITLE_CHOICES, verbose_name='Title')
     patientfirstname = models.CharField(max_length=256, verbose_name='First Name')

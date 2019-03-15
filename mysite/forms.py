@@ -50,6 +50,30 @@ class AddPatientForm(ModelForm):
                  }
 
 
+class EditProfileForm(ModelForm):
+
+
+    class Meta:
+        model = PersonalDetails
+        fields = [
+            'patienttitle',
+            'patientfirstname',
+            'patientlastname',
+            'patientpreferredname',
+            'dateofbirth',
+            'gender',
+            'weight',
+            'height',
+            'address',
+            'bmi',
+            'phonenumber',
+            'email',
+            'dnr',
+            'wardlocation',
+            'photo'
+        ]
+
+
 class AddNotesForm(ModelForm):
     class Meta:
         model = NotesAndScans

@@ -1,13 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.views.generic import DetailView, ListView, TemplateView, CreateView
 
 from mysite.forms import AddPatientForm, AddNotesForm, AddGuardianForm, AddSocialDetailsForm, AddFamilyHistoryForm, \
     AddDiagnosisHistoryForm, AddAllergyDetailsForm, AddMedicationForm, AddInjectionForm, AddImmunisationForm, \
-    AddNewsForm
+    AddNewsForm, EditProfileForm
 from users.models import *
 from django.contrib.auth.decorators import login_required
+
+
 # Create your views here.
 
 
@@ -46,7 +49,8 @@ def home(request):
 class Patient(LoginRequiredMixin, DetailView):
     template_name = 'mysite/patient.html'
     context_object_name = 'patient_list'
-    #queryset = PersonalDetails.objects.all()
+
+    # queryset = PersonalDetails.objects.all()
 
     def get_object(self):
         id_ = self.kwargs.get("id")
@@ -84,6 +88,7 @@ class AddPatientView(LoginRequiredMixin, TemplateView):
             return HttpResponseRedirect('/home')
         return render(request, self.template_name, {'form': form})
 
+
 @login_required()
 def addnoteview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
@@ -98,6 +103,7 @@ def addnoteview(request, id):
     else:
         form = AddNotesForm()
     return render(request, 'mysite/add_note.html', {'form': form})
+
 
 @login_required()
 def addguardianview(request, id):
@@ -114,6 +120,7 @@ def addguardianview(request, id):
         form = AddGuardianForm()
     return render(request, 'mysite/add_guardian.html', {'form': form})
 
+
 @login_required()
 def addsocialview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
@@ -128,6 +135,7 @@ def addsocialview(request, id):
     else:
         form = AddSocialDetailsForm()
     return render(request, 'mysite/add_social.html', {'form': form})
+
 
 @login_required()
 def addfamilyhistview(request, id):
@@ -144,6 +152,7 @@ def addfamilyhistview(request, id):
         form = AddFamilyHistoryForm()
     return render(request, 'mysite/add_family_hist.html', {'form': form})
 
+
 @login_required()
 def adddiagnosishistview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
@@ -158,6 +167,7 @@ def adddiagnosishistview(request, id):
     else:
         form = AddDiagnosisHistoryForm()
     return render(request, 'mysite/add_diagnosis_hist.html', {'form': form})
+
 
 @login_required()
 def addallgergyview(request, id):
@@ -174,6 +184,7 @@ def addallgergyview(request, id):
         form = AddAllergyDetailsForm()
     return render(request, 'mysite/add_allergy.html', {'form': form})
 
+
 @login_required()
 def addmedicationview(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
@@ -188,6 +199,7 @@ def addmedicationview(request, id):
     else:
         form = AddMedicationForm()
     return render(request, 'mysite/add_medication.html', {'form': form})
+
 
 @login_required()
 def addInjectionView(request, id):
@@ -204,6 +216,7 @@ def addInjectionView(request, id):
         form = AddInjectionForm()
     return render(request, 'mysite/add_injection.html', {'form': form})
 
+
 @login_required()
 def addImmunisationView(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
@@ -218,6 +231,7 @@ def addImmunisationView(request, id):
     else:
         form = AddImmunisationForm()
     return render(request, 'mysite/add_immunisation.html', {'form': form})
+
 
 @login_required()
 def addNewsView(request, id):
@@ -234,3 +248,19 @@ def addNewsView(request, id):
         form = AddNewsForm()
     return render(request, 'mysite/add_news.html', {'form': form})
 
+@login_required()
+def edit_profile(request, id):
+    patient = get_object_or_404(PersonalDetails, id=id)
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=patient)
+
+        if form.is_valid():
+            personadetails = form.save(commit=False)
+            personadetails.patient = patient
+            form.instance.personaldetails_id = id
+            personadetails.save()
+            return redirect('patient_list', id=id)
+    else:
+        form = EditProfileForm(instance=patient)
+
+        return render(request, 'mysite/edit_profile.html', {'form': form})

@@ -21,5 +21,6 @@ urlpatterns = [
     path('patient/<int:id>/add_injection', views.addInjectionView, name='add-injection'),
     path('patient/<int:id>/add_immunisation', views.addImmunisationView, name='add-immunisation'),
     path('patient/<int:id>/add_news', views.addNewsView, name='add-news'),
+    path('patient/<int:id>/edit/', views.edit_profile, name='edit_profile'),
     #path('patient/', views.patient, name ='mysite-patient'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
