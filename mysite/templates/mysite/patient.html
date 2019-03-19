@@ -55,6 +55,8 @@
             <dl class="row">
                 <dt class="col-sm-3">Title:</dt>
                 <dd class="col-sm-9">{{ patient_list.patienttitle }}</dd>
+                <dt class="col-sm-3">Unique ID:</dt>
+                <dd class="col-sm-9">{{ patient_list.patientuniqueid }}</dd>
                 <dt class="col-sm-3">First Name:</dt>
                 <dd class="col-sm-9">{{ patient_list.patientfirstname }}</dd>
                 <dt class="col-sm-3">Last Name:</dt>
@@ -80,7 +82,8 @@
                 <dt class="col-sm-3">Ward Location:</dt>
                 <dd class="col-sm-9">{{ patient_list.wardlocation }}</dd>
                 <dt class="col-sm-3">Photo:</dt>
-                <dd class="col-sm-9"><img class="img-thumbnail" src="{{ patient_list.photo.url }}"></dd>
+                <dd class="col-sm-9"><img class="img-thumbnail rounded" src="{{ patient_list.photo.url }}"></dd>
+                <a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit</a>
             </dl>
 
         </div>
@@ -107,6 +110,7 @@
                                 <dd class="col-sm-9">{{ med.medicationquantity }}</dd>
                                 <dt class="col-sm-3">Medication Schedule:</dt>
                                 <dd class="col-sm-9">{{ med.medicationschedule }}</dd>
+                                <a class="btn btn-primary btn" href="{% url 'edit-medication' medication=med.id id=patient_list.id %}">Edit</a>
                                 <hr style="width: 100%;"/>
                             </dl>
                         {% endfor %}
@@ -132,6 +136,7 @@
                                 <dd class="col-sm-9">{{ inj.injectiondose }}</dd>
                                 <dt class="col-sm-3">Injection Priority:</dt>
                                 <dd class="col-sm-9">{{ inj.injectionpriority }}</dd>
+                            <a class="btn btn-primary btn" href="{% url 'edit-injection' injection=inj.id id=patient_list.id %}">Edit</a>
                             </dl>
                         {% endfor %}
                     {% else %}
@@ -156,6 +161,7 @@
                                 <dd class="col-sm-9">{{ imu.vaccinedatetime }}</dd>
                                 <dt class="col-sm-3">Priority:</dt>
                                 <dd class="col-sm-9">{{ imu.immunisationpriority }}</dd>
+                                <a class="btn btn-primary btn" href="{% url 'add-immunisation' immunisation=imu.id id=patient_list.id %}">Edit</a>
                             </dl>
                         {% endfor %}
                     {% else %}
@@ -167,13 +173,14 @@
                     <a class="btn btn-primary btn-lg" href="{% url 'add-allergy' id=patient_list.id %}">Add Allergy</a>
 
                     {% if allergies|length > 0 %}
-                        {% for allgery in allergies %}
-                            <p>Allergy: {{ allgery.allergytype }}</p>
-                            <p>Agent: {{ allgery.allergyagent }}</p>
-                            <p>Reaction: {{ allgery.allergyreaction }}</p>
-                            <p>Info source: {{ allgery.allergyinfosource }}</p>
-                            <p>Recorded Date: {{ allgery.allergyrecorddatetime }}</p>
-                            <p>Status: {{ allgery.allergystatus }}</p>
+                        {% for allergy in allergies %}
+                            <p>Allergy: {{ allergy.allergytype }}</p>
+                            <p>Agent: {{ allergy.allergyagent }}</p>
+                            <p>Reaction: {{ allergy.allergyreaction }}</p>
+                            <p>Info source: {{ allergy.allergyinfosource }}</p>
+                            <p>Recorded Date: {{ allergy.allergyrecorddatetime }}</p>
+                            <p>Status: {{ allergy.allergystatus }}</p>
+                            <a class="btn btn-primary btn" href="{% url 'add-allergy' allergy=allergy.id id=patient_list.id %}">Edit</a>
                         {% endfor %}
                     {% else %}
                         <p>No Allergies</p>
@@ -191,6 +198,7 @@
                             <p>Phone number: {{ guard.contactnumber }}</p>
                             <p>Address: {{ guard.address }}</p>
                             <p>Email: {{ guard.email }}</p>
+                            <a class="btn btn-primary btn" href="{% url 'add-guardian' guardian=guard.id id=patient_list.id %}">Edit</a>
                         {% endfor %}
                     {% else %}
                         <p>No guardian details</p>
@@ -204,6 +212,7 @@
                         {% for note in notesandscans %}
                             <p>Note: {{ note.note_name }}</p>
                             <img class="img-thumbnail" src="{{ note.notes.url }}">
+                            <a class="btn btn-primary btn" href="{% url 'add-note' note=note.id id=patient_list.id %}">Edit</a>
                         {% endfor %}
                     {% else %}
                         <p>No Notes</p>
@@ -220,6 +229,7 @@
                             <p>Social drug use: {{ detail.socialdruguse }}</p>
                             <p>Handicaps: {{ detail.handicaps }}</p>
                             <p>Sexually Active: {{ detail.sexuallyactive }}</p>
+                            <a class="btn btn-primary btn" href="{% url 'add-social' social=detail.id id=patient_list.id %}">Edit</a>
                         {% endfor %}
                     {% else %}
                         <p>No Social history</p>
@@ -247,11 +257,12 @@
                             <p>Suicide: {{ family.suicide }}</p>
                             <p>Tidney Trouble: {{ family.kidneytrouble }}</p>
                             <p>Thyroid Disease: {{ family.thyroiddisease }}</p>
+                            <a class="btn btn-primary btn" href="{% url 'add-family-hist' family_history=family.id id=patient_list.id %}">Edit</a>
                         {% endfor %}
                     {% else %}
                         <p>No Social history</p>
+                        <a class="btn btn-primary btn-lg" href="{% url 'add-family-hist' id=patient_list.id %}">Add Family History</a>
                     {% endif %}
-                <a class="btn btn-primary btn-lg" href="{% url 'add-family-hist' id=patient_list.id %}">Add Family History</a>
                 </div>
                 <div class="tab-pane fade" id="list-diagnosishistory" role="tabpanel" aria-labelledby="list-diagnosishistory-list">
                     <h4>Diagnosis History</h4>
@@ -262,6 +273,7 @@
                             <p>Treatment: {{ diag.treatment }}</p>
                             <p>Treatment Date/Time: {{ diag.treatmentdatetime }}</p>
                             <p>Result: {{ diag.result }}</p>
+                            <a class="btn btn-primary btn" href="{% url 'add-diag-hist' diagnosis=diag.id id=patient_list.id %}">Edit</a>
                         {% endfor %}
                     {% else %}
                         <p>No Diagnosis history</p>
@@ -278,6 +290,7 @@
                             <p>Systolic Blood Pressure: {{ n.systolicbloodpressure }}</p>
                             <p>Level of Consciousness & Confusion: {{ n.levelofconsciousnessnewconfusion }}</p>
                             <p>Temperature: {{ n.temperature }}</p>
+                            <a class="btn btn-primary btn" href="{% url 'add-news' news=n.id id=patient_list.id %}">Edit</a>
                         {% endfor %}
                     {% else %}
                         <p>No National early warning score history</p>

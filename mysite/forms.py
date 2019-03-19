@@ -49,31 +49,6 @@ class AddPatientForm(ModelForm):
                      'dateofbirth': DateInput(),
                  }
 
-
-class EditProfileForm(ModelForm):
-
-
-    class Meta:
-        model = PersonalDetails
-        fields = [
-            'patienttitle',
-            'patientfirstname',
-            'patientlastname',
-            'patientpreferredname',
-            'dateofbirth',
-            'gender',
-            'weight',
-            'height',
-            'address',
-            'bmi',
-            'phonenumber',
-            'email',
-            'dnr',
-            'wardlocation',
-            'photo'
-        ]
-
-
 class AddNotesForm(ModelForm):
     class Meta:
         model = NotesAndScans
@@ -109,6 +84,7 @@ class AddDiagnosisHistoryForm(ModelForm):
 
         widgets = {
         'diagnoseddatetime': DateTimeInput(),
+        'treatmentdatetime': DateTimeInput(),
         }
 
 
@@ -126,7 +102,12 @@ class AddAllergyDetailsForm(ModelForm):
 class AddMedicationForm(ModelForm):
     class Meta:
         model = Medication
-        fields = ['medicationname', 'medstartdatetime', 'medenddatetime', 'medicationduration', 'medicationquantity', 'medicationschedule']
+        fields = ['medicationname',
+                  'medstartdatetime',
+                  'medenddatetime',
+                  'medicationduration',
+                  'medicationquantity',
+                  'medicationschedule']
 
         widgets = {
             'medstartdatetime': DateTimeInput(),

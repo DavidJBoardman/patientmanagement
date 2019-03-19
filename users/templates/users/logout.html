@@ -1,9 +1,16 @@
 {% extends "mysite/base.html" %}
 {% block content %}
-    <h2>You have successfully logged out.</h2>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            <a href="{% url 'login' %}">Log in</a>
-        </small>
+    <br>
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm">
+        <h2>You have successfully logged out.</h2>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                <a href="{% url 'login' %}">Log in</a>
+            </small>
+        </div>
+        </div>
+    <div class="col-sm"></div>
     </div>
 {% endblock content %}

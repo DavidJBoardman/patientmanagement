@@ -1,3 +1,8 @@
+import uuid
+
+from django.db.models.signals import pre_save
+
+from mysite.utils import unique_patient_id_generator
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -16,14 +21,90 @@ GENDER_CHOICES = (
 )
 
 YES_NO_CHOICES = (
-    ('Y', 'Yes'),
-    ('N', 'No'),
+    ('Yes', 'Yes'),
+    ('No', 'No'),
 )
 
 SEXUAL_ORIENTATION_CHOICES = (
-    ('S', 'Straight'),
-    ('G', 'Gay'),
-    ('B', 'Bisexual'),
+    ('Hetrosexual', 'Hetrosexual'),
+    ('homosexual', 'homosexual'),
+    ('Bisexual', 'Bisexual'),
+)
+
+ALLERGY_TYPE_CHOICES = (
+    ('Drug', 'Drug'),
+    ('Food', 'Food'),
+    ('Environmental', 'Environmental'),
+    ('Inhalant', 'Inhalant'),
+    ('Insect', 'Insect'),
+    ('Plant', 'Plant'),
+    ('Other', 'Other (Specify)')
+)
+
+ALLERGY_AGENT_CHOICES = (
+    ('Propensity to adverse reaction (disorder)', 'Propensity to adverse reaction (disorder)'),
+    ('Propensity to adverse reaction to drug (disorder)', 'Propensity to adverse reaction to drug (disorder)'),
+    ('Propensity to adverse reaction to food (disorder)', 'Propensity to adverse reaction to food (disorder)'),
+    ('Allergy to substance (disorder)', 'Allergy to substance (disorder)'),
+    ('Drug allergy (disorder)', 'Drug allergy (disorder)'),
+    ('Food allergy (disorder)', 'Food allergy (disorder)'),
+    ('Drug intolerance (disorder)', 'Drug intolerance (disorder)'),
+    ('Food intolerance (disorder)', 'Food intolerance (disorder)')
+
+)
+
+ALLERGY_REACTION_SEVERITY_CHOICES = (
+    ('Mild', 'Mild'),
+    ('Moderate', 'Moderate'),
+    ('Severe', 'Severe')
+)
+
+ALLERGY_SOURCE_CHOICES = (
+    ('Practice Reported', 'Practice Reported'),
+    ('Patient Reported', 'Patient Reported'),
+    ('Allergy history', 'Allergy history'),
+    ('Transition of care/referral', 'Transition of care/referral')
+)
+
+STATUS_CHOICES = (
+    ('Active', 'Active'),
+    ('Inactive', 'Inactive'),
+    ('Resolved', 'Resolved')
+)
+
+INJECTION_PRIORITY_CHOICES = (
+    ('Routine', 'Routine'),
+    ('Urgent', 'Urgent'),
+    ('Requested', 'Requested')
+)
+
+# TODO: How to store in database correctly without the -'s
+VACCINE_DISTRIBUTION_CHOICES = (
+    ('Birth', 'Birth'),
+    ('1 Months', '1 Months',),
+    ('4 Months', '4 Months'),
+    ('6 Months', '6 Months'),
+    ('12 Months', '12 Months'),
+    ('15 Months', '15 Months'),
+    ('18 Months', '18 Months'),
+    ('19-23 Months', '19-23 Months'),
+    ('2-3 Years', '2-3 Years'),
+    ('4-6 Years', '4-6 Years'),
+    ('7-10 Years', '7-10 Years')
+)
+
+# TODO: Ability to add other vaccines.
+VACCINE_LIST_CHOICES = (
+    ('BCG', 'BCG'),
+    ('Hepatitis A', 'Hepatitis A'),
+    ('Hepatitis B', 'Hepatitis B'),
+    ('Rotavirus', 'Rotavirus'),
+    ('Diphtheria-Tetanus-Pertussis', 'Diphtheria-Tetanus-Pertussis'),
+    ('Pneumococcal', 'Pneumococcal'),
+    ('Poliovirus', 'Poliovirus'),
+    ('Influenza', 'Influenza'),
+    ('Measles-Mumps-Rubella', 'Measles-Mumps-Rubella'),
+    ('Other', 'Other')
 )
 
 # from django.utils import timezone
@@ -69,6 +150,7 @@ class TableError(models.Model):
 # Personal Details-------------------------
 class PersonalDetails(models.Model):
     patienttitle = models.CharField(max_length=4, choices=TITLE_CHOICES, verbose_name='Title')
+    patientuniqueid = models.CharField(unique=True, max_length=10, verbose_name='Patient ID')
     patientfirstname = models.CharField(max_length=256, verbose_name='First Name')
     patientlastname = models.CharField(max_length=256, verbose_name='Last Name')
     patientpreferredname = models.CharField(max_length=256, blank=True, verbose_name='Preferred name')
@@ -86,6 +168,13 @@ class PersonalDetails(models.Model):
 
     def __str__(self):
         return self.patientfirstname
+
+def pre_save_create_order_id(sender, instance, *args, **kwargs):
+    if not instance.patientuniqueid:
+        instance.patientuniqueid= unique_patient_id_generator(instance)
+
+
+pre_save.connect(pre_save_create_order_id, sender=PersonalDetails)
 
 
 class NotesAndScans(models.Model):
@@ -172,15 +261,16 @@ class DiagnosisHistory(models.Model):
         return self.patientid
 
 
+# TODO: Add other please specifcy feild to allergy_type_choices form
 # Medication Information Allergies -------------------------
 class AllergyDetails(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    allergytype = models.CharField(max_length=256, blank=True, verbose_name='Allergy type')
-    allergyagent = models.CharField(max_length=256, blank=True, verbose_name='Allergy Agent')
+    allergytype = models.CharField(max_length=256, blank=True, verbose_name='Allergy type', choices=ALLERGY_TYPE_CHOICES)
+    allergyagent = models.CharField(max_length=256, blank=True, verbose_name='Allergy Agent', choices=ALLERGY_AGENT_CHOICES)
     allergyreaction = models.CharField(max_length=256, blank=True, verbose_name='Allergy reaction')
-    reactionseverity = models.CharField(max_length=256, blank=True, verbose_name='Reaction severity')
-    allergyinfosource = models.CharField(max_length=256, blank=True, verbose_name='Allergy Info Source')
-    allergystatus = models.CharField(max_length=256, blank=True, verbose_name='Status')
+    reactionseverity = models.CharField(max_length=256, blank=True, verbose_name='Reaction severity', choices=ALLERGY_REACTION_SEVERITY_CHOICES)
+    allergyinfosource = models.CharField(max_length=256, blank=True, verbose_name='Allergy Info Source', choices=ALLERGY_SOURCE_CHOICES)
+    allergystatus = models.CharField(max_length=256, blank=True, verbose_name='Status', choices=STATUS_CHOICES)
     allergyrecorddatetime = models.DateTimeField()
 
     def __str__(self):
@@ -191,10 +281,10 @@ class AllergyDetails(models.Model):
 class Medication(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     medicationname = models.CharField(max_length=256, verbose_name='Medication Name')
-    medstartdatetime = models.DateTimeField(blank=True, verbose_name='Medication Start Date')
-    medenddatetime = models.DateTimeField(blank=True, verbose_name='Medication End Date')
+    medstartdatetime = models.DateTimeField(verbose_name='Medication Start Date')
+    medenddatetime = models.DateTimeField(verbose_name='Medication End Date')
     medicationduration = models.IntegerField(blank=True, verbose_name='Medication Duration')
-    medicationquantity = models.CharField(max_length=256, blank=True, verbose_name='Medication Quantity')
+    medicationquantity = models.CharField(max_length=256, blank=True, verbose_name='Medication dose')
     medicationschedule = models.CharField(max_length=256, blank=True, verbose_name='Medication Schedule')
 
     def __str__(self):
@@ -207,7 +297,7 @@ class Injection(models.Model):
     injectiondatetime = models.DateTimeField(verbose_name='Injection Date Administered')
     injectionreason = models.CharField(max_length=256, blank=True, verbose_name='Injection Reason')
     injectiondose = models.CharField(max_length=256, blank=True, verbose_name='Injection Dose')
-    injectionpriority = models.CharField(max_length=256, blank=True, verbose_name='Injection Priority')
+    injectionpriority = models.CharField(max_length=256, blank=True, verbose_name='Injection Priority', choices=INJECTION_PRIORITY_CHOICES)
 
     def __str__(self):
         return self.injectionname
@@ -215,11 +305,11 @@ class Injection(models.Model):
 
 class Immunisation(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    vaccinename = models.CharField(max_length=256, verbose_name='Vaccine Name')
+    vaccinename = models.CharField(max_length=256, verbose_name='Vaccine Name', choices=VACCINE_LIST_CHOICES)
     vaccinedatetime = models.DateTimeField(verbose_name='Vaccine date administered')
     vaccinedose = models.CharField(max_length=256, verbose_name='Vaccine dose')
     vaccinereason = models.CharField(max_length=256, blank=True, verbose_name='Vaccine Reason')
-    immunisationpriority = models.IntegerField(verbose_name='Immunisation priority')
+    immunisationpriority = models.IntegerField(verbose_name='Immunisation priority', choices=INJECTION_PRIORITY_CHOICES)
 
     def __str__(self):
         return self.vaccinename

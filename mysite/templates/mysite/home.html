@@ -1,11 +1,12 @@
-{% extends "mysite/base.html" %}
+
+{% extends "mysite/search.html" %}
 {% block content %}
     <br>
         <div class="row">
             <div class="col-sm">
             <h2>Patient List</h2>
                 <div class="list-group">
-                    {% for patient in patients %}
+                    {% for patient in personal_patient_list %}
                         <a href="patient/{{patient.id}}" class="list-group-item list-group-item-action">{{ patient.patientfirstname }} {{ patient.patientlastname }}</a>
                     {% endfor %}
                 </div>
@@ -13,13 +14,41 @@
             <div class="col-sm">
                 <h2>Search</h2>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Patient Id">
-                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Patient Name">
-                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="D.O.B">
-                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Postcode">
-                    <br>
-                    <button type="button" class="btn btn-secondary btn-lg btn-block">Search</button>
+                    <form method="GET" action='' class="form-inline">
+                            {% csrf_token %}
+                                <input type="text" name="patient_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patient_id }}">
+                                <input type="text" name="patient_firstname" id="search-firstname" class="form-control mb-2 mr-sm-2"  placeholder="Firstname" value="{{ request.GET.patient_firstname }}">
+                                <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
+                                <input type="text" name="patient_dob" id="search-dob" class="form-control mb-2 mr-sm-2"  placeholder="DOB" value="{{ request.GET.patient_id }}">
+                                <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
+                        </form>
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Patient Id</th>
+                                    <th scope="col">First name</th>
+                                    <th scope="col">Surname</th>
+                                    <th scope="col">Date of Birth</th>
+                                    <th scope="col">Photo</th>
+                                    </a>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for search in patients %}
+                                <tr  class="clickable-tr" href="patient/{{search.id}}" >
+                                    <td scope="row">{{ search.id }}</td>
+                                    <td scope="row">{{ search.patientfirstname }}</td>
+                                    <td scope="row">{{ search.patientlastname }}</td>
+                                    <td scope="row">{{ search.dateofbirth }}</td>
+                                    <td scope="row"><img class="img-thumbnail rounded" src="{{ search.photo.url }}"></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
                 </div>
+
             </div>
             <div class="col-sm">
                 <h2>Tools</h2>
