@@ -66,7 +66,7 @@ class AddSocialDetailsForm(ModelForm):
     class Meta:
         model = SocialDetails
         fields = ['occupation', 'smoking', 'drink', 'sexualorientation', 'socialdruguse',
-                  'handicaps', 'sexuallyactive']
+                  'disability', 'sexuallyactive']
 
 
 class AddFamilyHistoryForm(ModelForm):
@@ -105,9 +105,9 @@ class AddMedicationForm(ModelForm):
         fields = ['medicationname',
                   'medstartdatetime',
                   'medenddatetime',
-                  'medicationduration',
-                  'medicationquantity',
-                  'medicationschedule']
+                  'usage',
+                  'quantity',
+                  'schedule']
 
         widgets = {
             'medstartdatetime': DateTimeInput(),
@@ -138,7 +138,7 @@ class AddImmunisationForm(ModelForm):
 class AddNewsForm(ModelForm):
     class Meta:
         model = NationalEarlyWarningScore
-        fields = ['date', 'respirationrate', 'oxygensaturation', 'systolicbloodpressure', 'levelofconsciousnessnewconfusion', 'temperature']
+        fields = ['date', 'respirationrate', 'oxygensaturation', 'bloodpressure', 'heartrate', 'temperature']
 
         widgets = {
             'date': DateTimeInput(),

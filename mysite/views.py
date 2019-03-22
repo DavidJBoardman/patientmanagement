@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.core.serializers import json
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
@@ -29,6 +30,8 @@ def home(request):
     query_surname = request.GET.get('patient_surname')
     query_dob = request.GET.get('patient_dob')
 
+
+
     if query_id:
         patient_list = patient_list.filter(id=query_id)
     if query_firstname:
@@ -38,8 +41,12 @@ def home(request):
     if query_dob:
         patient_list = patient_list.filter(dateofbirth__in=query_dob)
 
+    paginator = Paginator(patient_list, 5)  # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    patients = paginator.get_page(page)
     context = {
-        'patients': patient_list,
+        'patients': patients,
         'personal_patient_list': personal_patient_list,
         'title': 'Home'
     }
@@ -54,6 +61,8 @@ def search_view(request):
     query_surname = request.GET.get('patient_surname')
     query_dob = request.GET.get('patient_dob')
 
+
+
     if query_id:
         patient_list = patient_list.filter(id=query_id)
     if query_firstname:
@@ -63,8 +72,11 @@ def search_view(request):
     if query_dob:
         patient_list = patient_list.filter(dateofbirth__in=query_dob)
 
+    paginator = Paginator(patient_list, 2)  # Show 25 contacts per page
+    page = request.GET.get('page')
+    patients = paginator.get_page(page)
     context = {
-        'patients': patient_list,
+        'patients': patients,
         'title': 'Search'
     }
 
@@ -161,7 +173,7 @@ def edit_medication(request, id, medication=None):
     if medication is None:
         type = 'Add'
     if request.method == 'POST':
-        form = AddMedicationForm(request.POST, instance=medication)
+        form = AddMedicationForm(request.POST, request.FILES, instance=medication)
 
         if form.is_valid():
             medications = form.save(commit=False)
@@ -171,8 +183,7 @@ def edit_medication(request, id, medication=None):
             return redirect('patient-list', id=id)
     else:
         form = AddMedicationForm(instance=medication)
-
-        return render(request, 'mysite/edit_medication.html', {'form': form, 'tab': 'Medication', 'type': type})
+        return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Medication', 'type': type})
 
 @login_required()
 def edit_notes_view(request, id, note=None):
@@ -182,6 +193,7 @@ def edit_notes_view(request, id, note=None):
         type = 'Add'
     if request.method == "POST":
         form = AddNotesForm(request.POST, request.FILES, instance=note)
+
         if form.is_valid():
             notes = form.save(commit=False)
             notes.patient = note
@@ -190,7 +202,7 @@ def edit_notes_view(request, id, note=None):
             return redirect('patient-list', id=id)
     else:
         form = AddNotesForm(instance=note)
-    return render(request, 'mysite/add_note.html', {'form': form, 'tab': 'Note', 'type': type})
+    return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Note', 'type': type})
 
 
 @login_required()

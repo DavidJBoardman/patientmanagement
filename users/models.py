@@ -23,12 +23,14 @@ GENDER_CHOICES = (
 YES_NO_CHOICES = (
     ('Yes', 'Yes'),
     ('No', 'No'),
+    ('Prefer not to say', 'Prefer not to say'),
 )
 
 SEXUAL_ORIENTATION_CHOICES = (
     ('Hetrosexual', 'Hetrosexual'),
-    ('homosexual', 'homosexual'),
+    ('Homosexual', 'Homosexual'),
     ('Bisexual', 'Bisexual'),
+    ('Prefer not to say', 'Prefer not to say'),
 )
 
 ALLERGY_TYPE_CHOICES = (
@@ -107,6 +109,12 @@ VACCINE_LIST_CHOICES = (
     ('Other', 'Other')
 )
 
+
+MED_USES_CHOICES = (
+    ('With Food', 'With Food'),
+    ('Without Food', 'Without Food'),
+    ('NA', 'NA')
+)
 # from django.utils import timezone
 
 # Create your models here.
@@ -216,9 +224,9 @@ class SocialDetails(models.Model):
     occupation = models.CharField(max_length=256, blank=True, verbose_name='Occupation')
     smoking = models.CharField(max_length=10, blank=True, verbose_name='Smoker', choices=YES_NO_CHOICES)
     drink = models.CharField(max_length=10, blank=True, verbose_name='Drinker', choices=YES_NO_CHOICES)
-    sexualorientation = models.CharField(max_length=10, blank=True, verbose_name='Sexual Orientation', choices=SEXUAL_ORIENTATION_CHOICES)
+    sexualorientation = models.CharField(max_length=17, blank=True, verbose_name='Sexual Orientation', choices=SEXUAL_ORIENTATION_CHOICES)
     socialdruguse = models.CharField(max_length=10, blank=True, verbose_name='Social Drug Use', choices=YES_NO_CHOICES)
-    handicaps = models.CharField(max_length=256, blank=True, verbose_name='Handicaps')
+    disability = models.CharField(max_length=256, blank=True, verbose_name='disabilities')
     sexuallyactive = models.CharField(max_length=10, blank=True, verbose_name='Sexually Active', choices=YES_NO_CHOICES)
 
     def __str__(self):
@@ -283,9 +291,9 @@ class Medication(models.Model):
     medicationname = models.CharField(max_length=256, verbose_name='Medication Name')
     medstartdatetime = models.DateTimeField(verbose_name='Medication Start Date')
     medenddatetime = models.DateTimeField(verbose_name='Medication End Date')
-    medicationduration = models.IntegerField(blank=True, verbose_name='Medication Duration')
-    medicationquantity = models.CharField(max_length=256, blank=True, verbose_name='Medication dose')
-    medicationschedule = models.CharField(max_length=256, blank=True, verbose_name='Medication Schedule')
+    usage = models.IntegerField(blank=True, verbose_name='Medication Usage', choices=MED_USES_CHOICES)
+    quantity = models.CharField(max_length=256, blank=True, verbose_name='Medication dose (mg)')
+    schedule = models.CharField(max_length=256, blank=True, verbose_name='Medication Schedule Frequency')
 
     def __str__(self):
         return self.medicationname
@@ -309,7 +317,7 @@ class Immunisation(models.Model):
     vaccinedatetime = models.DateTimeField(verbose_name='Vaccine date administered')
     vaccinedose = models.CharField(max_length=256, verbose_name='Vaccine dose')
     vaccinereason = models.CharField(max_length=256, blank=True, verbose_name='Vaccine Reason')
-    immunisationpriority = models.IntegerField(verbose_name='Immunisation priority', choices=INJECTION_PRIORITY_CHOICES)
+    immunisationpriority = models.CharField(max_length=9, verbose_name='Immunisation priority', choices=INJECTION_PRIORITY_CHOICES)
 
     def __str__(self):
         return self.vaccinename
@@ -319,10 +327,11 @@ class NationalEarlyWarningScore(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     date = models.DateTimeField()
     respirationrate = models.CharField(max_length=256, blank=True, verbose_name='Respiration Rate')
-    oxygensaturation = models.CharField(max_length=256, blank=True, verbose_name='Oxygen Saturation')
-    systolicbloodpressure = models.CharField(max_length=256, blank=True, verbose_name='Systolic Blood Pressure')
-    levelofconsciousnessnewconfusion = models.CharField(max_length=256, blank=True, verbose_name='Level of Consciousness')
+    oxygensaturation = models.CharField(max_length=256, blank=True, verbose_name='Oxygen Saturation Levels')
+    bloodpressure = models.CharField(max_length=256, blank=True, verbose_name='Blood Pressure')
+    heartrate = models.CharField(max_length=256, blank=True, verbose_name='Heart rate')
     temperature = models.CharField(max_length=256, blank=True, verbose_name='Temperature')
+    bm = models.CharField(max_length=256, blank=True, verbose_name='Blood Monitoring Glucose (Diabetic)')
 
     def __str__(self):
         return self.patientid
