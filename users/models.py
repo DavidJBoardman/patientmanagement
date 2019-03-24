@@ -120,16 +120,6 @@ MED_USES_CHOICES = (
 # Create your models here.
 # A model is a object model of a database table. You create a class which will then be used with the ORM in order to
 
-
-class Profile(models.Model):
-    # if the user is deleted then delete the profile too but not the other way around
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.png', upload_to='profile_pics')
-
-    def __str__(self):
-        return f'{self.user.username} Profile'
-
-
 # handle database requests
 # Meta----------------------------------------------------
 
@@ -176,6 +166,16 @@ class PersonalDetails(models.Model):
 
     def __str__(self):
         return self.patientfirstname
+
+
+class Profile(models.Model):
+    # if the user is deleted then delete the profile too but not the other way around
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    favourite = models.ManyToManyField(PersonalDetails, related_name='favorited_by')
+    image = models.ImageField(default='default.png', upload_to='profile_pics')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
     if not instance.patientuniqueid:
@@ -291,7 +291,7 @@ class Medication(models.Model):
     medicationname = models.CharField(max_length=256, verbose_name='Medication Name')
     medstartdatetime = models.DateTimeField(verbose_name='Medication Start Date')
     medenddatetime = models.DateTimeField(verbose_name='Medication End Date')
-    usage = models.IntegerField(blank=True, verbose_name='Medication Usage', choices=MED_USES_CHOICES)
+    usage = models.CharField(max_length=12, blank=True, verbose_name='Medication Usage', choices=MED_USES_CHOICES)
     quantity = models.CharField(max_length=256, blank=True, verbose_name='Medication dose (mg)')
     schedule = models.CharField(max_length=256, blank=True, verbose_name='Medication Schedule Frequency')
 
@@ -304,7 +304,7 @@ class Injection(models.Model):
     injectionname = models.CharField(max_length=256, verbose_name='Injection Name')
     injectiondatetime = models.DateTimeField(verbose_name='Injection Date Administered')
     injectionreason = models.CharField(max_length=256, blank=True, verbose_name='Injection Reason')
-    injectiondose = models.CharField(max_length=256, blank=True, verbose_name='Injection Dose')
+    injectiondose = models.CharField(max_length=256, blank=True, verbose_name='Injection Dose (ml)')
     injectionpriority = models.CharField(max_length=256, blank=True, verbose_name='Injection Priority', choices=INJECTION_PRIORITY_CHOICES)
 
     def __str__(self):

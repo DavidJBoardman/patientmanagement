@@ -2,9 +2,8 @@
 {% load user_tags %}
 {% block content %}
     <br>
-    <div class="row">
         <div class="col-sm-4"></div>
-        <div class="col-sm-8">
+        <div class="col-sm-12">
             <ul class="nav nav-tabs nav-fill">
                 <li class="nav-item">
                     <a class="nav-link active" id="list-medication-list" data-toggle="list" href="#list-medication" role="tab"
@@ -48,7 +47,7 @@
                 </li>
             </ul>
         </div>
-    </div>
+
     <br>
     <div class="row">
         <div class="col-sm-4">
@@ -56,7 +55,7 @@
             <dl class="row">
                 <dt class="col-sm-3">Title:</dt>
                 <dd class="col-sm-9">{{ patient_list.patienttitle }}</dd>
-                <dt class="col-sm-3">Unique ID:</dt>
+                <dt class="col-sm-3">Patient ID:</dt>
                 <dd class="col-sm-9">{{ patient_list.patientuniqueid }}</dd>
                 <dt class="col-sm-3">First Name:</dt>
                 <dd class="col-sm-9">{{ patient_list.patientfirstname }}</dd>
@@ -121,7 +120,23 @@
                     {% else %}
                         <p>No Medications Prescribed.</p>
                     {% endif %}
+                    <div class="pagination">
+                    <span class="step-links">
+                        {% if medication.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ medication.previous_page_number }}">previous</a>
+                        {% endif %}
 
+                        <span class="current">
+                            Page {{ medication.number }} of {{ medication.paginator.num_pages }}.
+                        </span>
+
+                        {% if medication.has_next %}
+                            <a href="?page={{ medication.next_page_number }}">next</a>
+                            <a href="?page={{ medication.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="list-injections" role="tabpanel" aria-labelledby="list-injections-list">
                     <h4>Injections</h4>
@@ -149,6 +164,24 @@
                     {% else %}
                         <p>No Injections Found.</p>
                     {% endif %}
+
+                    <div class="pagination">
+                            <span class="step-links">
+                                {% if injection.has_previous %}
+                                    <a href="?page=1">&laquo; first</a>
+                                    <a href="?page={{ injection.previous_page_number }}">previous</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ injection.number }} of {{ injection.paginator.num_pages }}.
+                                </span>
+
+                                {% if injection.has_next %}
+                                    <a href="?page={{ injection.next_page_number }}">next</a>
+                                    <a href="?page={{ injection.paginator.num_pages }}">last &raquo;</a>
+                                {% endif %}
+                            </span>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="list-immunisations" role="tabpanel"
                      aria-labelledby="list-immunisations-list">
@@ -177,6 +210,24 @@
                     {% else %}
                         <p>No Vaccines Found.</p>
                     {% endif %}
+
+                    <div class="pagination">
+                            <span class="step-links">
+                                {% if immunisation.has_previous %}
+                                    <a href="?page=1">&laquo; first</a>
+                                    <a href="?page={{ immunisation.previous_page_number }}">previous</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ immunisation.number }} of {{ immunisation.paginator.num_pages }}.
+                                </span>
+
+                                {% if immunisation.has_next %}
+                                    <a href="?page={{ immunisation.next_page_number }}">next</a>
+                                    <a href="?page={{ immunisation.paginator.num_pages }}">last &raquo;</a>
+                                {% endif %}
+                            </span>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="list-allergies" role="tabpanel" aria-labelledby="list-allergies-list">
                     <h4>Allergies</h4>
@@ -198,6 +249,23 @@
                     {% else %}
                         <p>No Allergies</p>
                     {% endif %}
+                    <div class="pagination">
+                            <span class="step-links">
+                                {% if allergies.has_previous %}
+                                    <a href="?page=1">&laquo; first</a>
+                                    <a href="?page={{ allergies.previous_page_number }}">previous</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ allergies.number }} of {{ allergies.paginator.num_pages }}.
+                                </span>
+
+                                {% if allergies.has_next %}
+                                    <a href="?page={{ allergies.next_page_number }}">next</a>
+                                    <a href="?page={{ allergies.paginator.num_pages }}">last &raquo;</a>
+                                {% endif %}
+                            </span>
+                    </div>
 
                 </div>
                 <div class="tab-pane fade" id="list-guardian" role="tabpanel" aria-labelledby="list-guardian-list">
@@ -221,6 +289,24 @@
                     {% else %}
                         <p>No guardian details</p>
                     {% endif %}
+
+                    <div class="pagination">
+                            <span class="step-links">
+                                {% if guardian.has_previous %}
+                                    <a href="?page=1">&laquo; first</a>
+                                    <a href="?page={{ guardian.previous_page_number }}">previous</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ guardian.number }} of {{ guardian.paginator.num_pages }}.
+                                </span>
+
+                                {% if guardian.has_next %}
+                                    <a href="?page={{ guardian.next_page_number }}">next</a>
+                                    <a href="?page={{ guardian.paginator.num_pages }}">last &raquo;</a>
+                                {% endif %}
+                            </span>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="list-notes" role="tabpanel" aria-labelledby="list-notes-list">
                     <h4>Notes</h4>
@@ -238,6 +324,24 @@
                     {% else %}
                         <p>No Notes</p>
                     {% endif %}
+
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if notesandscans.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ notesandscans.previous_page_number }}">previous</a>
+                            {% endif %}
+
+                            <span class="current">
+                                Page {{ notesandscans.number }} of {{ notesandscans.paginator.num_pages }}.
+                            </span>
+
+                            {% if notesandscans.has_next %}
+                                <a href="?page={{ notesandscans.next_page_number }}">next</a>
+                                <a href="?page={{ notesandscans.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="list-social" role="tabpanel" aria-labelledby="list-social-list">
                     <h4>Notes</h4>
@@ -260,37 +364,72 @@
                     {% else %}
                         <p>No Social history</p>
                     {% endif %}
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if social.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ social.previous_page_number }}">previous</a>
+                            {% endif %}
+
+                            <span class="current">
+                                Page {{ social.number }} of {{ social.paginator.num_pages }}.
+                            </span>
+
+                            {% if social.has_next %}
+                                <a href="?page={{ social.next_page_number }}">next</a>
+                                <a href="?page={{ social.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
 
                 </div>
                 <div class="tab-pane fade" id="list-familyhist" role="tabpanel" aria-labelledby="list-familyhist-list">
                     <h4>Notes</h4>
-                        {% if request.user|in_group:"Doctor" %}
-                            <a class="btn btn-primary btn-lg" href="{% url 'add-family-hist' id=patient_list.id %}">Add Family History</a>
-                        {% endif %}
-                        {% if familyhistory|length > 0 %}
-                            {% for family in familyhistory %}
-                                <p>Allgergies: {{ family.allgergies }}</p>
-                                <p>Asthma: {{ family.asthma }}</p>
-                                <p>Arthritis: {{ family.arthritis }}</p>
-                                <p>Glaucoma: {{ family.glaucoma }}</p>
-                                <p>Cancer: {{ family.cancer }}</p>
-                                <p>Tuberculosis: {{ family.tuberculosis }}</p>
-                                <p>Diabetes: {{ family.diabetes }}</p>
-                                <p>Heart Problems: {{ family.hearttrouble }}</p>
-                                <p>High Blood Pressure: {{ family.highbloodpressure }}</p>
-                                <p>Stroke: {{ family.stroke }}</p>
-                                <p>Epilepsy: {{ family.epilepsy }}</p>
-                                <p>Substance Abuse: {{ family.substanceabuse }}</p>
-                                <p>Depression: {{ family.depression }}</p>
-                                <p>Emotional Problems: {{ family.emotionalproblems }}</p>
-                                <p>Suicide: {{ family.suicide }}</p>
-                                <p>Tidney Trouble: {{ family.kidneytrouble }}</p>
-                                <p>Thyroid Disease: {{ family.thyroiddisease }}</p>
-                                <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'add-family-hist' family_history=family.id id=patient_list.id %}">Edit</a></dd>
-                            {% endfor %}
-                        {% else %}
+                    {% if request.user|in_group:"Doctor" %}
+                        <a class="btn btn-primary btn-lg" href="{% url 'add-family-hist' id=patient_list.id %}">Add Family History</a>
+                    {% endif %}
+                    {% if familyhistory|length > 0 %}
+                        {% for family in familyhistory %}
+                            <p>Allgergies: {{ family.allgergies }}</p>
+                            <p>Asthma: {{ family.asthma }}</p>
+                            <p>Arthritis: {{ family.arthritis }}</p>
+                            <p>Glaucoma: {{ family.glaucoma }}</p>
+                            <p>Cancer: {{ family.cancer }}</p>
+                            <p>Tuberculosis: {{ family.tuberculosis }}</p>
+                            <p>Diabetes: {{ family.diabetes }}</p>
+                            <p>Heart Problems: {{ family.hearttrouble }}</p>
+                            <p>High Blood Pressure: {{ family.highbloodpressure }}</p>
+                            <p>Stroke: {{ family.stroke }}</p>
+                            <p>Epilepsy: {{ family.epilepsy }}</p>
+                            <p>Substance Abuse: {{ family.substanceabuse }}</p>
+                            <p>Depression: {{ family.depression }}</p>
+                            <p>Emotional Problems: {{ family.emotionalproblems }}</p>
+                            <p>Suicide: {{ family.suicide }}</p>
+                            <p>Tidney Trouble: {{ family.kidneytrouble }}</p>
+                            <p>Thyroid Disease: {{ family.thyroiddisease }}</p>
+                            <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'add-family-hist' family_history=family.id id=patient_list.id %}">Edit</a></dd>
+                        {% endfor %}
+                    {% else %}
                         <p>No Family history</p>
                     {% endif %}
+
+                <div class="pagination">
+                        <span class="step-links">
+                            {% if familyhistory.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ familyhistory.previous_page_number }}">previous</a>
+                            {% endif %}
+
+                            <span class="current">
+                                Page {{ familyhistory.number }} of {{ familyhistory.paginator.num_pages }}.
+                            </span>
+
+                            {% if familyhistory.has_next %}
+                                <a href="?page={{ familyhistory.next_page_number }}">next</a>
+                                <a href="?page={{ familyhistory.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="list-diagnosishistory" role="tabpanel" aria-labelledby="list-diagnosishistory-list">
                     <h4>Diagnosis History</h4>

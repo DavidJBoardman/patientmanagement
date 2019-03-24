@@ -10,8 +10,4 @@
         {% csrf_token %}
         {{ form.as_p }}
     </div>
-    <div class="modal-footer">
-       <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-       <a href="#" data-toggle="modal" class="btn btn-primary" onclick="genericLoadDialog('#{{ editor_form_id }}', '#{{ editor_dialog_id }}', null, 'invalid_form');">Save</a>
-    </div>
 </form>

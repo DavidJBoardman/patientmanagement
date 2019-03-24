@@ -14,30 +14,15 @@ class DateTimeInput(forms.DateTimeInput):
     input_type = 'date'
 
 
-# class AddPatientForm(forms.ModelForm):
-#     patienttitle = forms.CharField(required=True, max_length=256)
-#     patientfirstname = forms.CharField(required=True, max_length=256)
-#     patientlastname = forms.CharField(required=True, max_length=256)
-#     patientpreferredname = forms.CharField(required=True, max_length=256)
-#     dateofbirth = fields.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-#     gender = forms.CharField(required=True, max_length=256)
-#     occupation = forms.CharField(required=False, max_length=256)
-#     weight = forms.CharField(required=False, max_length=256)
-#     height = forms.CharField(required=False, max_length=256)
-#     address = forms.CharField(required=True, max_length=256)
-#     bmi = forms.CharField(required=False, max_length=256)
-#     phonenumber = forms.CharField(required=False, max_length=256)
-#     email = forms.CharField(required=False, max_length=256)
-#     dnr = forms.CharField(required=False)
-#     wardlocation = forms.CharField(required=False, max_length=256)
-#     photo = forms.ImageField(required=False)
-#
-#     class Meta:
-#         model = PersonalDetails
-#         widgets = {
-#             'dateofbirth': DateInput(),
-#         }
-
+class DateForm(forms.Form):
+    date = forms.DateField(input_formats=['%Y-%m-%d'], widget=DateInput(
+        attrs={
+            'class': 'form-control mb-2 mr-sm-2',
+            'name': "patient_surname",
+            'id': "search-dob",
+            'placeholder': 'DOB'
+        }
+    ), required=False, )
 
 class AddPatientForm(ModelForm):
     class Meta:

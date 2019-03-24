@@ -1,17 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.core.serializers import json
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect, render_to_response
-from django.template import loader
-from django.template.context_processors import csrf
-from django.template.loader import render_to_string
-from django.urls import reverse
-from django.views.generic import DetailView, ListView, TemplateView, CreateView
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import DetailView, TemplateView
 
 from mysite.forms import AddPatientForm, AddNotesForm, AddGuardianForm, AddSocialDetailsForm, AddFamilyHistoryForm, \
     AddDiagnosisHistoryForm, AddAllergyDetailsForm, AddMedicationForm, AddInjectionForm, AddImmunisationForm, \
-    AddNewsForm
+    AddNewsForm, DateForm
 from users.models import *
 from django.contrib.auth.decorators import login_required
 
@@ -25,21 +20,22 @@ def home(request):
     personal_patient_list = PersonalDetails.objects.all()
     patient_list = PersonalDetails.objects.all()
 
-    query_id = request.GET.get('patient_id')
+    query_id = request.GET.get('patient_unique_id')
     query_firstname = request.GET.get('patient_firstname')
     query_surname = request.GET.get('patient_surname')
     query_dob = request.GET.get('patient_dob')
+    form = DateForm(request.GET)
+    if form.is_valid():
+        date = form.cleaned_data['date']
 
-
-
-    if query_id:
-        patient_list = patient_list.filter(id=query_id)
-    if query_firstname:
-        patient_list = patient_list.filter(patientfirstname__icontains=query_firstname)
-    if query_surname:
-        patient_list = patient_list.filter(patientlastname__icontains=query_surname)
-    if query_dob:
-        patient_list = patient_list.filter(dateofbirth__in=query_dob)
+        if query_id:
+            patient_list = patient_list.filter(patientuniqueid__icontains=query_id)
+        if query_firstname:
+            patient_list = patient_list.filter(patientfirstname__icontains=query_firstname)
+        if query_surname:
+            patient_list = patient_list.filter(patientlastname__icontains=query_surname)
+        if date:
+            patient_list = patient_list.filter(dateofbirth__day=date.day)
 
     paginator = Paginator(patient_list, 5)  # Show 25 contacts per page
 
@@ -48,7 +44,8 @@ def home(request):
     context = {
         'patients': patients,
         'personal_patient_list': personal_patient_list,
-        'title': 'Home'
+        'title': 'Home',
+        'form': form
     }
     return render(request, 'mysite/home.html', context)
 
@@ -80,47 +77,7 @@ def search_view(request):
         'title': 'Search'
     }
 
-    #t = loader.select_template(["mysite/search.html"])
-    #html = render_to_string('mysite/search.html', {'patients': patient_list, 'title': 'Search'})
     return render(request, 'mysite/search.html', context)
-    #return HttpResponse(html)
-
-# def search_view(request):
-#     if request.method == 'POST':
-#         search_ids = request.POST['search_patient_id']
-#     else:
-#         search_ids = ''
-#
-#     patients = PersonalDetails.objects.filter(patientfirstname__icontains=search_ids)
-#
-#     args = {}
-#     args.update(csrf(request))
-#
-#     args['patients': patients]
-#     args['title': 'Search']
-#
-#     return render(request, 'mysite/search.html', {'patients': patients})
-
-# # Patient details page
-# #@login_required()
-# class PatientView(ListView):
-#     context_object_name = 'patient_list'
-#     template_name = 'mysite/patient.html'
-#     title = 'Patient Details'
-#     queryset = PersonalDetails.objects.all()
-#
-#     def get_context_data(self, **kwargs):
-#          context = super(PatientView, self).get_context_data(**kwargs)
-#          context['patientdetails'] = self.queryset
-#          context['medication'] = MedicationTable.objects.all()
-#          context['injection'] = InjectionTable.objects.all()
-#          context['immunisation'] = ImmunisationTable.objects.all()
-#          context['allergies'] = AllergyDetails.objects.all()
-#          context['guardian'] = GuardianDetails.objects.all()
-#
-#          return context
-
-# # Patient details page
 
 
 class Patient(LoginRequiredMixin, DetailView):
@@ -137,16 +94,27 @@ class Patient(LoginRequiredMixin, DetailView):
         id_ = self.kwargs.get("id")
 
         context = super(Patient, self).get_context_data(**kwargs)
-        context['notesandscans'] = NotesAndScans.objects.filter(personaldetails_id=id_)
-        context['guardian'] = GuardianDetails.objects.filter(personaldetails_id=id_)
-        context['social'] = SocialDetails.objects.filter(personaldetails_id=id_)
-        context['familyhistory'] = FamilyHistory.objects.filter(personaldetails_id=id_)
-        context['diagnosis'] = DiagnosisHistory.objects.filter(personaldetails_id=id_)
-        context['allergies'] = AllergyDetails.objects.filter(personaldetails_id=id_)
-        context['medication'] = Medication.objects.filter(personaldetails_id=id_)
-        context['injection'] = Injection.objects.filter(personaldetails_id=id_)
-        context['immunisation'] = Immunisation.objects.filter(personaldetails_id=id_)
-        context['news'] = NationalEarlyWarningScore.objects.filter(personaldetails_id=id_)
+        page = self.request.GET.get('page')
+        medication = Paginator(Medication.objects.filter(personaldetails_id=id_), 3)
+        notesandscans = Paginator(NotesAndScans.objects.filter(personaldetails_id=id_), 3)
+        guardian = Paginator(GuardianDetails.objects.filter(personaldetails_id=id_), 3)
+        social = Paginator(SocialDetails.objects.filter(personaldetails_id=id_), 3)
+        familyhistory = Paginator(FamilyHistory.objects.filter(personaldetails_id=id_), 3)
+        diagnosis = Paginator(DiagnosisHistory.objects.filter(personaldetails_id=id_), 3)
+        allergies = Paginator(AllergyDetails.objects.filter(personaldetails_id=id_), 3)
+        injection = Paginator(Injection.objects.filter(personaldetails_id=id_), 3)
+        immunisation = Paginator(Immunisation.objects.filter(personaldetails_id=id_), 3)
+        news = Paginator(NationalEarlyWarningScore.objects.filter(personaldetails_id=id_), 3)
+        context['notesandscans'] = notesandscans.get_page(page)
+        context['guardian'] = guardian.get_page(page)
+        context['social'] = social.get_page(page)
+        context['familyhistory'] = familyhistory.get_page(page)
+        context['diagnosis'] = diagnosis.get_page(page)
+        context['allergies'] = allergies.get_page(page)
+        context['medication'] = medication.get_page(page)
+        context['injection'] = injection.get_page(page)
+        context['immunisation'] = immunisation.get_page(page)
+        context['news'] = news.get_page(page)
         context['title'] = ('Patient %s' % id_)
         return context
 
@@ -183,7 +151,7 @@ def edit_medication(request, id, medication=None):
             return redirect('patient-list', id=id)
     else:
         form = AddMedicationForm(instance=medication)
-        return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Medication', 'type': type})
+    return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Medication', 'type': type})
 
 @login_required()
 def edit_notes_view(request, id, note=None):
@@ -335,7 +303,7 @@ def edit_news_view(request, id, news=None):
             return redirect('patient-list', id=id)
     else:
         form = AddNewsForm(instance=news)
-    return render(request, 'mysite/add_news.html', {'form': form, 'tab': 'NEWS', 'type': type})
+    return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'NEWS', 'type': type})
 
 
 @login_required()
@@ -353,7 +321,7 @@ def edit_profile(request, id):
     else:
         form = AddPatientForm(instance=patient)
 
-        return render(request, 'mysite/edit_profile.html', {'form': form})
+        return render(request, 'mysite/add_patient.html', {'form': form})
 
 
 @login_required()

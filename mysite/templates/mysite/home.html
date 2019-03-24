@@ -1,5 +1,5 @@
-
 {% extends "mysite/search.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
     <br>
         <div class="row">
@@ -14,14 +14,14 @@
             <div class="col-sm-4">
                 <h2>Search</h2>
                 <div class="form-group">
-                    <form method="GET" action='' class="form-inline">
-                            {% csrf_token %}
-                                <input type="text" name="patient_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patient_id }}">
-                                <input type="text" name="patient_firstname" id="search-firstname" class="form-control mb-2 mr-sm-2"  placeholder="Firstname" value="{{ request.GET.patient_firstname }}">
-                                <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
-                                <input type="text" name="patient_dob" id="search-dob" class="form-control mb-2 mr-sm-2"  placeholder="DOB" value="{{ request.GET.patient_id }}">
-                                <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
-                        </form>
+                    <form method="GET" action='' enctype="multipart/form-data" class="form-inline">
+                        {% csrf_token %}
+                        <input type="text" name="patient_unique_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patientuniqueid }}">
+                        <input type="text" name="patient_firstname" id="search-firstname" class="form-control mb-2 mr-sm-2"  placeholder="Firstname" value="{{ request.GET.patient_firstname }}">
+                        <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
+                        {{ form.date }}
+                        <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
+                    </form>
 
                         <table class="table table-hover">
                             <thead>
@@ -37,7 +37,7 @@
                             <tbody>
                             {% for search in patients %}
                                 <tr  class="clickable-tr" href="patient/{{search.id}}" >
-                                    <td scope="row">{{ search.id }}</td>
+                                    <td scope="row">{{ search.patientuniqueid }}</td>
                                     <td scope="row">{{ search.patientfirstname }}</td>
                                     <td scope="row">{{ search.patientlastname }}</td>
                                     <td scope="row">{{ search.dateofbirth }}</td>
@@ -71,5 +71,5 @@
                 <a class="btn btn-secondary btn-lg btn-block" href="{% url 'add-patient' %}">Add Patient
                 </a>
             </div>
-<br>
+    <br>
 {% endblock content %}
