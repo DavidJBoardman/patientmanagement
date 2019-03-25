@@ -224,6 +224,7 @@ class GuardianDetails(models.Model):
     def __str__(self):
         return self.patientid
 
+
 # Currently unsued
 class DoctorDetails(models.Model):
     doctorid = models.AutoField(primary_key=True)

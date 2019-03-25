@@ -2,6 +2,7 @@ from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.core.serializers import json
+from django.db.models.functions import Coalesce, Lower
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
@@ -112,16 +113,16 @@ class Patient(LoginRequiredMixin, DetailView):
 
         context = super(Patient, self).get_context_data(**kwargs)
         page = self.request.GET.get('page')
-        medication = Paginator(Medication.objects.filter(personaldetails_id=id_), 3)
-        notesandscans = Paginator(NotesAndScans.objects.filter(personaldetails_id=id_), 3)
-        guardian = Paginator(GuardianDetails.objects.filter(personaldetails_id=id_), 3)
-        social = Paginator(SocialDetails.objects.filter(personaldetails_id=id_), 3)
-        familyhistory = Paginator(FamilyHistory.objects.filter(personaldetails_id=id_), 3)
-        diagnosis = Paginator(DiagnosisHistory.objects.filter(personaldetails_id=id_), 3)
-        allergies = Paginator(AllergyDetails.objects.filter(personaldetails_id=id_), 3)
-        injection = Paginator(Injection.objects.filter(personaldetails_id=id_), 3)
-        immunisation = Paginator(Immunisation.objects.filter(personaldetails_id=id_), 3)
-        news = Paginator(NationalEarlyWarningScore.objects.filter(personaldetails_id=id_), 3)
+        medication = Paginator(Medication.objects.filter(personaldetails_id=id_).order_by(Lower('medstartdatetime').desc()), 10)
+        notesandscans = Paginator(NotesAndScans.objects.filter(personaldetails_id=id_), 10)
+        guardian = Paginator(GuardianDetails.objects.filter(personaldetails_id=id_), 10)
+        social = Paginator(SocialDetails.objects.filter(personaldetails_id=id_), 10)
+        familyhistory = Paginator(FamilyHistory.objects.filter(personaldetails_id=id_), 10)
+        diagnosis = Paginator(DiagnosisHistory.objects.filter(personaldetails_id=id_), 10)
+        allergies = Paginator(AllergyDetails.objects.filter(personaldetails_id=id_), 10)
+        injection = Paginator(Injection.objects.filter(personaldetails_id=id_), 10)
+        immunisation = Paginator(Immunisation.objects.filter(personaldetails_id=id_), 10)
+        news = Paginator(NationalEarlyWarningScore.objects.filter(personaldetails_id=id_), 10)
         context['notesandscans'] = notesandscans.get_page(page)
         context['guardian'] = guardian.get_page(page)
         context['social'] = social.get_page(page)

@@ -2,129 +2,127 @@
 {% load user_tags %}
 {% block content %}
     <br>
-        <div class="col-sm-4"></div>
+        <div class="row">
+        <div class="col"><img class="img-thumbnail rounded" src="{{ patient_list.photo.url }}"></div>
+        <div class="col">
+            <p><b>Patient ID:</b> {{ patient_list.patientuniqueid }}</p>
+            <p><b>Title:</b> {{ patient_list.patienttitle }} </p>
+            <p><b>First Name:</b> {{ patient_list.patientfirstname }}</p>
+            <p><b>Last Name:</b> {{ patient_list.patientlastname }}</p>
+            <p><b>DOB:</b> {{ patient_list.dateofbirth|date:"d F y" }}</p>
+            <p><b>Gender:</b> {{ patient_list.gender }}</p>
+            <p><b>BMI:</b> {{ patient_list.bmi }}</p>
+        </div>
+        <div class="col">
+            <p><b>Contact Number:</b> {{ patient_list.phonenumber }}</p>
+            <p><b>Height:</b> {{ patient_list.height }}</p>
+            <p><b>Weight:</b> {{ patient_list.weight }}</p>
+            <p><b>Address:</b> {{ patient_list.address }}</p>
+            <p><b>Email:</b> {{ patient_list.email }}</p>
+            <p><b>Ward Location:</b> {{ patient_list.wardlocation }}</p>
+        </div>
+        <div class="col"><p class="font-weight-bold">Allergies:</p> {% for al in allergies %}<span class="badge badge-warning">{{ al.allergyagent }}</span>{% endfor %}</div>
+    </div>
+    <hr>
         <div class="col-sm-12">
             <ul class="nav nav-tabs nav-fill">
                 <li class="nav-item">
                     <a class="nav-link active" id="list-medication-list" data-toggle="list" href="#list-medication" role="tab"
-                       aria-controls="Medication">Medication</a>
+                       aria-controls="Medication">Medication <i class="fas fa-pills"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-injections-list" data-toggle="list" href="#list-injections" role="tab"
-                       aria-controls="Injections">Injections</a>
+                       aria-controls="Injections">Injections <i class="fas fa-crutch"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-immunisations-list" data-toggle="list" href="#list-immunisations" role="tab"
-                       aria-controls="Immunisations">Immunisations</a>
+                       aria-controls="Immunisations">Immunisations <i class="fas fa-syringe"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-allergies-list" data-toggle="list" href="#list-allergies" role="tab"
-                       aria-controls="Allergies">Allergies</a>
+                       aria-controls="Allergies">Allergies <i class="fas fa-allergies"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-guardian-list" data-toggle="list" href="#list-guardian" role="tab"
-                       aria-controls="Guardian">Guardian Details</a>
+                       aria-controls="Guardian">Guardian Details <i class="fas fa-user-shield"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-notes-list" data-toggle="list" href="#list-notes" role="tab"
-                       aria-controls="Notes">Notes</a>
+                       aria-controls="Notes">Notes <i class="fas fa-book-medical"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-social-list" data-toggle="list" href="#list-social" role="tab"
-                       aria-controls="Social">Social History</a>
+                       aria-controls="Social">Social History <i class="fas fa-laptop-medical"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-familyhist-list" data-toggle="list" href="#list-familyhist" role="tab"
-                       aria-controls="Family">Family History</a>
+                       aria-controls="Family">Family History <i class="fas fa-users"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-diagnosishistory-list" data-toggle="list" href="#list-diagnosishistory" role="tab"
-                       aria-controls="Diagnosis">Diagnosis</a>
+                       aria-controls="Diagnosis">Diagnosis <i class="fas fa-diagnoses"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="list-news-list" data-toggle="list" href="#list-news" role="tab"
-                       aria-controls="News">N.E.W.S</a>
+                       aria-controls="News">N.E.W.S <i class="fas fa-user-nurse"></i></a>
                 </li>
             </ul>
         </div>
 
+
     <br>
     <div class="row">
-        <div class="col-sm-4">
-            <h4>Patient Details</h4>
-            <dl class="row">
-                <dt class="col-sm-3">Title:</dt>
-                <dd class="col-sm-9">{{ patient_list.patienttitle }}</dd>
-                <dt class="col-sm-3">Patient ID:</dt>
-                <dd class="col-sm-9">{{ patient_list.patientuniqueid }}</dd>
-                <dt class="col-sm-3">First Name:</dt>
-                <dd class="col-sm-9">{{ patient_list.patientfirstname }}</dd>
-                <dt class="col-sm-3">Last Name:</dt>
-                <dd class="col-sm-9">{{ patient_list.patientlastname }}</dd>
-                <dt class="col-sm-3">Preferred Name:</dt>
-                <dd class="col-sm-9">{{ patient_list.patientpreferredname }}</dd>
-                <dt class="col-sm-3">DOB:</dt>
-                <dd class="col-sm-9">{{ patient_list.dateofbirth|date:"d F y" }}</dd>
-                <dt class="col-sm-3">Gender:</dt>
-                <dd class="col-sm-9">{{ patient_list.gender }}</dd>
-                <dt class="col-sm-3">Weight (kg):</dt>
-                <dd class="col-sm-9">{{ patient_list.weight }}</dd>
-                <dt class="col-sm-3">Height (cm):</dt>
-                <dd class="col-sm-9">{{ patient_list.height }}</dd>
-                <dt class="col-sm-3">BMI:</dt>
-                <dd class="col-sm-9">{{ patient_list.bmi }}</dd>
-                <dt class="col-sm-3">Address:</dt>
-                <dd class="col-sm-9">{{ patient_list.address }}</dd>
-                <dt class="col-sm-3">Phone Number:</dt>
-                <dd class="col-sm-9">{{ patient_list.phonenumber }}</dd>
-                <dt class="col-sm-3">Email:</dt>
-                <dd class="col-sm-9">{{ patient_list.email }}</dd>
-                <dt class="col-sm-3">Ward Location:</dt>
-                <dd class="col-sm-9">{{ patient_list.wardlocation }}</dd>
-                <dt class="col-sm-3">Photo:</dt>
-                <dd class="col-sm-9"><img class="img-thumbnail rounded" src="{{ patient_list.photo.url }}"></dd>
-                <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit</a></dd>
-            </dl>
-
-        </div>
-
-        <div class="col-sm-8">
+        <div class="col-sm-12">
             <div class="tab-content" id="nav-tabContent">
+                {# Medication tables #}
                 <div class="tab-pane fade show active" id="list-medication" role="tabpanel"
                      aria-labelledby="list-medication-list">
                     <h4>Medication</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-medication' id=patient_list.id %}">Add Medication</a>
                     {% endif %}
-                    {% if medication|length > 0 %}
-                        {% for med in medication %}
-                            <dl class="row">
-                                <dt class="col-sm-3">Medication Name:</dt>
-                                <dd class="col-sm-9">{{ med.medicationname }}</dd>
-                                <dt class="col-sm-3">Medication Start Date:</dt>
-                                <dd class="col-sm-9">{{ med.medstartdatetime }}</dd>
-                                <dt class="col-sm-3">Medication End Date:</dt>
-                                <dd class="col-sm-9">{{ med.medenddatetime }}</dd>
-                                <dt class="col-sm-3">Medication Duration:</dt>
-                                <dd class="col-sm-9">{{ med.medicationduration }}</dd>
-                                <dt class="col-sm-3">Medication Quantity:</dt>
-                                <dd class="col-sm-9">{{ med.medicationquantity }}</dd>
-                                <dt class="col-sm-3">Medication Schedule:</dt>
-                                <dd class="col-sm-9">{{ med.medicationschedule }}</dd>
-                                {% if request.user|in_group:"Doctor" %}
-                                    <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'edit-medication' medication=med.id id=patient_list.id %}">Edit</a></dd>
-                                {% endif %}
-                                <hr style="width: 100%;"/>
-                            </dl>
-                        {% endfor %}
+
+                {% if medication|length > 0 %}
+                <div class="card">
+                <div class="card-body">
+                    <div id="table" class="table-editable">
+                        <table class="table table-bordered table-responsive-md table-striped text-center">
+                            <tr>
+                                <th scope="col">Medication Name</th>
+                                <th scope="col">Medication Start Date</th>
+                                <th scope="col">Medication End Date</th>
+                                <th scope="col">Medication Usage</th>
+                                <th scope="col">Medication Dose (mg)</th>
+                                <th scope="col">Medication Schedule</th>
+                                <th scope="col">Edit</th>
+                            </tr>
+                            {% for med in medication %}
+                                <tr>
+                                    <td class="pt-3-half">{{ med.medicationname }}</td>
+                                    <td class="pt-3-half">{{ med.medstartdatetime }}</td>
+                                    <td class="pt-3-half">{{ med.medenddatetime }}</td>
+                                    <td class="pt-3-half">{{ med.usage }}</td>
+                                    <td class="pt-3-half">{{ med.quantity }}</td>
+                                    <td class="pt-3-half">{{ med.schedule }}</td>
+                                    <td>
+                                        {% if request.user|in_group:"Doctor" %}
+                                            <a class="btn btn-primary btn" href="{% url 'edit-medication' medication=med.id id=patient_list.id %}">Edit</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
                     {% else %}
                         <p>No Medications Prescribed.</p>
                     {% endif %}
+
                     <div class="pagination">
                     <span class="step-links">
                         {% if medication.has_previous %}
-                            <a href="?page=1">&laquo; first</a>
-                            <a href="?page={{ medication.previous_page_number }}">previous</a>
+                            <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                            <a href="?page={{ medication.previous_page_number }}"><i class="fas fa-angle-left "></i></a>
                         {% endif %}
 
                         <span class="current">
@@ -132,83 +130,114 @@
                         </span>
 
                         {% if medication.has_next %}
-                            <a href="?page={{ medication.next_page_number }}">next</a>
-                            <a href="?page={{ medication.paginator.num_pages }}">last &raquo;</a>
+                            <a href="?page={{ medication.next_page_number }}"><i class="fas fa-angle-right "></i></a>
+                            <a href="?page={{ medication.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
                         {% endif %}
                     </span>
                     </div>
                 </div>
+                </div>
+
+                {# Injections #}
                 <div class="tab-pane fade" id="list-injections" role="tabpanel" aria-labelledby="list-injections-list">
                     <h4>Injections</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-injection' id=patient_list.id %}">Add Injections</a>
                     {% endif %}
                     {% if injection|length > 0 %}
-                        {% for inj in injection %}
-                            <dl class="row">
-                                <dt class="col-sm-3">Injection Name:</dt>
-                                <dd class="col-sm-9">{{ inj.injectionname }}</dd>
-                                <dt class="col-sm-3">Injection Date:</dt>
-                                <dd class="col-sm-9">{{ inj.injectiondatetime }}</dd>
-                                <dt class="col-sm-3">Injection Reason:</dt>
-                                <dd class="col-sm-9">{{ inj.injectionreason }}</dd>
-                                <dt class="col-sm-3">Injection Dose:</dt>
-                                <dd class="col-sm-9">{{ inj.injectiondose }}</dd>
-                                <dt class="col-sm-3">Injection Priority:</dt>
-                                <dd class="col-sm-9">{{ inj.injectionpriority }}</dd>
-                                {% if request.user|in_group:"Doctor" %}
-                                    <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'edit-injection' injection=inj.id id=patient_list.id %}">Edit</a></dd>
-                                {% endif %}
-                            </dl>
-                        {% endfor %}
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="table" class="table-editable">
+                                    <table class="table table-bordered table-responsive-md table-striped text-center">
+                                        <tr>
+                                            <th scope="col">Injection Name</th>
+                                            <th scope="col">Injection Date</th>
+                                            <th scope="col">Injection Reason</th>
+                                            <th scope="col">Injection Dose (mg)</th>
+                                            <th scope="col">Injection Priority</th>
+                                            <th scope="col">Edit</th>
+                                        </tr>
+                                        {% for inj in injection %}
+                                            <tr>
+                                                <td class="pt-3-half">{{ inj.injectionname }}</td>
+                                                <td class="pt-3-half">{{ inj.injectiondatetime }}</td>
+                                                <td class="pt-3-half">{{ inj.injectionreason }}</td>
+                                                <td class="pt-3-half">{{ inj.injectiondose }}</td>
+                                                <td class="pt-3-half">{{ inj.injectionpriority }}</td>
+                                                <td>
+                                                    {% if request.user|in_group:"Doctor" %}
+                                                        <a class="btn btn-primary btn" href="{% url 'edit-injection' injection=inj.id id=patient_list.id %}">Edit</a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
                     {% else %}
-                        <p>No Injections Found.</p>
+                        <p>No Medications Prescribed.</p>
                     {% endif %}
 
                     <div class="pagination">
-                            <span class="step-links">
-                                {% if injection.has_previous %}
-                                    <a href="?page=1">&laquo; first</a>
-                                    <a href="?page={{ injection.previous_page_number }}">previous</a>
-                                {% endif %}
+                        <span class="step-links">
+                            {% if injection.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ injection.previous_page_number }}">previous</a>
+                            {% endif %}
 
-                                <span class="current">
-                                    Page {{ injection.number }} of {{ injection.paginator.num_pages }}.
-                                </span>
-
-                                {% if injection.has_next %}
-                                    <a href="?page={{ injection.next_page_number }}">next</a>
-                                    <a href="?page={{ injection.paginator.num_pages }}">last &raquo;</a>
-                                {% endif %}
+                            <span class="current">
+                                Page {{ injection.number }} of {{ injection.paginator.num_pages }}.
                             </span>
+
+                            {% if injection.has_next %}
+                                <a href="?page={{ injection.next_page_number }}">next</a>
+                                <a href="?page={{ injection.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
                     </div>
                 </div>
+                </div>
+
+                {# Immunisations #}
                 <div class="tab-pane fade" id="list-immunisations" role="tabpanel"
                      aria-labelledby="list-immunisations-list">
                     <h4>Immunisations</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-immunisation' id=patient_list.id %}">Add Immunisation</a>
                     {% endif %}
+
                     {% if immunisation|length > 0 %}
-                        {% for imu in immunisation %}
-                            <dl class="row">
-                                <dt class="col-sm-3">Vacccine Name:</dt>
-                                <dd class="col-sm-9">{{ imu.vaccinename }}</dd>
-                                <dt class="col-sm-3">Dose:</dt>
-                                <dd class="col-sm-9">{{ imu.vaccinedose }}</dd>
-                                <dt class="col-sm-3">Reason:</dt>
-                                <dd class="col-sm-9">{{ imu.vaccinereason }}</dd>
-                                <dt class="col-sm-3">Date administered:</dt>
-                                <dd class="col-sm-9">{{ imu.vaccinedatetime }}</dd>
-                                <dt class="col-sm-3">Priority:</dt>
-                                <dd class="col-sm-9">{{ imu.immunisationpriority }}</dd>
-                                {% if request.user|in_group:"Doctor" %}
-                                    <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'add-immunisation' immunisation=imu.id id=patient_list.id %}">Edit</a></dd>
-                                {% endif %}
-                            </dl>
-                        {% endfor %}
+                        <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Vacccine Name</th>
+                                        <th scope="col">Dose</th>
+                                        <th scope="col">Reason</th>
+                                        <th scope="col">Date administered</th>
+                                        <th scope="col">Priority</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for imu in immunisation %}
+                                        <tr>
+                                            <td class="pt-3-half">{{ imu.vaccinename }}</td>
+                                            <td class="pt-3-half">{{ imu.vaccinedose }}</td>
+                                            <td class="pt-3-half">{{ imu.vaccinereason }}</td>
+                                            <td class="pt-3-half">{{ imu.vaccinedatetime }}</td>
+                                            <td class="pt-3-half">{{ imu.immunisationpriority }}</td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-immunisation' immunisation=imu.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
                     {% else %}
-                        <p>No Vaccines Found.</p>
+                        <p>No Immunisations Logged.</p>
                     {% endif %}
 
                     <div class="pagination">
@@ -229,26 +258,51 @@
                             </span>
                     </div>
                 </div>
+                </div>
+
+                {# Allergies #}
                 <div class="tab-pane fade" id="list-allergies" role="tabpanel" aria-labelledby="list-allergies-list">
                     <h4>Allergies</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-allergy' id=patient_list.id %}">Add Allergy</a>
                     {% endif %}
+
                     {% if allergies|length > 0 %}
-                        {% for allergy in allergies %}
-                            <p>Allergy: {{ allergy.allergytype }}</p>
-                            <p>Agent: {{ allergy.allergyagent }}</p>
-                            <p>Reaction: {{ allergy.allergyreaction }}</p>
-                            <p>Info source: {{ allergy.allergyinfosource }}</p>
-                            <p>Recorded Date: {{ allergy.allergyrecorddatetime }}</p>
-                            <p>Status: {{ allergy.allergystatus }}</p>
-                            {% if request.user|in_group:"Doctor" %}
-                                <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'add-allergy' allergy=allergy.id id=patient_list.id %}">Edit</a></dd>
-                            {% endif %}
-                        {% endfor %}
+                        <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">>Allergy:</th>
+                                        <th scope="col">Agent:</th>
+                                        <th scope="col">Reaction:</th>
+                                        <th scope="col">Info source:</th>
+                                        <th scope="col">Recorded Date:</th>
+                                        <th scope="col">Status:</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for allergy in allergies %}
+                                        <tr>
+                                            <td class="pt-3-half">{{ allergy.allergytype }}</td>
+                                            <td class="pt-3-half">{{ allergy.allergyagent }}</td>
+                                            <td class="pt-3-half">{{ allergy.allergyreaction }}</td>
+                                            <td class="pt-3-half">{{ allergy.allergyinfosource }}</td>
+                                            <td class="pt-3-half">{{ allergy.allergyrecorddatetime }}</td>
+                                            <td class="pt-3-half">{{ allergy.allergystatus }}</td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-allergy' allergy=allergy.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
                     {% else %}
-                        <p>No Allergies</p>
+                        <p>No Allergies Logged.</p>
                     {% endif %}
+
                     <div class="pagination">
                             <span class="step-links">
                                 {% if allergies.has_previous %}
@@ -261,7 +315,7 @@
                                 </span>
 
                                 {% if allergies.has_next %}
-                                    <a href="?page={{ allergies.next_page_number }}">next</a>
+                                    <a href="?page={{ allergies.next_page_number }}"><i class="fas fa-caret-square-right"></i></a>
                                     <a href="?page={{ allergies.paginator.num_pages }}">last &raquo;</a>
                                 {% endif %}
                             </span>

@@ -52,7 +52,7 @@
                                     <td class="pt-3-half">{{ search.dateofbirth }}</td>
                                     <td class="pt-3-half"><img class="img-thumbnail rounded" src="{{ search.photo.url }}"></td>
                                     <td>
-                                        <a class="btn btn-primary clickable-tr" href="{% url 'change_assigned' operation='add' pk=search.pk %}">Add to patient list</a>
+                                        <a class="btn btn-primary clickable-tr" href="{% url 'change_assigned' operation='add' pk=search.pk %}">Assign</a>
                                     </td>
                                 </tr>
                             {% endfor %}
