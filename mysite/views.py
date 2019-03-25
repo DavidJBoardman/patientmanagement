@@ -1,7 +1,10 @@
+from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
+from django.core.serializers import json
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from django.views.generic import DetailView, TemplateView
 
 from mysite.forms import AddPatientForm, AddNotesForm, AddGuardianForm, AddSocialDetailsForm, AddFamilyHistoryForm, \
@@ -17,14 +20,20 @@ from django.contrib.auth.decorators import login_required
 # Example of creating a view (in the future this should be a template)
 @login_required()
 def home(request):
-    personal_patient_list = PersonalDetails.objects.all()
     patient_list = PersonalDetails.objects.all()
 
     query_id = request.GET.get('patient_unique_id')
     query_firstname = request.GET.get('patient_firstname')
     query_surname = request.GET.get('patient_surname')
-    query_dob = request.GET.get('patient_dob')
     form = DateForm(request.GET)
+
+    try:
+        users = User.objects.exclude(id=request.user.id)
+        patient = AssignedPatient.objects.get(current_user=request.user)
+        personal_patients = patient.users.all()
+    except AssignedPatient.DoesNotExist:
+        personal_patients = None
+
     if form.is_valid():
         date = form.cleaned_data['date']
 
@@ -43,11 +52,21 @@ def home(request):
     patients = paginator.get_page(page)
     context = {
         'patients': patients,
-        'personal_patient_list': personal_patient_list,
+        'personal_list': personal_patients,
         'title': 'Home',
         'form': form
     }
     return render(request, 'mysite/home.html', context)
+
+
+def change_assigned(request, operation, pk):
+    friend = PersonalDetails.objects.get(pk=pk)
+    if operation == 'add':
+        AssignedPatient.make_patient(request.user, friend)
+    elif operation == 'remove':
+        AssignedPatient.lose_patient(request.user, friend)
+    return redirect('/home')
+
 
 @login_required()
 def search_view(request):
@@ -57,8 +76,6 @@ def search_view(request):
     query_firstname = request.GET.get('patient_firstname')
     query_surname = request.GET.get('patient_surname')
     query_dob = request.GET.get('patient_dob')
-
-
 
     if query_id:
         patient_list = patient_list.filter(id=query_id)

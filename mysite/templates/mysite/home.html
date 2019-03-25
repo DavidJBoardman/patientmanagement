@@ -2,74 +2,86 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <br>
-        <div class="row">
-            <div class="col-sm-4">
-            <h2>Patient List</h2>
-                <div class="list-group">
-                    {% for patient in personal_patient_list %}
-                        <a href="patient/{{patient.id}}" class="list-group-item list-group-item-action">{{ patient.patientfirstname }} {{ patient.patientlastname }}</a>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <h2>Search</h2>
-                <div class="form-group">
-                    <form method="GET" action='' enctype="multipart/form-data" class="form-inline">
-                        {% csrf_token %}
-                        <input type="text" name="patient_unique_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patientuniqueid }}">
-                        <input type="text" name="patient_firstname" id="search-firstname" class="form-control mb-2 mr-sm-2"  placeholder="Firstname" value="{{ request.GET.patient_firstname }}">
-                        <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
-                        {{ form.date }}
-                        <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
-                    </form>
+    <div class="row">
+        <div class="col-sm-4">
+            <h3 class="display-4">Assigned Patients</h3>
 
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Patient Id</th>
-                                    <th scope="col">First name</th>
-                                    <th scope="col">Surname</th>
-                                    <th scope="col">Date of Birth</th>
-                                    <th scope="col">Photo</th>
-                                    </a>
-                                </tr>
-                            </thead>
-                            <tbody>
+            {% for patient in personal_list %}
+                <div class="btn-group special" role="group">
+                    <a type="button" href="patient/{{patient.id}}" class="btn btn-outline-info">{{ patient.patientfirstname }} {{ patient.patientlastname }}</a>
+                    <a type="button" class="btn badge-danger" href="{% url 'change_assigned' operation='remove' pk=patient.pk %}">Remove</a>
+                </div>
+                <br>
+            {% endfor %}
+        <a class="btn btn-secondary btn-lg btn-block" href="{% url 'add-patient' %}">Add Patient</a>
+        </div>
+
+        <div class="col-sm-8">
+            <h3 class="display-4">Search</h3>
+            <div class="form-group">
+
+                <form method="GET" action='' enctype="multipart/form-data" class="form-inline">
+                    {% csrf_token %}
+                    <input type="text" name="patient_unique_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patientuniqueid }}">
+                    <input type="text" name="patient_firstname" id="search-firstname" class="form-control mb-2 mr-sm-2"  placeholder="Firstname" value="{{ request.GET.patient_firstname }}">
+                    <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
+                    {{ form.date }}
+                    <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div id="table" class="table-editable">
+                        <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i class="fas fa-plus fa-2x"
+                                                                                                           aria-hidden="true"></i></a></span>
+                        <table class="table table-bordered table-responsive-md table-striped text-center">
+                            <tr>
+                                <th scope="col">Patient Id</th>
+                                <th scope="col">First name</th>
+                                <th scope="col">Surname</th>
+                                <th scope="col">Date of Birth</th>
+                                <th scope="col">Photo</th>
+                                <th scope="col">Add</th>
+                            </tr>
+                            <!-- This is our clonable table line -->
                             {% for search in patients %}
-                                <tr  class="clickable-tr" href="patient/{{search.id}}" >
-                                    <td scope="row">{{ search.patientuniqueid }}</td>
-                                    <td scope="row">{{ search.patientfirstname }}</td>
-                                    <td scope="row">{{ search.patientlastname }}</td>
-                                    <td scope="row">{{ search.dateofbirth }}</td>
-                                    <td scope="row"><img class="img-thumbnail rounded" src="{{ search.photo.url }}"></td>
+                                {#                        <tr  class="clickable-tr" href="patient/{{search.id}}" >#}
+                                <tr class="clickable-tr" href="patient/{{search.id}}">
+                                    <td class="pt-3-half">{{ search.patientuniqueid }}</td>
+                                    <td class="pt-3-half">{{ search.patientfirstname }}</td>
+                                    <td class="pt-3-half">{{ search.patientlastname }}</td>
+                                    <td class="pt-3-half">{{ search.dateofbirth }}</td>
+                                    <td class="pt-3-half"><img class="img-thumbnail rounded" src="{{ search.photo.url }}"></td>
+                                    <td>
+                                        <a class="btn btn-primary clickable-tr" href="{% url 'change_assigned' operation='add' pk=search.pk %}">Add to patient list</a>
+                                    </td>
                                 </tr>
                             {% endfor %}
-                            </tbody>
                         </table>
+                    </div>
                 <div class="pagination">
-                <span class="step-links">
-                    {% if patients.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ patients.previous_page_number }}">previous</a>
-                    {% endif %}
+                    <span class="step-links">
+                        {% if patients.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ patients.previous_page_number }}">previous</a>
+                        {% endif %}
 
-                    <span class="current">
-                        Page {{ patients.number }} of {{ patients.paginator.num_pages }}.
+                        <span class="current">
+                            Page {{ patients.number }} of {{ patients.paginator.num_pages }}.
+                        </span>
+
+                        {% if patients.has_next %}
+                            <a href="?page={{ patients.next_page_number }}">next</a>
+                            <a href="?page={{ patients.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
                     </span>
-
-                    {% if patients.has_next %}
-                        <a href="?page={{ patients.next_page_number }}">next</a>
-                        <a href="?page={{ patients.paginator.num_pages }}">last &raquo;</a>
-                    {% endif %}
-                </span>
-
-                </div>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <h2>Tools</h2>
-                <a class="btn btn-secondary btn-lg btn-block" href="{% url 'add-patient' %}">Add Patient
-                </a>
-            </div>
+        </div>
+        </div>
+        <br>
+    </div>
     <br>
+
 {% endblock content %}

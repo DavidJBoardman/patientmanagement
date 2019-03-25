@@ -120,6 +120,17 @@ MED_USES_CHOICES = (
 # Create your models here.
 # A model is a object model of a database table. You create a class which will then be used with the ORM in order to
 
+
+class Profile(models.Model):
+    # if the user is deleted then delete the profile too but not the other way around
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default='default.png', upload_to='profile_pics')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+
+
 # handle database requests
 # Meta----------------------------------------------------
 
@@ -168,14 +179,23 @@ class PersonalDetails(models.Model):
         return self.patientfirstname
 
 
-class Profile(models.Model):
-    # if the user is deleted then delete the profile too but not the other way around
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    favourite = models.ManyToManyField(PersonalDetails, related_name='favorited_by')
-    image = models.ImageField(default='default.png', upload_to='profile_pics')
+class AssignedPatient(models.Model):
+    users = models.ManyToManyField(PersonalDetails)
+    current_user = models.ForeignKey(User, related_name='owner', null=True, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f'{self.user.username} Profile'
+    @classmethod
+    def make_patient(cls, current_user, new_patient):
+        patient, created = cls.objects.get_or_create(
+            current_user=current_user
+        )
+        patient.users.add(new_patient)
+
+    @classmethod
+    def lose_patient(cls, current_user, new_patient):
+        patient, created = cls.objects.get_or_create(
+            current_user=current_user
+        )
+        patient.users.remove(new_patient)
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
     if not instance.patientuniqueid:

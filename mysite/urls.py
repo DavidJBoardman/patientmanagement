@@ -1,14 +1,16 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.conf.urls import url
 from django.views.generic import DetailView
-from mysite.views import Patient, AddPatientView, search_view
+from mysite.views import Patient, AddPatientView
 from . import views
 from users.models import PersonalDetails
 
 urlpatterns = [
-    path('', views.home, name ='mysite-home'),
+    path('', views.home, name='mysite-home'),
+    url(r'^connect/(?P<operation>.+)/(?P<pk>\d+)/$', views.change_assigned, name='change_assigned'),
     path('add_patient', AddPatientView.as_view(), name='add-patient'),
     path('search', views.search_view, name='search'),
     path('patient/<int:id>', Patient.as_view(), name="patient-list"),
