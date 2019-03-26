@@ -23,6 +23,7 @@
         </div>
         <div class="col"><p class="font-weight-bold">Allergies:</p> {% for al in allergies %}<span class="badge badge-warning">{{ al.allergyagent }}</span>{% endfor %}</div>
     </div>
+
     <hr>
         <div class="col-sm-12">
             <ul class="nav nav-tabs nav-fill">
@@ -82,60 +83,59 @@
                         <a class="btn btn-primary btn-lg" href="{% url 'add-medication' id=patient_list.id %}">Add Medication</a>
                     {% endif %}
 
-                {% if medication|length > 0 %}
-                <div class="card">
-                <div class="card-body">
-                    <div id="table" class="table-editable">
-                        <table class="table table-bordered table-responsive-md table-striped text-center">
-                            <tr>
-                                <th scope="col">Medication Name</th>
-                                <th scope="col">Medication Start Date</th>
-                                <th scope="col">Medication End Date</th>
-                                <th scope="col">Medication Usage</th>
-                                <th scope="col">Medication Dose (mg)</th>
-                                <th scope="col">Medication Schedule</th>
-                                <th scope="col">Edit</th>
-                            </tr>
-                            {% for med in medication %}
-                                <tr>
-                                    <td class="pt-3-half">{{ med.medicationname }}</td>
-                                    <td class="pt-3-half">{{ med.medstartdatetime }}</td>
-                                    <td class="pt-3-half">{{ med.medenddatetime }}</td>
-                                    <td class="pt-3-half">{{ med.usage }}</td>
-                                    <td class="pt-3-half">{{ med.quantity }}</td>
-                                    <td class="pt-3-half">{{ med.schedule }}</td>
-                                    <td>
-                                        {% if request.user|in_group:"Doctor" %}
-                                            <a class="btn btn-primary btn" href="{% url 'edit-medication' medication=med.id id=patient_list.id %}">Edit</a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+                    {% if medication|length > 0 %}
+                        <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Medication Name</th>
+                                        <th scope="col">Medication Start Date</th>
+                                        <th scope="col">Medication End Date</th>
+                                        <th scope="col">Medication Usage</th>
+                                        <th scope="col">Medication Dose (mg)</th>
+                                        <th scope="col">Medication Schedule</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for med in medication %}
+                                    <tr>
+                                        <td class="pt-3-half">{{ med.medicationname }}</td>
+                                        <td class="pt-3-half">{{ med.medstartdatetime }}</td>
+                                        <td class="pt-3-half">{{ med.medenddatetime }}</td>
+                                        <td class="pt-3-half">{{ med.usage }}</td>
+                                        <td class="pt-3-half">{{ med.quantity }}</td>
+                                        <td class="pt-3-half">{{ med.schedule }}</td>
+                                        <td>
+                                            {% if request.user|in_group:"Doctor" %}
+                                                <a class="btn btn-primary btn" href="{% url 'edit-medication' medication=med.id id=patient_list.id %}">Edit</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if medication.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ medication.previous_page_number }}"><i class="fas fa-angle-left "></i></a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ medication.number }} of {{ medication.paginator.num_pages }}.
+                                </span>
+
+                                {% if medication.has_next %}
+                                    <a href="?page={{ medication.next_page_number }}"><i class="fas fa-angle-right "></i></a>
+                                    <a href="?page={{ medication.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                {% endif %}
+                            </span>
+                        </div>
                     </div>
-                </div>
                     {% else %}
                         <p>No Medications Prescribed.</p>
                     {% endif %}
-
-                    <div class="pagination">
-                    <span class="step-links">
-                        {% if medication.has_previous %}
-                            <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
-                            <a href="?page={{ medication.previous_page_number }}"><i class="fas fa-angle-left "></i></a>
-                        {% endif %}
-
-                        <span class="current">
-                            Page {{ medication.number }} of {{ medication.paginator.num_pages }}.
-                        </span>
-
-                        {% if medication.has_next %}
-                            <a href="?page={{ medication.next_page_number }}"><i class="fas fa-angle-right "></i></a>
-                            <a href="?page={{ medication.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
-                        {% endif %}
-                    </span>
-                    </div>
-                </div>
                 </div>
 
                 {# Injections #}
@@ -174,28 +174,28 @@
                                     </table>
                                 </div>
                             </div>
+
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if injection.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ injection.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ injection.number }} of {{ injection.paginator.num_pages }}.
+                                </span>
+
+                                {% if injection.has_next %}
+                                    <a href="?page={{ injection.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ injection.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
                     {% else %}
                         <p>No Medications Prescribed.</p>
                     {% endif %}
-
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if injection.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ injection.previous_page_number }}">previous</a>
-                            {% endif %}
-
-                            <span class="current">
-                                Page {{ injection.number }} of {{ injection.paginator.num_pages }}.
-                            </span>
-
-                            {% if injection.has_next %}
-                                <a href="?page={{ injection.next_page_number }}">next</a>
-                                <a href="?page={{ injection.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
-                    </div>
-                </div>
                 </div>
 
                 {# Immunisations #}
@@ -236,28 +236,28 @@
                                 </table>
                             </div>
                         </div>
+
+                        <div class="pagination">
+                                <span class="step-links">
+                                    {% if immunisation.has_previous %}
+                                        <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                        <a href="?page={{ immunisation.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        Page {{ immunisation.number }} of {{ immunisation.paginator.num_pages }}.
+                                    </span>
+
+                                    {% if immunisation.has_next %}
+                                        <a href="?page={{ immunisation.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                        <a href="?page={{ immunisation.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                    {% endif %}
+                                </span>
+                        </div>
+                    </div>
                     {% else %}
                         <p>No Immunisations Logged.</p>
                     {% endif %}
-
-                    <div class="pagination">
-                            <span class="step-links">
-                                {% if immunisation.has_previous %}
-                                    <a href="?page=1">&laquo; first</a>
-                                    <a href="?page={{ immunisation.previous_page_number }}">previous</a>
-                                {% endif %}
-
-                                <span class="current">
-                                    Page {{ immunisation.number }} of {{ immunisation.paginator.num_pages }}.
-                                </span>
-
-                                {% if immunisation.has_next %}
-                                    <a href="?page={{ immunisation.next_page_number }}">next</a>
-                                    <a href="?page={{ immunisation.paginator.num_pages }}">last &raquo;</a>
-                                {% endif %}
-                            </span>
-                    </div>
-                </div>
                 </div>
 
                 {# Allergies #}
@@ -273,12 +273,12 @@
                             <div id="table" class="table-editable">
                                 <table class="table table-bordered table-responsive-md table-striped text-center">
                                     <tr>
-                                        <th scope="col">>Allergy:</th>
-                                        <th scope="col">Agent:</th>
-                                        <th scope="col">Reaction:</th>
-                                        <th scope="col">Info source:</th>
-                                        <th scope="col">Recorded Date:</th>
-                                        <th scope="col">Status:</th>
+                                        <th scope="col">Allergy</th>
+                                        <th scope="col">Agent</th>
+                                        <th scope="col">Reaction</th>
+                                        <th scope="col">Info source</th>
+                                        <th scope="col">Recorded Date</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for allergy in allergies %}
@@ -299,15 +299,12 @@
                                 </table>
                             </div>
                         </div>
-                    {% else %}
-                        <p>No Allergies Logged.</p>
-                    {% endif %}
 
                     <div class="pagination">
                             <span class="step-links">
                                 {% if allergies.has_previous %}
-                                    <a href="?page=1">&laquo; first</a>
-                                    <a href="?page={{ allergies.previous_page_number }}">previous</a>
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ allergies.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
                                 {% endif %}
 
                                 <span class="current">
@@ -315,40 +312,64 @@
                                 </span>
 
                                 {% if allergies.has_next %}
-                                    <a href="?page={{ allergies.next_page_number }}"><i class="fas fa-caret-square-right"></i></a>
-                                    <a href="?page={{ allergies.paginator.num_pages }}">last &raquo;</a>
+                                    <a href="?page={{ allergies.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ allergies.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
                                 {% endif %}
                             </span>
+                        </div>
                     </div>
-
+                    {% else %}
+                        <p>No Allergies Logged.</p>
+                    {% endif %}
                 </div>
+
+                {# Guardian Details #}
                 <div class="tab-pane fade" id="list-guardian" role="tabpanel" aria-labelledby="list-guardian-list">
                     <h4>Guardian Details</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-guardian' id=patient_list.id %}">Add Guardian Details</a>
                     {% endif %}
-                    {% if guardian|length > 0 %}
-                        {% for guard in guardian %}
-                            <p>Title: {{ guard.guardiantitle }}</p>
-                            <p>First Name: {{ guard.guardianfirstname }}</p>
-                            <p>Surname: {{ guard.guardianlastname }}</p>
-                            <p>Relation: {{ guard.patientrelation }}</p>
-                            <p>Phone number: {{ guard.contactnumber }}</p>
-                            <p>Address: {{ guard.address }}</p>
-                            <p>Email: {{ guard.email }}</p>
-                            {% if request.user|in_group:"Doctor" %}
-                                <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'add-guardian' guardian=guard.id id=patient_list.id %}">Edit</a></dd>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <p>No guardian details</p>
-                    {% endif %}
 
-                    <div class="pagination">
+                {% if guardian|length > 0 %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">First Name</th>
+                                        <th scope="col">Surname</th>
+                                        <th scope="col">Relation</th>
+                                        <th scope="col">Phone number</th>
+                                        <th scope="col">Address</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for guard in guardian %}
+                                        <tr>
+                                            <td class="pt-3-half">{{ guard.guardiantitle }}</td>
+                                            <td class="pt-3-half">{{ guard.guardianfirstname }}</td>
+                                            <td class="pt-3-half">{{ guard.guardianlastname }}</td>
+                                            <td class="pt-3-half">{{ guard.patientrelation }}</td>
+                                            <td class="pt-3-half">{{ guard.contactnumber }}</td>
+                                            <td class="pt-3-half">{{ guard.address }}</td>
+                                            <td class="pt-3-half">{{ guard.email }}</td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-guardian' guardian=guard.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="pagination">
                             <span class="step-links">
                                 {% if guardian.has_previous %}
-                                    <a href="?page=1">&laquo; first</a>
-                                    <a href="?page={{ guardian.previous_page_number }}">previous</a>
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ guardian.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
                                 {% endif %}
 
                                 <span class="current">
@@ -356,177 +377,341 @@
                                 </span>
 
                                 {% if guardian.has_next %}
-                                    <a href="?page={{ guardian.next_page_number }}">next</a>
-                                    <a href="?page={{ guardian.paginator.num_pages }}">last &raquo;</a>
+                                    <a href="?page={{ guardian.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ guardian.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
                                 {% endif %}
                             </span>
+                        </div>
                     </div>
+                {% else %}
+                    <p>No guardian details</p>
+                {% endif %}
                 </div>
+
+                {# Notes #}
                 <div class="tab-pane fade" id="list-notes" role="tabpanel" aria-labelledby="list-notes-list">
                     <h4>Notes</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-note' id=patient_list.id %}">Upload note</a>
                     {% endif %}
                     {% if notesandscans|length > 0 %}
-                        {% for note in notesandscans %}
-                            <p>Note: {{ note.note_name }}</p>
-                            <img class="img-thumbnail" src="{{ note.notes.url }}">
-                            {% if request.user|in_group:"Doctor" %}
-                                <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'add-note' note=note.id id=patient_list.id %}">Edit</a></dd>
-                            {% endif %}
-                        {% endfor %}
+                        <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Note</th>
+                                        <th scope="col">Link</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for note in notesandscans %}
+                                        <tr>
+                                            <td class="pt-3-half">date</td>
+                                            <td class="pt-3-half">{{ note.note_name }}</td>
+                                            <td class="pt-3-half"><img class="img-thumbnail" src="{{ note.notes.url }}"></td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-note' note=note.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if notesandscans.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ notesandscans.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ notesandscans.number }} of {{ notesandscans.paginator.num_pages }}.
+                                </span>
+
+                                {% if notesandscans.has_next %}
+                                    <a href="?page={{ notesandscans.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ notesandscans.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
                     {% else %}
                         <p>No Notes</p>
                     {% endif %}
-
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if notesandscans.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ notesandscans.previous_page_number }}">previous</a>
-                            {% endif %}
-
-                            <span class="current">
-                                Page {{ notesandscans.number }} of {{ notesandscans.paginator.num_pages }}.
-                            </span>
-
-                            {% if notesandscans.has_next %}
-                                <a href="?page={{ notesandscans.next_page_number }}">next</a>
-                                <a href="?page={{ notesandscans.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
-                    </div>
                 </div>
+
+                {# Social History #}
                 <div class="tab-pane fade" id="list-social" role="tabpanel" aria-labelledby="list-social-list">
-                    <h4>Notes</h4>
+                    <h4>Social History</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-social' id=patient_list.id %}">Add Social History</a>
                     {% endif %}
-                    {% if social|length > 0 %}
-                        {% for detail in social %}
-                            <p>Occupation: {{ detail.occupation }}</p>
-                            <p>Smoker: {{ detail.smoking }}</p>
-                            <p>Drink: {{ detail.drink }}</p>
-                            <p>sexual Orientation: {{ detail.sexualorientation }}</p>
-                            <p>Social drug use: {{ detail.socialdruguse }}</p>
-                            <p>Handicaps: {{ detail.handicaps }}</p>
-                            <p>Sexually Active: {{ detail.sexuallyactive }}</p>
-                            {% if request.user|in_group:"Doctor" %}
-                                <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'add-social' social=detail.id id=patient_list.id %}">Edit</a></dd>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <p>No Social history</p>
-                    {% endif %}
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if social.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ social.previous_page_number }}">previous</a>
-                            {% endif %}
+                        {% if social|length > 0 %}
+                        <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Occupation</th>
+                                        <th scope="col">Smoker</th>
+                                        <th scope="col">Drink</th>
+                                        <th scope="col">sexual Orientation</th>
+                                        <th scope="col">Social drug use</th>
+                                        <th scope="col">Handicaps</th>
+                                        <th scope="col">Sexually Active</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for detail in social %}
+                                        <tr>
+                                            <td class="pt-3-half">{{ detail.occupation }}</td>
+                                            <td class="pt-3-half">{{ detail.smoking }}</td>
+                                            <td class="pt-3-half">{{ detail.drink }}</td>
+                                            <td class="pt-3-half">{{ detail.sexualorientation }}</td>
+                                            <td class="pt-3-half">{{ detail.socialdruguse }}</td>
+                                            <td class="pt-3-half">{{ detail.handicaps }}</td>
+                                            <td class="pt-3-half">{{ detail.sexuallyactive }}</td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-social' social=detail.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
 
-                            <span class="current">
-                                Page {{ social.number }} of {{ social.paginator.num_pages }}.
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if social.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ social.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ social.number }} of {{ social.paginator.num_pages }}.
+                                </span>
+
+                                {% if social.has_next %}
+                                    <a href="?page={{ social.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ social.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                {% endif %}
                             </span>
-
-                            {% if social.has_next %}
-                                <a href="?page={{ social.next_page_number }}">next</a>
-                                <a href="?page={{ social.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
+                        </div>
                     </div>
-
+                    {% else %}
+                        <p>No Notes</p>
+                    {% endif %}
                 </div>
+
+                {# Family History #}
                 <div class="tab-pane fade" id="list-familyhist" role="tabpanel" aria-labelledby="list-familyhist-list">
-                    <h4>Notes</h4>
+                    <h4>Family History</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-family-hist' id=patient_list.id %}">Add Family History</a>
                     {% endif %}
                     {% if familyhistory|length > 0 %}
-                        {% for family in familyhistory %}
-                            <p>Allgergies: {{ family.allgergies }}</p>
-                            <p>Asthma: {{ family.asthma }}</p>
-                            <p>Arthritis: {{ family.arthritis }}</p>
-                            <p>Glaucoma: {{ family.glaucoma }}</p>
-                            <p>Cancer: {{ family.cancer }}</p>
-                            <p>Tuberculosis: {{ family.tuberculosis }}</p>
-                            <p>Diabetes: {{ family.diabetes }}</p>
-                            <p>Heart Problems: {{ family.hearttrouble }}</p>
-                            <p>High Blood Pressure: {{ family.highbloodpressure }}</p>
-                            <p>Stroke: {{ family.stroke }}</p>
-                            <p>Epilepsy: {{ family.epilepsy }}</p>
-                            <p>Substance Abuse: {{ family.substanceabuse }}</p>
-                            <p>Depression: {{ family.depression }}</p>
-                            <p>Emotional Problems: {{ family.emotionalproblems }}</p>
-                            <p>Suicide: {{ family.suicide }}</p>
-                            <p>Tidney Trouble: {{ family.kidneytrouble }}</p>
-                            <p>Thyroid Disease: {{ family.thyroiddisease }}</p>
-                            <dd class="col-sm-9"><a class="btn btn-primary btn" href="{% url 'add-family-hist' family_history=family.id id=patient_list.id %}">Edit</a></dd>
-                        {% endfor %}
-                    {% else %}
-                        <p>No Family history</p>
-                    {% endif %}
+                        <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Allgergies</th>
+                                        <th scope="col">Asthma</th>
+                                        <th scope="col">Arthritis</th>
+                                        <th scope="col">Glaucoma</th>
+                                        <th scope="col">Cancer</th>
+                                        <th scope="col">Tuberculosis</th>
+                                        <th scope="col">Diabetes</th>
+                                        <th scope="col">Heart Problems</th>
+                                        <th scope="col">High Blood Pressure</th>
+                                        <th scope="col">Stroke</th>
+                                        <th scope="col">Epilepsy</th>
+                                        <th scope="col">Substance Abuse</th>
+                                        <th scope="col">Depression</th>
+                                        <th scope="col">Emotional Problems</th>
+                                        <th scope="col">Suicide</th>
+                                        <th scope="col">Tidney Trouble</th>
+                                        <th scope="col">Thyroid Disease</th>
+                                    </tr>
+                                    {% for family in familyhistory %}
+                                        <tr>
+                                            <td class="pt-3-half">{{ family.allgergies }}</td>
+                                            <td class="pt-3-half">{{ family.asthma }}</td>
+                                            <td class="pt-3-half">{{ family.arthritis }}</td>
+                                            <td class="pt-3-half">{{ family.glaucoma }}</td>
+                                            <td class="pt-3-half">{{ family.cancer }}</td>
+                                            <td class="pt-3-half">{{ family.tuberculosis }}</td>
+                                            <td class="pt-3-half">{{ family.diabetes }}</td>
+                                            <td class="pt-3-half">{{ family.hearttrouble }}</td>
+                                            <td class="pt-3-half">{{ family.highbloodpressure }}</td>
+                                            <td class="pt-3-half">{{ family.stroke }}</td>
+                                            <td class="pt-3-half">{{ family.epilepsy }}</td>
+                                            <td class="pt-3-half">{{ family.substanceabuse }}</td>
+                                            <td class="pt-3-half">{{ family.depression }}</td>
+                                            <td class="pt-3-half">{{ family.emotionalproblems }}</td>
+                                            <td class="pt-3-half">{{ family.suicide }}</td>
+                                            <td class="pt-3-half">{{ family.kidneytrouble }}</td>
+                                            <td class="pt-3-half">{{ family.thyroiddisease }}</td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-family-hist' family_history=family.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
 
-                <div class="pagination">
-                        <span class="step-links">
-                            {% if familyhistory.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ familyhistory.previous_page_number }}">previous</a>
-                            {% endif %}
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if familyhistory.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ familyhistory.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                {% endif %}
 
-                            <span class="current">
-                                Page {{ familyhistory.number }} of {{ familyhistory.paginator.num_pages }}.
+                                <span class="current">
+                                    Page {{ familyhistory.number }} of {{ familyhistory.paginator.num_pages }}.
+                                </span>
+
+                                {% if familyhistory.has_next %}
+                                    <a href="?page={{ familyhistory.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ familyhistory.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                {% endif %}
                             </span>
-
-                            {% if familyhistory.has_next %}
-                                <a href="?page={{ familyhistory.next_page_number }}">next</a>
-                                <a href="?page={{ familyhistory.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
+                        </div>
                     </div>
+                    {% else %}
+                        <p>No Notes</p>
+                    {% endif %}
                 </div>
+
+                {# Diagnosis History #}
                 <div class="tab-pane fade" id="list-diagnosishistory" role="tabpanel" aria-labelledby="list-diagnosishistory-list">
                     <h4>Diagnosis History</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-diag-hist' id=patient_list.id %}">Add Diagnosis</a>
                     {% endif %}
                     {% if diagnosis|length > 0 %}
-                        {% for diag in diagnosis %}
-                            <p>Previous Diagnosis: {{ diag.previousdiagnosis }}</p>
-                            <p>Diagnosed Date/Time: {{ diag.diagnoseddatetime }}</p>
-                            <p>Treatment: {{ diag.treatment }}</p>
-                            <p>Treatment Date/Time: {{ diag.treatmentdatetime }}</p>
-                            <p>Result: {{ diag.result }}</p>
-                            {% if request.user|in_group:"Doctor" %}
-                                <a class="btn btn-primary btn" href="{% url 'add-diag-hist' diagnosis=diag.id id=patient_list.id %}">Edit</a>
-                            {% endif %}
-                        {% endfor %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Previous Diagnosis</th>
+                                        <th scope="col">Diagnosed Date/Time</th>
+                                        <th scope="col">Treatment</th>
+                                        <th scope="col">Treatment Date/Time</th>
+                                        <th scope="col">Result</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for diag in diagnosis %}
+                                        <tr>
+                                            <td class="pt-3-half">{{ diag.previousdiagnosis }}</td>
+                                            <td class="pt-3-half">{{ diag.diagnoseddatetime }}</td>
+                                            <td class="pt-3-half">{{ diag.treatment }}</td>
+                                            <td class="pt-3-half">{{ diag.treatmentdatetime }}</td>
+                                            <td class="pt-3-half">{{ diag.result }}</td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-diag-hist' diagnosis=diag.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if diagnosis.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ diagnosis.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ diagnosis.number }} of {{ diagnosis.paginator.num_pages }}.
+                                </span>
+
+                                {% if familyhistory.has_next %}
+                                    <a href="?page={{ familyhistory.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ familyhistory.paginator.num_pages }}"><i class="fas fa-angle-double-left"></i></a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
                     {% else %}
-                        <p>No Diagnosis history</p>
+                        <p>Diagnosis history</p>
                     {% endif %}
                 </div>
+
+                {# National Early Warning System #}
                 <div class="tab-pane fade" id="list-news" role="tabpanel" aria-labelledby="list-news-list">
                     <h4>Nation Early Warning Score</h4>
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-news' id=patient_list.id %}">Add N.E.W.S</a>
                     {% endif %}
                     {% if news|length > 0 %}
-                        {% for n in news %}
-                            <p>Date: {{ n.date }}</p>
-                            <p>Respiration Rate: {{ n.respirationrate }}</p>
-                            <p>Oxygen Saturation: {{ n.oxygensaturation }}</p>
-                            <p>Systolic Blood Pressure: {{ n.bloodpressure }}</p>
-                            <p>Heart Rate: {{ n.heartrate }}</p>
-                            <p>Temperature: {{ n.temperature }}</p>
-                            {% if request.user|in_group:"Doctor" %}
-                                <a class="btn btn-primary btn" href="{% url 'add-news' news=n.id id=patient_list.id %}">Edit</a>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <p>No National early warning score history</p>
-                    {% endif %}
+                        <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Respiration Rate</th>
+                                        <th scope="col">Oxygen Saturation</th>
+                                        <th scope="col">Systolic Blood Pressure</th>
+                                        <th scope="col">Heart Rate</th>
+                                        <th scope="col">Temperature</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for n in news %}
+                                        <tr>
+                                            <td class="pt-3-half">{{ n.date }}</td>
+                                            <td class="pt-3-half">{{ n.respirationrate }}</td>
+                                            <td class="pt-3-half">{{ n.oxygensaturation }}</td>
+                                            <td class="pt-3-half">{{ n.bloodpressure }}</td>
+                                            <td class="pt-3-half">{{ n.heartrate }}</td>
+                                            <td class="pt-3-half">{{ n.temperature }}</td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-news' news=n.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
 
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if news.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ news.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ news.number }} of {{ news.paginator.num_pages }}.
+                                </span>
+
+                                {% if familyhistory.has_next %}
+                                    <a href="?page={{ news.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ news.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
                 </div>
+                {% else %}
+                    <p>No National early warning score history</p>
+                {% endif %}
             </div>
         </div>
     </div>

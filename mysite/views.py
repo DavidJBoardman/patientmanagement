@@ -1,11 +1,8 @@
-from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.core.serializers import json
-from django.db.models.functions import Coalesce, Lower
-from django.http import HttpResponseRedirect, HttpResponse
+from django.db.models.functions import Lower
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views import View
 from django.views.generic import DetailView, TemplateView
 
 from mysite.forms import AddPatientForm, AddNotesForm, AddGuardianForm, AddSocialDetailsForm, AddFamilyHistoryForm, \
@@ -15,10 +12,7 @@ from users.models import *
 from django.contrib.auth.decorators import login_required
 
 
-# Create your views here.
-
-
-# Example of creating a view (in the future this should be a template)
+# Home page which shows search, personal patient list
 @login_required()
 def home(request):
     patient_list = PersonalDetails.objects.all()
@@ -28,6 +22,7 @@ def home(request):
     query_surname = request.GET.get('patient_surname')
     form = DateForm(request.GET)
 
+    # Fixes issue with new users who have no favourites set.
     try:
         users = User.objects.exclude(id=request.user.id)
         patient = AssignedPatient.objects.get(current_user=request.user)
@@ -59,7 +54,7 @@ def home(request):
     }
     return render(request, 'mysite/home.html', context)
 
-
+@login_required()
 def change_assigned(request, operation, pk):
     friend = PersonalDetails.objects.get(pk=pk)
     if operation == 'add':
@@ -67,35 +62,6 @@ def change_assigned(request, operation, pk):
     elif operation == 'remove':
         AssignedPatient.lose_patient(request.user, friend)
     return redirect('/home')
-
-
-@login_required()
-def search_view(request):
-    patient_list = PersonalDetails.objects.all()
-
-    query_id = request.GET.get('patient_id')
-    query_firstname = request.GET.get('patient_firstname')
-    query_surname = request.GET.get('patient_surname')
-    query_dob = request.GET.get('patient_dob')
-
-    if query_id:
-        patient_list = patient_list.filter(id=query_id)
-    if query_firstname:
-        patient_list = patient_list.filter(patientfirstname__icontains=query_firstname)
-    if query_surname:
-        patient_list = patient_list.filter(patientlastname__icontains=query_surname)
-    if query_dob:
-        patient_list = patient_list.filter(dateofbirth__in=query_dob)
-
-    paginator = Paginator(patient_list, 2)  # Show 25 contacts per page
-    page = request.GET.get('page')
-    patients = paginator.get_page(page)
-    context = {
-        'patients': patients,
-        'title': 'Search'
-    }
-
-    return render(request, 'mysite/search.html', context)
 
 
 class Patient(LoginRequiredMixin, DetailView):

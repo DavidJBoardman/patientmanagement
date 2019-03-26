@@ -280,7 +280,7 @@ class FamilyHistory(models.Model):
 
 class DiagnosisHistory(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    previousdiagnosis = models.CharField(max_length=256, verbose_name='Previous Diagnosis')
+    previousdiagnosis = models.CharField(max_length=256, verbose_name='Diagnosis')
     diagnoseddatetime = models.DateTimeField(verbose_name='Diagnosis Date')
     treatment = models.CharField(max_length=256, verbose_name='Treatment administered')
     treatmentdatetime = models.DateTimeField(verbose_name='Treatment Date')
