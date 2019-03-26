@@ -12,7 +12,6 @@ urlpatterns = [
     path('', views.home, name='mysite-home'),
     url(r'^connect/(?P<operation>.+)/(?P<pk>\d+)/$', views.change_assigned, name='change_assigned'),
     path('add_patient', AddPatientView.as_view(), name='add-patient'),
-    path('search', views.search_view, name='search'),
     path('patient/<int:id>', Patient.as_view(), name="patient-list"),
     path('patient/<int:id>/add_note', views.edit_notes_view, name='add-note'),
     path('patient/<int:id>/add_guardian', views.edit_guardian_details_view, name='add-guardian'),
