@@ -79,7 +79,7 @@ class Patient(LoginRequiredMixin, DetailView):
 
         context = super(Patient, self).get_context_data(**kwargs)
         page = self.request.GET.get('page')
-        medication = Paginator(Medication.objects.filter(personaldetails_id=id_).order_by(Lower('medstartdatetime').desc()), 10)
+        medication = Paginator(Medication.objects.filter(personaldetails_id=id_).order_by('-medstartdatetime'), 10)
         notesandscans = Paginator(NotesAndScans.objects.filter(personaldetails_id=id_), 10)
         guardian = Paginator(GuardianDetails.objects.filter(personaldetails_id=id_), 10)
         social = Paginator(SocialDetails.objects.filter(personaldetails_id=id_), 10)
