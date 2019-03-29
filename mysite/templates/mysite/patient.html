@@ -22,6 +22,8 @@
             <p><b>Ward Location:</b> {{ patient_list.wardlocation }}</p>
         </div>
         <div class="col"><p class="font-weight-bold">Allergies:</p> {% for al in allergies %}<span class="badge badge-warning">{{ al.allergyagent }}</span>{% endfor %}</div>
+        <div class="col"><a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit Details</a></div>
+
     </div>
 
     <hr>
@@ -115,6 +117,7 @@
                                 </table>
                             </div>
                         </div>
+
                         <div class="pagination">
                             <span class="step-links">
                                 {% if medication.has_previous %}
@@ -144,6 +147,7 @@
                     {% if request.user|in_group:"Doctor" %}
                         <a class="btn btn-primary btn-lg" href="{% url 'add-injection' id=patient_list.id %}">Add Injections</a>
                     {% endif %}
+
                     {% if injection|length > 0 %}
                         <div class="card">
                             <div class="card-body">
@@ -194,7 +198,7 @@
                         </div>
                     </div>
                     {% else %}
-                        <p>No Medications Prescribed.</p>
+                        <p>No injections administered.</p>
                     {% endif %}
                 </div>
 
@@ -238,21 +242,21 @@
                         </div>
 
                         <div class="pagination">
-                                <span class="step-links">
-                                    {% if immunisation.has_previous %}
-                                        <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
-                                        <a href="?page={{ immunisation.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
-                                    {% endif %}
+                            <span class="step-links">
+                                {% if immunisation.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ immunisation.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                {% endif %}
 
-                                    <span class="current">
-                                        Page {{ immunisation.number }} of {{ immunisation.paginator.num_pages }}.
-                                    </span>
-
-                                    {% if immunisation.has_next %}
-                                        <a href="?page={{ immunisation.next_page_number }}"><i class="fas fa-angle-right"></i></a>
-                                        <a href="?page={{ immunisation.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
-                                    {% endif %}
+                                <span class="current">
+                                    Page {{ immunisation.number }} of {{ immunisation.paginator.num_pages }}.
                                 </span>
+
+                                {% if immunisation.has_next %}
+                                    <a href="?page={{ immunisation.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ immunisation.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                {% endif %}
+                            </span>
                         </div>
                     </div>
                     {% else %}
@@ -301,23 +305,23 @@
                         </div>
 
                     <div class="pagination">
-                            <span class="step-links">
-                                {% if allergies.has_previous %}
-                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
-                                    <a href="?page={{ allergies.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
-                                {% endif %}
+                        <span class="step-links">
+                            {% if allergies.has_previous %}
+                                <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                <a href="?page={{ allergies.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                            {% endif %}
 
-                                <span class="current">
-                                    Page {{ allergies.number }} of {{ allergies.paginator.num_pages }}.
-                                </span>
-
-                                {% if allergies.has_next %}
-                                    <a href="?page={{ allergies.next_page_number }}"><i class="fas fa-angle-right"></i></a>
-                                    <a href="?page={{ allergies.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
-                                {% endif %}
+                            <span class="current">
+                                Page {{ allergies.number }} of {{ allergies.paginator.num_pages }}.
                             </span>
-                        </div>
+
+                            {% if allergies.has_next %}
+                                <a href="?page={{ allergies.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                <a href="?page={{ allergies.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                            {% endif %}
+                        </span>
                     </div>
+                        </div>
                     {% else %}
                         <p>No Allergies Logged.</p>
                     {% endif %}
