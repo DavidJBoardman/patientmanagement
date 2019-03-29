@@ -4,7 +4,7 @@
     <br>
     <div class="row">
         <div class="col-sm-4">
-            <h3 class="display-4">Assigned Patients</h3>
+            <h2>Assigned Patients</h2>
 
             {% for patient in personal_list %}
                 <div class="btn-group special" role="group">
@@ -17,9 +17,8 @@
         </div>
 
         <div class="col-sm-8">
-            <h3 class="display-4">Search</h3>
+            <h2>Search</h2>
             <div class="form-group">
-
                 <form method="GET" action='' enctype="multipart/form-data" class="form-inline">
                     {% csrf_token %}
                     <input type="text" name="patient_unique_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patientuniqueid }}">
@@ -44,7 +43,6 @@
                             </tr>
                             <!-- This is our clonable table line -->
                             {% for search in patients %}
-                                {#                        <tr  class="clickable-tr" href="patient/{{search.id}}" >#}
                                 <tr class="clickable-tr" href="patient/{{search.id}}">
                                     <td class="pt-3-half">{{ search.patientuniqueid }}</td>
                                     <td class="pt-3-half">{{ search.patientfirstname }}</td>
@@ -52,7 +50,12 @@
                                     <td class="pt-3-half">{{ search.dateofbirth }}</td>
                                     <td class="pt-3-half"><img class="img-thumbnail rounded" src="{{ search.photo.url }}"></td>
                                     <td>
+                                        {% if not search in personal_list %}
                                         <a class="btn btn-primary clickable-tr" href="{% url 'change_assigned' operation='add' pk=search.pk %}">Assign</a>
+                                        {% endif %}
+                                        {% if search in personal_list %}
+                                            <a class="btn btn-primary btn-danger clickable-tr" href="{% url 'change_assigned' operation='remove' pk=search.pk %}">Remove</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

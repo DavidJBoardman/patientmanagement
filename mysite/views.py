@@ -48,6 +48,7 @@ def home(request):
     patients = paginator.get_page(page)
     context = {
         'patients': patients,
+        'patient': patient,
         'personal_list': personal_patients,
         'title': 'Home',
         'form': form
