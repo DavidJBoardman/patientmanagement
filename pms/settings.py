@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'patientmanagement.urls'
+ROOT_URLCONF = 'pms.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'patientmanagement.wsgi.application'
+WSGI_APPLICATION = 'pms.wsgi.application'
 
 
 # Database
