@@ -1,5 +1,6 @@
 import uuid
 
+from django.core.validators import RegexValidator
 from django.db.models.signals import pre_save
 
 from mysite.utils import unique_patient_id_generator
@@ -170,7 +171,9 @@ class PersonalDetails(models.Model):
     height = models.CharField(max_length=256, blank=True, verbose_name='Height (cm)')
     address = models.CharField(max_length=256, verbose_name='Address')
     bmi = models.CharField(max_length=256, blank=True, verbose_name='BMI')
-    phonenumber = models.CharField(max_length=256, blank=True, verbose_name='Phone Number')
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phonenumber = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     email = models.CharField(max_length=256, blank=True, verbose_name='Email')
     dnr = models.NullBooleanField(null=True, blank=True, verbose_name='DNR')
     wardlocation = models.CharField(max_length=256, blank=True, verbose_name='Ward Location')
