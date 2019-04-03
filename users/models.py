@@ -172,8 +172,8 @@ class PersonalDetails(models.Model):
     address = models.CharField(max_length=256, verbose_name='Address')
     bmi = models.CharField(max_length=256, blank=True, verbose_name='BMI')
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phonenumber = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+                                 message="Phone number must be entered in the format: '+999999999'. 9 to 15 digits allowed.")
+    phonenumber = models.CharField(validators=[phone_regex], max_length=15, blank=True)
     email = models.CharField(max_length=256, blank=True, verbose_name='Email')
     dnr = models.NullBooleanField(null=True, blank=True, verbose_name='DNR')
     wardlocation = models.CharField(max_length=256, blank=True, verbose_name='Ward Location')
@@ -312,7 +312,7 @@ class AllergyDetails(models.Model):
     reactionseverity = models.CharField(max_length=256, blank=True, verbose_name='Reaction severity', choices=ALLERGY_REACTION_SEVERITY_CHOICES)
     allergyinfosource = models.CharField(max_length=256, blank=True, verbose_name='Allergy Info Source', choices=ALLERGY_SOURCE_CHOICES)
     allergystatus = models.CharField(max_length=256, blank=True, verbose_name='Status', choices=STATUS_CHOICES)
-    allergyrecorddatetime = models.DateTimeField()
+    allergyrecorddatetime = models.DateTimeField(default=date.today, verbose_name="Allergy Date Recorded")
     lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
