@@ -406,20 +406,39 @@
                                     <tr>
                                         <th scope="col">Date</th>
                                         <th scope="col">Note</th>
-                                        <th scope="col">Link</th>
+                                        <th scope="col">Last Modified</th>
+                                        <th scope="col">Image (Click to Enlarge)</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for note in notesandscans %}
                                         <tr>
-                                            <td class="pt-3-half">date</td>
+                                            <td class="pt-3-half">{{ note.date }}</td>
                                             <td class="pt-3-half">{{ note.note_name }}</td>
-                                            <td class="pt-3-half"><img class="img-thumbnail" src="{{ note.notes.url }}"></td>
+                                            <td class="pt-3-half">{{ note.lastmodified }}</td>
+                                            <td class="pt-3-half"><img class="img-thumbnail img-200" src="{{ note.notes.url }}" data-toggle="modal" data-target="#exampleModalCenter"/></td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-note' note=note.id id=patient_list.id %}">Edit</a>
                                                 {% endif %}
                                             </td>
                                         </tr>
+                                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                          <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalCenterTitle">{{ note.note_name }}</h5>
+
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                              </div>
+                                                <h6 style="padding: 10px"><b>Date recorded:</b> {{ note.date }}</h6>
+                                              <div class="modal-body">
+                                                <img style="width: 100%; height: 100%;" class="" src="{{ note.notes.url }}">
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
                                     {% endfor %}
                                 </table>
                             </div>
@@ -446,6 +465,8 @@
                     {% else %}
                         <p>No Notes</p>
                     {% endif %}
+                    <!-- Modal -->
+
                 </div>
 
                 {# Social History #}

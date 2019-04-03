@@ -5,6 +5,7 @@ from django.db.models.signals import pre_save
 from mysite.utils import unique_patient_id_generator
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 
 TITLE_CHOICES = (
     ('MR', 'Mr.'),
@@ -209,6 +210,8 @@ class NotesAndScans(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     note_name = models.CharField(max_length=85, verbose_name='Note Description')
     notes = models.ImageField(upload_to='note_pics', verbose_name='Upload Note')
+    date = models.DateField(default=date.today)
+    lastmodified = models.DateField(auto_now=True)
 
 
 class GuardianDetails(models.Model):
