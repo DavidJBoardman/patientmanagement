@@ -48,7 +48,7 @@
                                     <td class="pt-3-half">{{ search.patientfirstname }}</td>
                                     <td class="pt-3-half">{{ search.patientlastname }}</td>
                                     <td class="pt-3-half">{{ search.dateofbirth }}</td>
-                                    <td class="pt-3-half"><img class="img-thumbnail rounded" src="{{ search.photo.url }}"></td>
+                                    <td class="pt-3-half"><img class="img-thumbnail rounded img-200" src="{{ search.photo.url }}"></td>
                                     <td>
                                         {% if not search in personal_list %}
                                         <a class="btn btn-primary clickable-tr" href="{% url 'change_assigned' operation='add' pk=search.pk %}">Assign</a>

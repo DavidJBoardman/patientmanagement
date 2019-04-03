@@ -15,5 +15,9 @@ padding-top: 1.4rem;
 }
 
 .special .btn {
-  flex: 1
+  flex: 1;
+}
+
+.img-200 {
+  height: 200px;
 }
