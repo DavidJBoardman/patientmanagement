@@ -108,14 +108,16 @@ class AddPatientView(LoginRequiredMixin, TemplateView):
 
     def get(self, request):
         form = AddPatientForm(request.POST)
-        return render(request, self.template_name, {'form': form})
+        type = 'Create'
+        return render(request, self.template_name, {'form': form, 'type': type})
 
     def post(self, request):
         form = AddPatientForm(request.POST, request.FILES,)
+        type = 'Create'
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/home')
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'type': type})
 
 
 @login_required()
@@ -293,6 +295,7 @@ def edit_news_view(request, id, news=None):
 @login_required()
 def edit_profile(request, id):
     patient = get_object_or_404(PersonalDetails, id=id)
+    type = 'Edit'
     if request.method == 'POST':
         form = AddPatientForm(request.POST, request.FILES, instance=patient)
 
@@ -305,7 +308,7 @@ def edit_profile(request, id):
     else:
         form = AddPatientForm(instance=patient)
 
-        return render(request, 'mysite/add_patient.html', {'form': form})
+        return render(request, 'mysite/add_patient.html', {'form': form, 'type': type})
 
 
 @login_required()

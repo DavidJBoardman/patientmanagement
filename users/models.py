@@ -166,8 +166,8 @@ class PersonalDetails(models.Model):
     patientpreferredname = models.CharField(max_length=256, blank=True, verbose_name='Preferred name')
     dateofbirth = models.DateTimeField(verbose_name='DOB')
     gender = models.CharField(max_length=256, choices=GENDER_CHOICES, verbose_name='Gender')
-    weight = models.CharField(max_length=256, blank=True, verbose_name='Weight')
-    height = models.CharField(max_length=256, blank=True, verbose_name='Height')
+    weight = models.CharField(max_length=256, blank=True, verbose_name='Weight (kg)')
+    height = models.CharField(max_length=256, blank=True, verbose_name='Height (cm)')
     address = models.CharField(max_length=256, verbose_name='Address')
     bmi = models.CharField(max_length=256, blank=True, verbose_name='BMI')
     phonenumber = models.CharField(max_length=256, blank=True, verbose_name='Phone Number')
@@ -175,6 +175,7 @@ class PersonalDetails(models.Model):
     dnr = models.NullBooleanField(null=True, blank=True, verbose_name='DNR')
     wardlocation = models.CharField(max_length=256, blank=True, verbose_name='Ward Location')
     photo = models.ImageField(default='default.png', upload_to='profile_pics', blank=True, verbose_name='Photo')
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.patientfirstname
@@ -223,6 +224,7 @@ class GuardianDetails(models.Model):
     address = models.CharField(max_length=256, blank=True, verbose_name='Address')
     contactnumber = models.CharField(max_length=256, blank=True, verbose_name='Contact Number')
     email = models.CharField(max_length=256, blank=True, verbose_name='Email')
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.patientid
@@ -238,6 +240,7 @@ class DoctorDetails(models.Model):
     wardlocation = models.CharField(max_length=256)
     phonenumber = models.CharField(max_length=256)
     email = models.CharField(max_length=256)
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.doctorid
@@ -252,6 +255,7 @@ class SocialDetails(models.Model):
     socialdruguse = models.CharField(max_length=10, blank=True, verbose_name='Social Drug Use', choices=YES_NO_CHOICES)
     disability = models.CharField(max_length=256, blank=True, verbose_name='disabilities')
     sexuallyactive = models.CharField(max_length=10, blank=True, verbose_name='Sexually Active', choices=YES_NO_CHOICES)
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.patientid
@@ -276,6 +280,7 @@ class FamilyHistory(models.Model):
     suicide = models.CharField(max_length=10, blank=True, verbose_name='Suicide', choices=YES_NO_CHOICES)
     kidneytrouble = models.CharField(max_length=10, blank=True, verbose_name='Kidney Trouble', choices=YES_NO_CHOICES)
     thyroiddisease = models.CharField(max_length=10, blank=True, verbose_name='Thyroid Disease', choices=YES_NO_CHOICES)
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.patientid
@@ -288,6 +293,7 @@ class DiagnosisHistory(models.Model):
     treatment = models.CharField(max_length=256, verbose_name='Treatment administered')
     treatmentdatetime = models.DateTimeField(verbose_name='Treatment Date')
     result = models.CharField(max_length=256)
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.patientid
@@ -304,6 +310,7 @@ class AllergyDetails(models.Model):
     allergyinfosource = models.CharField(max_length=256, blank=True, verbose_name='Allergy Info Source', choices=ALLERGY_SOURCE_CHOICES)
     allergystatus = models.CharField(max_length=256, blank=True, verbose_name='Status', choices=STATUS_CHOICES)
     allergyrecorddatetime = models.DateTimeField()
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.allergytype
@@ -313,11 +320,12 @@ class AllergyDetails(models.Model):
 class Medication(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     medicationname = models.CharField(max_length=256, verbose_name='Medication Name')
-    medstartdatetime = models.DateTimeField(verbose_name='Medication Start Date')
+    medstartdatetime = models.DateTimeField(default=date.today, verbose_name='Medication Start Date')
     medenddatetime = models.DateTimeField(verbose_name='Medication End Date')
     usage = models.CharField(max_length=12, blank=True, verbose_name='Medication Usage', choices=MED_USES_CHOICES)
     quantity = models.CharField(max_length=256, blank=True, verbose_name='Medication dose (mg)')
     schedule = models.CharField(max_length=256, blank=True, verbose_name='Medication Schedule Frequency')
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.medicationname
@@ -326,10 +334,11 @@ class Medication(models.Model):
 class Injection(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     injectionname = models.CharField(max_length=256, verbose_name='Injection Name')
-    injectiondatetime = models.DateTimeField(verbose_name='Injection Date Administered')
+    injectiondatetime = models.DateTimeField(default=date.today, verbose_name='Injection Date Administered')
     injectionreason = models.CharField(max_length=256, blank=True, verbose_name='Injection Reason')
-    injectiondose = models.CharField(max_length=256, blank=True, verbose_name='Injection Dose (ml)')
+    injectiondose = models.CharField(max_length=256, blank=True, verbose_name='Injection Dose (mg)')
     injectionpriority = models.CharField(max_length=256, blank=True, verbose_name='Injection Priority', choices=INJECTION_PRIORITY_CHOICES)
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.injectionname
@@ -338,10 +347,11 @@ class Injection(models.Model):
 class Immunisation(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     vaccinename = models.CharField(max_length=256, verbose_name='Vaccine Name', choices=VACCINE_LIST_CHOICES)
-    vaccinedatetime = models.DateTimeField(verbose_name='Vaccine date administered')
-    vaccinedose = models.CharField(max_length=256, verbose_name='Vaccine dose')
+    vaccinedatetime = models.DateTimeField(default=date.today, verbose_name='Vaccine date administered')
+    vaccinedose = models.CharField(max_length=256, verbose_name='Vaccine dose (mg)')
     vaccinereason = models.CharField(max_length=256, blank=True, verbose_name='Vaccine Reason')
     immunisationpriority = models.CharField(max_length=9, verbose_name='Immunisation priority', choices=INJECTION_PRIORITY_CHOICES)
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.vaccinename
@@ -356,6 +366,7 @@ class NationalEarlyWarningScore(models.Model):
     heartrate = models.CharField(max_length=256, blank=True, verbose_name='Heart rate')
     temperature = models.CharField(max_length=256, blank=True, verbose_name='Temperature')
     bm = models.CharField(max_length=256, blank=True, verbose_name='Blood Monitoring Glucose (Diabetic)')
+    lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.patientid

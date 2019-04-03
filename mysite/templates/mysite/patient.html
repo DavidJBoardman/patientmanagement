@@ -20,6 +20,7 @@
             <p><b>Address:</b> {{ patient_list.address }}</p>
             <p><b>Email:</b> {{ patient_list.email }}</p>
             <p><b>Ward Location:</b> {{ patient_list.wardlocation }}</p>
+            <p><b>Last modified:</b> {{ patient_list.lastmodified }}</p>
         </div>
         <div class="col"><p class="font-weight-bold">Allergies:</p> {% for al in allergies %}<span class="badge badge-warning">{{ al.allergyagent }}</span>{% endfor %}</div>
         <div class="col"><a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit Details</a></div>
@@ -97,6 +98,7 @@
                                         <th scope="col">Medication Usage</th>
                                         <th scope="col">Medication Dose (mg)</th>
                                         <th scope="col">Medication Schedule</th>
+                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for med in medication %}
@@ -107,6 +109,7 @@
                                         <td class="pt-3-half">{{ med.usage }}</td>
                                         <td class="pt-3-half">{{ med.quantity }}</td>
                                         <td class="pt-3-half">{{ med.schedule }}</td>
+                                        <td class="pt-3-half">{{ med.lastmodified }}</td>
                                         <td>
                                             {% if request.user|in_group:"Doctor" %}
                                                 <a class="btn btn-primary btn" href="{% url 'edit-medication' medication=med.id id=patient_list.id %}">Edit</a>
@@ -159,6 +162,7 @@
                                             <th scope="col">Injection Reason</th>
                                             <th scope="col">Injection Dose (mg)</th>
                                             <th scope="col">Injection Priority</th>
+                                            <th scope="col">Last Modified</th>
                                             <th scope="col">Edit</th>
                                         </tr>
                                         {% for inj in injection %}
@@ -168,6 +172,7 @@
                                                 <td class="pt-3-half">{{ inj.injectionreason }}</td>
                                                 <td class="pt-3-half">{{ inj.injectiondose }}</td>
                                                 <td class="pt-3-half">{{ inj.injectionpriority }}</td>
+                                                <td class="pt-3-half">{{ inj.lastmodified }}</td>
                                                 <td>
                                                     {% if request.user|in_group:"Doctor" %}
                                                         <a class="btn btn-primary btn" href="{% url 'edit-injection' injection=inj.id id=patient_list.id %}">Edit</a>
@@ -221,6 +226,7 @@
                                         <th scope="col">Reason</th>
                                         <th scope="col">Date administered</th>
                                         <th scope="col">Priority</th>
+                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for imu in immunisation %}
@@ -230,6 +236,7 @@
                                             <td class="pt-3-half">{{ imu.vaccinereason }}</td>
                                             <td class="pt-3-half">{{ imu.vaccinedatetime }}</td>
                                             <td class="pt-3-half">{{ imu.immunisationpriority }}</td>
+                                            <td class="pt-3-half">{{ imu.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-immunisation' immunisation=imu.id id=patient_list.id %}">Edit</a>
@@ -283,6 +290,7 @@
                                         <th scope="col">Info source</th>
                                         <th scope="col">Recorded Date</th>
                                         <th scope="col">Status</th>
+                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for allergy in allergies %}
@@ -293,6 +301,7 @@
                                             <td class="pt-3-half">{{ allergy.allergyinfosource }}</td>
                                             <td class="pt-3-half">{{ allergy.allergyrecorddatetime }}</td>
                                             <td class="pt-3-half">{{ allergy.allergystatus }}</td>
+                                            <td class="pt-3-half">{{ allergy.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-allergy' allergy=allergy.id id=patient_list.id %}">Edit</a>
@@ -347,6 +356,7 @@
                                         <th scope="col">Phone number</th>
                                         <th scope="col">Address</th>
                                         <th scope="col">Email</th>
+                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for guard in guardian %}
@@ -358,6 +368,7 @@
                                             <td class="pt-3-half">{{ guard.contactnumber }}</td>
                                             <td class="pt-3-half">{{ guard.address }}</td>
                                             <td class="pt-3-half">{{ guard.email }}</td>
+                                            <td class="pt-3-half">{{ guard.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-guardian' guardian=guard.id id=patient_list.id %}">Edit</a>
@@ -406,16 +417,16 @@
                                     <tr>
                                         <th scope="col">Date</th>
                                         <th scope="col">Note</th>
-                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Image (Click to Enlarge)</th>
+                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for note in notesandscans %}
                                         <tr>
                                             <td class="pt-3-half">{{ note.date }}</td>
                                             <td class="pt-3-half">{{ note.note_name }}</td>
-                                            <td class="pt-3-half">{{ note.lastmodified }}</td>
                                             <td class="pt-3-half"><img class="img-thumbnail img-200" src="{{ note.notes.url }}" data-toggle="modal" data-target="#exampleModalCenter"/></td>
+                                            <td class="pt-3-half">{{ note.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-note' note=note.id id=patient_list.id %}">Edit</a>
@@ -488,6 +499,7 @@
                                         <th scope="col">Social drug use</th>
                                         <th scope="col">Handicaps</th>
                                         <th scope="col">Sexually Active</th>
+                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for detail in social %}
@@ -499,6 +511,7 @@
                                             <td class="pt-3-half">{{ detail.socialdruguse }}</td>
                                             <td class="pt-3-half">{{ detail.handicaps }}</td>
                                             <td class="pt-3-half">{{ detail.sexuallyactive }}</td>
+                                            <td class="pt-3-half">{{ detail.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-social' social=detail.id id=patient_list.id %}">Edit</a>
@@ -562,6 +575,7 @@
                                         <th scope="col">Suicide</th>
                                         <th scope="col">Tidney Trouble</th>
                                         <th scope="col">Thyroid Disease</th>
+                                        <th scope="col">Last Modified</th>
                                     </tr>
                                     {% for family in familyhistory %}
                                         <tr>
@@ -582,6 +596,7 @@
                                             <td class="pt-3-half">{{ family.suicide }}</td>
                                             <td class="pt-3-half">{{ family.kidneytrouble }}</td>
                                             <td class="pt-3-half">{{ family.thyroiddisease }}</td>
+                                            <td class="pt-3-half">{{ family.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-family-hist' family_history=family.id id=patient_list.id %}">Edit</a>
@@ -633,6 +648,7 @@
                                         <th scope="col">Treatment</th>
                                         <th scope="col">Treatment Date/Time</th>
                                         <th scope="col">Result</th>
+                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for diag in diagnosis %}
@@ -642,6 +658,7 @@
                                             <td class="pt-3-half">{{ diag.treatment }}</td>
                                             <td class="pt-3-half">{{ diag.treatmentdatetime }}</td>
                                             <td class="pt-3-half">{{ diag.result }}</td>
+                                            <td class="pt-3-half">{{ diag.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-diag-hist' diagnosis=diag.id id=patient_list.id %}">Edit</a>
@@ -694,6 +711,7 @@
                                         <th scope="col">Systolic Blood Pressure</th>
                                         <th scope="col">Heart Rate</th>
                                         <th scope="col">Temperature</th>
+                                        <th scope="col">Last Modified</th>
                                         <th scope="col">Edit</th>
                                     </tr>
                                     {% for n in news %}
@@ -704,6 +722,7 @@
                                             <td class="pt-3-half">{{ n.bloodpressure }}</td>
                                             <td class="pt-3-half">{{ n.heartrate }}</td>
                                             <td class="pt-3-half">{{ n.temperature }}</td>
+                                            <td class="pt-3-half">{{ n.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
                                                     <a class="btn btn-primary btn" href="{% url 'add-news' news=n.id id=patient_list.id %}">Edit</a>
