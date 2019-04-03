@@ -13,7 +13,6 @@
                 </div>
                 <br>
             {% endfor %}
-        <a class="btn btn-secondary btn-lg btn-block" href="{% url 'add-patient' %}">Add Patient</a>
         </div>
 
         <div class="col-sm-8">
@@ -26,7 +25,9 @@
                     <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
                     {{ form.date }}
                     <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
+                    <a class="btn btn-secondary mb-2 mr-sm-2" href="{% url 'add-patient' %}">New Patient</a>
                 </form>
+
             </div>
 
             <div class="card">
