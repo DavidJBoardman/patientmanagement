@@ -9,6 +9,7 @@ from mysite.forms import AddPatientForm, AddNotesForm, AddGuardianForm, AddSocia
     AddDiagnosisHistoryForm, AddAllergyDetailsForm, AddMedicationForm, AddInjectionForm, AddImmunisationForm, \
     AddNewsForm, DateForm
 from users.models import *
+import requests
 from django.contrib.auth.decorators import login_required
 
 
@@ -124,11 +125,20 @@ class AddPatientView(LoginRequiredMixin, TemplateView):
 def edit_medication(request, id, medication=None):
     medication = get_object_or_404(Medication, id=medication) if medication else None
     type = 'Edit'
-    medication_list = ('Acetaminophen', 'Adderall', 'Alprazolam', 'Amitriptyline', 'Ciprofloxacin', 'Citalopram', 'Cymbalta', 'Doxycycline', 'Gabapentin')
+    response = requests.get('https://api.fda.gov/drug/label.json?api_key=VUzB7rGRVZJvhrEWwXSAF4daTF4sWoVz8l703qiI&count=openfda.brand_name.exact')
+
+    reaction_data = response.json()
+
+    xy = reaction_data['results']
+    reaction_list = []
+    for x in xy:
+        reaction_list.append(x['term'])
+
+
     if medication is None:
         type = 'Add'
     if request.method == 'POST':
-        form = AddMedicationForm(request.POST, request.FILES, instance=medication, data_list=medication_list)
+        form = AddMedicationForm(request.POST, request.FILES, instance=medication, data_list=reaction_list)
 
         if form.is_valid():
             medications = form.save(commit=False)
@@ -137,7 +147,7 @@ def edit_medication(request, id, medication=None):
             medications.save()
             return redirect('patient-list', id=id)
     else:
-        form = AddMedicationForm(instance=medication, data_list=medication_list)
+        form = AddMedicationForm(instance=medication, data_list=reaction_list)
     return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Medication', 'type': type})
 
 @login_required()
