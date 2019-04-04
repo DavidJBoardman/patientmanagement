@@ -160,8 +160,8 @@ class TableError(models.Model):
 
 # Personal Details-------------------------
 class PersonalDetails(models.Model):
-    patienttitle = models.CharField(max_length=4, choices=TITLE_CHOICES, verbose_name='Title')
     patientuniqueid = models.CharField(unique=True, max_length=10, verbose_name='Patient ID')
+    patienttitle = models.CharField(max_length=4, choices=TITLE_CHOICES, verbose_name='Title')
     patientfirstname = models.CharField(max_length=256, verbose_name='First Name')
     patientlastname = models.CharField(max_length=256, verbose_name='Last Name')
     patientpreferredname = models.CharField(max_length=256, blank=True, verbose_name='Preferred name')
@@ -170,6 +170,10 @@ class PersonalDetails(models.Model):
     weight = models.CharField(max_length=256, blank=True, verbose_name='Weight (kg)')
     height = models.CharField(max_length=256, blank=True, verbose_name='Height (cm)')
     address = models.CharField(max_length=256, verbose_name='Address')
+    postcode = models.CharField(max_length=256, verbose_name='Post Code')
+    city = models.CharField(max_length=256, verbose_name='City')
+    county = models.CharField(max_length=256, verbose_name='County')
+    country = models.CharField(max_length=256, verbose_name='Country')
     bmi = models.CharField(max_length=256, blank=True, verbose_name='BMI')
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message="Phone number must be entered in the format: '+999999999'. 9 to 15 digits allowed.")
@@ -266,32 +270,23 @@ class SocialDetails(models.Model):
 
 class FamilyHistory(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    allgergies = models.CharField(max_length=10, blank=True, verbose_name='Allergies', choices=YES_NO_CHOICES)
+    eczma = models.CharField(max_length=10, blank=True, verbose_name='Eczma choices=YES_NO_CHOICES)
     asthma = models.CharField(max_length=10, blank=True, verbose_name='Asthma', choices=YES_NO_CHOICES)
-    arthritis = models.CharField(max_length=10, blank=True, verbose_name='Arthritis', choices=YES_NO_CHOICES)
-    glaucoma = models.CharField(max_length=10, blank=True, verbose_name='Glaucoma', choices=YES_NO_CHOICES)
     cancer = models.CharField(max_length=10, blank=True, verbose_name='Cancer', choices=YES_NO_CHOICES)
-    tuberculosis = models.CharField(max_length=10, blank=True, verbose_name='Tuberculosis', choices=YES_NO_CHOICES)
     diabetes = models.CharField(max_length=10, blank=True, verbose_name='Diabetes', choices=YES_NO_CHOICES)
-    hearttrouble = models.CharField(max_length=10, blank=True, verbose_name='Heart Trouble', choices=YES_NO_CHOICES)
+    heartdisease = models.CharField(max_length=10, blank=True, verbose_name='Heart Disease', choices=YES_NO_CHOICES)
     highbloodpressure = models.CharField(max_length=10, blank=True, verbose_name='High Blood Pressure', choices=YES_NO_CHOICES)
-    stroke = models.CharField(max_length=10, blank=True, verbose_name='Stroke', choices=YES_NO_CHOICES)
-    epilepsy = models.CharField(max_length=10, blank=True, verbose_name='Epilepsy', choices=YES_NO_CHOICES)
-    substanceabuse = models.CharField(max_length=10, blank=True, verbose_name='Substance Abuse', choices=YES_NO_CHOICES)
-    depression = models.CharField(max_length=10, blank=True, verbose_name='Depression', choices=YES_NO_CHOICES)
-    emotionalproblems = models.CharField(max_length=10, blank=True, verbose_name='Emotional Problems', choices=YES_NO_CHOICES)
-    suicide = models.CharField(max_length=10, blank=True, verbose_name='Suicide', choices=YES_NO_CHOICES)
-    kidneytrouble = models.CharField(max_length=10, blank=True, verbose_name='Kidney Trouble', choices=YES_NO_CHOICES)
-    thyroiddisease = models.CharField(max_length=10, blank=True, verbose_name='Thyroid Disease', choices=YES_NO_CHOICES)
     lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.patientid
 
 
-class DiagnosisHistory(models.Model):
+class Diagnosis(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    previousdiagnosis = models.CharField(max_length=256, verbose_name='Diagnosis')
+    diagnosis = models.CharField(max_length=256, verbose_name='Diagnosis')
+    symptons = models.CharField(max_length=256, verbose_name='Symptons')
+    previousdiagnosis = models.CharField(max_length=256, verbose_name='Previous Diagnosis')
     diagnoseddatetime = models.DateTimeField(verbose_name='Diagnosis Date')
     treatment = models.CharField(max_length=256, verbose_name='Treatment administered')
     treatmentdatetime = models.DateTimeField(verbose_name='Treatment Date')
