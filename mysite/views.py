@@ -132,10 +132,13 @@ def edit_medication(request, id, medication=None):
     for x in xy:
         reaction_list.append(x['term'].capitalize())
 
+    freq = ['Once Daily', 'Twice Daily', 'Three times Daily',
+            'Once Weekly', 'Twice Weekly', 'Three times Weekly',
+            'Once Monthly', 'Twice Monthly', 'Three times Monthly']
     if medication is None:
         type = 'Add'
     if request.method == 'POST':
-        form = AddMedicationForm(request.POST, request.FILES, instance=medication, data_list=reaction_list)
+        form = AddMedicationForm(request.POST, request.FILES, instance=medication, data_list=reaction_list, freq_list=freq)
 
         if form.is_valid():
             medications = form.save(commit=False)
@@ -144,7 +147,7 @@ def edit_medication(request, id, medication=None):
             medications.save()
             return redirect('patient-list', id=id)
     else:
-        form = AddMedicationForm(instance=medication, data_list=reaction_list)
+        form = AddMedicationForm(instance=medication, data_list=reaction_list, freq_list=freq)
     return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Medication', 'type': type})
 
 @login_required()

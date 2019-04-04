@@ -1,35 +1,106 @@
 {% extends "mysite/base.html" %}
 {% load crispy_forms_tags %}
+{% load user_tags %}
 {% block content %}
     <br>
-    <div class="row">
-        <div class="col-sm-4">
-            <h2>Assigned Patients</h2>
+    {% if request.user|in_group:"Doctor" or request.user|in_group:"Nurse" %}
+        <div class="row">
+            <div class="col-sm-4">
+                <h2>Assigned Patients</h2>
 
-            {% for patient in personal_list %}
-                <div class="btn-group special" role="group">
-                    <a type="button" href="patient/{{patient.id}}" class="btn btn-outline-info">{{ patient.patientfirstname }} {{ patient.patientlastname }}</a>
-                    <a type="button" class="btn badge-danger" href="{% url 'change_assigned' operation='remove' pk=patient.pk %}">Remove</a>
-                </div>
-                <br>
-            {% endfor %}
-        </div>
-
-        <div class="col-sm-8">
-            <h2>Search</h2>
-            <div class="form-group">
-                <form method="GET" action='' enctype="multipart/form-data" class="form-inline">
-                    {% csrf_token %}
-                    <input type="text" name="patient_unique_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patientuniqueid }}">
-                    <input type="text" name="patient_firstname" id="search-firstname" class="form-control mb-2 mr-sm-2"  placeholder="Firstname" value="{{ request.GET.patient_firstname }}">
-                    <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
-                    {{ form.date }}
-                    <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
-                    <a class="btn btn-secondary mb-2 mr-sm-2" href="{% url 'add-patient' %}">New Patient</a>
-                </form>
-
+                {% for patient in personal_list %}
+                    <div class="btn-group special" role="group">
+                        <a type="button" href="patient/{{patient.id}}" class="btn btn-outline-info">{{ patient.patientfirstname }} {{ patient.patientlastname }}</a>
+                        <a type="button" class="btn badge-danger" href="{% url 'change_assigned' operation='remove' pk=patient.pk %}">Remove</a>
+                    </div>
+                    <br>
+                {% endfor %}
             </div>
 
+            <div class="col-sm-8">
+                <h2>Search</h2>
+                <div class="form-group">
+                    <form method="GET" action='' enctype="multipart/form-data" class="form-inline">
+                        {% csrf_token %}
+                        <input type="text" name="patient_unique_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patientuniqueid }}">
+                        <input type="text" name="patient_firstname" id="search-firstname" class="form-control mb-2 mr-sm-2"  placeholder="Firstname" value="{{ request.GET.patient_firstname }}">
+                        <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
+                        {{ form.date }}
+                        <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
+                        <a class="btn btn-secondary mb-2 mr-sm-2" href="{% url 'add-patient' %}">New Patient</a>
+                    </form>
+
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div id="table" class="table-editable">
+                            <table class="table table-bordered table-responsive-md table-striped text-center">
+                                <tr>
+                                    <th scope="col">Patient Id</th>
+                                    <th scope="col">First name</th>
+                                    <th scope="col">Surname</th>
+                                    <th scope="col">Date of Birth</th>
+                                    <th scope="col">Photo</th>
+                                    <th scope="col">Add</th>
+                                </tr>
+                                <!-- This is our clonable table line -->
+                                {% for search in patients %}
+                                    <tr class="clickable-tr" href="patient/{{search.id}}">
+                                        <td class="pt-3-half">{{ search.patientuniqueid }}</td>
+                                        <td class="pt-3-half">{{ search.patientfirstname }}</td>
+                                        <td class="pt-3-half">{{ search.patientlastname }}</td>
+                                        <td class="pt-3-half">{{ search.dateofbirth }}</td>
+                                        <td class="pt-3-half"><img class="img-thumbnail rounded img-200" src="{{ search.photo.url }}"></td>
+                                        <td>
+                                            {% if not search in personal_list %}
+                                            <a class="btn btn-primary clickable-tr" href="{% url 'change_assigned' operation='add' pk=search.pk %}">Assign</a>
+                                            {% endif %}
+                                            {% if search in personal_list %}
+                                                <a class="btn btn-primary btn-danger clickable-tr" href="{% url 'change_assigned' operation='remove' pk=search.pk %}">Remove</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if patients.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ patients.previous_page_number }}">previous</a>
+                            {% endif %}
+
+                            <span class="current">
+                                Page {{ patients.number }} of {{ patients.paginator.num_pages }}.
+                            </span>
+
+                            {% if patients.has_next %}
+                                <a href="?page={{ patients.next_page_number }}">next</a>
+                                <a href="?page={{ patients.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <br>
+        </div>
+        <br>
+    {% else %}
+<h2>Search</h2>
+                <div class="form-group">
+                    <form method="GET" action='' enctype="multipart/form-data" class="form-inline">
+                        {% csrf_token %}
+                        <input type="text" name="patient_unique_id" id="search-id" class="form-control mb-2 mr-sm-2"  placeholder="Patient Id" value="{{ request.GET.patientuniqueid }}">
+                        <input type="text" name="patient_firstname" id="search-firstname" class="form-control mb-2 mr-sm-2"  placeholder="Firstname" value="{{ request.GET.patient_firstname }}">
+                        <input type="text" name="patient_surname" id="search-surname" class="form-control mb-2 mr-sm-2"  placeholder="Surname" value="{{ request.GET.patient_surname }}">
+                        {{ form.date }}
+                        <input type="submit" value="Search" class="form-control btn btn-primary mb-2 mr-sm-2">
+                        <a class="btn btn-secondary mb-2 mr-sm-2" href="{% url 'add-patient' %}">New Patient</a>
+                    </form>
+
+                </div>
             <div class="card">
                 <div class="card-body">
                     <div id="table" class="table-editable">
@@ -40,7 +111,6 @@
                                 <th scope="col">Surname</th>
                                 <th scope="col">Date of Birth</th>
                                 <th scope="col">Photo</th>
-                                <th scope="col">Add</th>
                             </tr>
                             <!-- This is our clonable table line -->
                             {% for search in patients %}
@@ -50,14 +120,6 @@
                                     <td class="pt-3-half">{{ search.patientlastname }}</td>
                                     <td class="pt-3-half">{{ search.dateofbirth }}</td>
                                     <td class="pt-3-half"><img class="img-thumbnail rounded img-200" src="{{ search.photo.url }}"></td>
-                                    <td>
-                                        {% if not search in personal_list %}
-                                        <a class="btn btn-primary clickable-tr" href="{% url 'change_assigned' operation='add' pk=search.pk %}">Assign</a>
-                                        {% endif %}
-                                        {% if search in personal_list %}
-                                            <a class="btn btn-primary btn-danger clickable-tr" href="{% url 'change_assigned' operation='remove' pk=search.pk %}">Remove</a>
-                                        {% endif %}
-                                    </td>
                                 </tr>
                             {% endfor %}
                         </table>
@@ -85,5 +147,5 @@
         <br>
     </div>
     <br>
-
+    {% endif %}
 {% endblock content %}

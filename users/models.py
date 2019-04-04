@@ -245,7 +245,7 @@ class SocialDetails(models.Model):
     drink = models.CharField(max_length=10, blank=True, verbose_name='Drinker', choices=YES_NO_CHOICES)
     sexualorientation = models.CharField(max_length=17, blank=True, verbose_name='Sexual Orientation', choices=SEXUAL_ORIENTATION_CHOICES)
     socialdruguse = models.CharField(max_length=10, blank=True, verbose_name='Social Drug Use', choices=YES_NO_CHOICES)
-    disability = models.CharField(max_length=256, blank=True, verbose_name='disabilities')
+    disability = models.CharField(max_length=256, blank=True, verbose_name='Disabilities')
     sexuallyactive = models.CharField(max_length=10, blank=True, verbose_name='Sexually Active', choices=YES_NO_CHOICES)
     lastmodified = models.DateField(auto_now=True)
 

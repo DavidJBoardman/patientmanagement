@@ -115,9 +115,11 @@ class AddMedicationForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         _medication_list = kwargs.pop('data_list', None)
+        _frequency_list = kwargs.pop('freq_list', None)
         super(AddMedicationForm, self).__init__(*args, **kwargs)
 
         self.fields['medicationname'].widget = ListTextWidget(data_list=_medication_list, name='medication-list')
+        self.fields['schedule'].widget = ListTextWidget(data_list=_frequency_list, name='frequency-list')
 
 
 class AddInjectionForm(ModelForm):
