@@ -270,7 +270,7 @@ class SocialDetails(models.Model):
 
 class FamilyHistory(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    eczma = models.CharField(max_length=10, blank=True, verbose_name='Eczma choices=YES_NO_CHOICES)
+    eczma = models.CharField(max_length=10, blank=True, verbose_name='Eczma', choices=YES_NO_CHOICES)
     asthma = models.CharField(max_length=10, blank=True, verbose_name='Asthma', choices=YES_NO_CHOICES)
     cancer = models.CharField(max_length=10, blank=True, verbose_name='Cancer', choices=YES_NO_CHOICES)
     diabetes = models.CharField(max_length=10, blank=True, verbose_name='Diabetes', choices=YES_NO_CHOICES)
@@ -323,6 +323,7 @@ class Medication(models.Model):
     usage = models.CharField(max_length=12, blank=True, verbose_name='Medication Usage', choices=MED_USES_CHOICES)
     quantity = models.CharField(max_length=256, blank=True, verbose_name='Medication dose (mg)')
     schedule = models.CharField(max_length=256, blank=True, verbose_name='Medication Schedule Frequency')
+    route = models.CharField(max_length=256, blank=True, verbose_name='Route')
     lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
