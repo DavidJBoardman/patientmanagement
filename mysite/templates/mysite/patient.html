@@ -3,8 +3,8 @@
 {% block content %}
     <br>
         <div class="row">
-        <div class="col"><img class="img-thumbnail rounded img-200" src="{{ patient_list.photo.url }}"></div>
-        <div class="col">
+        <div class="col-sm-2"><img class="img-thumbnail rounded img-200" src="{{ patient_list.photo.url }}"></div>
+        <div class="col-sm-2">
             <p><b>Patient ID:</b> {{ patient_list.patientuniqueid }}</p>
             <p><b>Title:</b> {{ patient_list.patienttitle }} </p>
             <p><b>First Name:</b> {{ patient_list.patientfirstname }}</p>
@@ -13,17 +13,21 @@
             <p><b>Gender:</b> {{ patient_list.gender }}</p>
             <p><b>BMI:</b> {{ patient_list.bmi }}</p>
         </div>
-        <div class="col">
+        <div class="col-sm-2">
             <p><b>Contact Number:</b> {{ patient_list.phonenumber }}</p>
             <p><b>Height(cm):</b> {{ patient_list.height }}</p>
             <p><b>Weight(kg):</b> {{ patient_list.weight }}</p>
             <p><b>Address:</b> {{ patient_list.address }}</p>
+            <p><b>Postcode:</b> {{ patient_list.postcode }}</p>
+            <p><b>City:</b> {{ patient_list.city }}</p>
+            <p><b>County:</b> {{ patient_list.county }}</p>
+            <p><b>Country:</b> {{ patient_list.country }}</p>
             <p><b>Email:</b> {{ patient_list.email }}</p>
             <p><b>Ward Location:</b> {{ patient_list.wardlocation }}</p>
-            <p><b>Last modified:</b> {{ patient_list.lastmodified }}</p>
+            <p><b>Last modified:</b> {{ patient_list.lastmodified }}</p>  county
         </div>
-        <div class="col"><p class="font-weight-bold">Allergies:</p> {% for al in allergies %}<span class="badge badge-warning">{{ al.allergyagent }}</span>{% endfor %}</div>
-        <div class="col"><a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit Details</a></div>
+        <div class="col-sm-2"><p class="font-weight-bold">Allergies:</p> {% for al in allergies %}<span class="badge badge-warning">{{ al.allergyagent }}</span>{% endfor %}</div>
+        <div class="col-sm-3"><a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit Details</a></div>
 
     </div>
 
@@ -31,7 +35,11 @@
         <div class="col-sm-12">
             <ul class="nav nav-tabs nav-fill">
                 <li class="nav-item">
-                    <a class="nav-link active" id="list-medication-list" data-toggle="list" href="#list-medication" role="tab"
+                    <a class="nav-link active" id="list-diagnosis-list" data-toggle="list" href="#list-diagnosis" role="tab"
+                       aria-controls="Diagnosis">Diagnosis<i class="fas fa-diagnoses"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="list-medication-list" data-toggle="list" href="#list-medication" role="tab"
                        aria-controls="Medication">Medication <i class="fas fa-pills"></i></a>
                 </li>
                 <li class="nav-item">
@@ -63,10 +71,6 @@
                        aria-controls="Family">Family History <i class="fas fa-users"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-diagnosishistory-list" data-toggle="list" href="#list-diagnosishistory" role="tab"
-                       aria-controls="Diagnosis">Diagnosis <i class="fas fa-diagnoses"></i></a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" id="list-news-list" data-toggle="list" href="#list-news" role="tab"
                        aria-controls="News">N.E.W.S <i class="fas fa-user-nurse"></i></a>
                 </li>
@@ -78,14 +82,79 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="tab-content" id="nav-tabContent">
+
+                {# Diagnosis History #}
+                <div class="tab-pane fade show active" id="list-diagnosis" role="tabpanel" aria-labelledby="list-diagnosis-list">
+                    <h4>Diagnosis</h4>
+                    {% if request.user|in_group:"Doctor" %}
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-diag' id=patient_list.id %}">Add Diagnosis</a>
+                    {% endif %}
+                    {% if diagnosis|length > 0 %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="table" class="table-editable">
+                                <table class="table table-bordered table-responsive-md table-striped text-center">
+                                    <tr>
+                                        <th scope="col">Diagnosis</th>
+                                        <th scope="col">Symptoms</th>
+                                        <th scope="col">Diagnosis Date/Time</th>
+                                        <th scope="col">Treatment Date/Time</th>
+                                        <th scope="col">Treatment</th>
+                                        <th scope="col">Result</th>
+                                        <th scope="col">Last Modified</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                    {% for diag in diagnosis %}
+                                        <tr>
+                                            <td class="pt-3-half">{{ diag.diagnosis }}</td>
+                                            <td class="pt-3-half">{{ diag.symptoms }}</td>
+                                            <td class="pt-3-half">{{ diag.diagnoseddatetime }}</td>
+                                            <td class="pt-3-half">{{ diag.treatmentdatetime }}</td>
+                                            <td class="pt-3-half">{{ diag.treatment }}</td>
+                                            <td class="pt-3-half">{{ diag.result }}</td>
+                                            <td class="pt-3-half">{{ diag.lastmodified }}</td>
+                                            <td>
+                                                {% if request.user|in_group:"Doctor" %}
+                                                    <a class="btn btn-primary btn" href="{% url 'add-diag' diagnosis=diag.id id=patient_list.id %}">Edit</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if diagnosis.has_previous %}
+                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                    <a href="?page={{ diagnosis.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ diagnosis.number }} of {{ diagnosis.paginator.num_pages }}.
+                                </span>
+
+                                {% if familyhistory.has_next %}
+                                    <a href="?page={{ familyhistory.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                    <a href="?page={{ familyhistory.paginator.num_pages }}"><i class="fas fa-angle-double-left"></i></a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    {% else %}
+                        <p>No recent diagnosis</p>
+                    {% endif %}
+                </div>
+
                 {# Medication tables #}
-                <div class="tab-pane fade show active" id="list-medication" role="tabpanel"
+                <div class="tab-pane fade" id="list-medication" role="tabpanel"
                      aria-labelledby="list-medication-list">
                     <h4>Medication</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-medication' id=patient_list.id %}">Add Medication</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-medication' id=patient_list.id %}">Add Medication</a>
                     {% endif %}
-
+                    <br>
                     {% if medication|length > 0 %}
                         <div class="card">
                         <div class="card-body">
@@ -148,7 +217,7 @@
                 <div class="tab-pane fade" id="list-injections" role="tabpanel" aria-labelledby="list-injections-list">
                     <h4>Injections</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-injection' id=patient_list.id %}">Add Injections</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-injection' id=patient_list.id %}">Add Injections</a>
                     {% endif %}
 
                     {% if injection|length > 0 %}
@@ -212,7 +281,7 @@
                      aria-labelledby="list-immunisations-list">
                     <h4>Immunisations</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-immunisation' id=patient_list.id %}">Add Immunisation</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-immunisation' id=patient_list.id %}">Add Immunisation</a>
                     {% endif %}
 
                     {% if immunisation|length > 0 %}
@@ -275,7 +344,7 @@
                 <div class="tab-pane fade" id="list-allergies" role="tabpanel" aria-labelledby="list-allergies-list">
                     <h4>Allergies</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-allergy' id=patient_list.id %}">Add Allergy</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-allergy' id=patient_list.id %}">Add Allergy</a>
                     {% endif %}
 
                     {% if allergies|length > 0 %}
@@ -340,7 +409,7 @@
                 <div class="tab-pane fade" id="list-guardian" role="tabpanel" aria-labelledby="list-guardian-list">
                     <h4>Guardian Details</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-guardian' id=patient_list.id %}">Add Guardian Details</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-guardian' id=patient_list.id %}">Add Guardian Details</a>
                     {% endif %}
 
                 {% if guardian|length > 0 %}
@@ -407,7 +476,7 @@
                 <div class="tab-pane fade" id="list-notes" role="tabpanel" aria-labelledby="list-notes-list">
                     <h4>Notes</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-note' id=patient_list.id %}">Upload note</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-note' id=patient_list.id %}">Upload note</a>
                     {% endif %}
                     {% if notesandscans|length > 0 %}
                         <div class="card">
@@ -484,7 +553,7 @@
                 <div class="tab-pane fade" id="list-social" role="tabpanel" aria-labelledby="list-social-list">
                     <h4>Social History</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-social' id=patient_list.id %}">Add Social History</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-social' id=patient_list.id %}">Add Social History</a>
                     {% endif %}
                         {% if social|length > 0 %}
                         <div class="card">
@@ -550,7 +619,7 @@
                 <div class="tab-pane fade" id="list-familyhist" role="tabpanel" aria-labelledby="list-familyhist-list">
                     <h4>Family History</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-family-hist' id=patient_list.id %}">Add Family History</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-family-hist' id=patient_list.id %}">Add Family History</a>
                     {% endif %}
                     {% if familyhistory|length > 0 %}
                         <div class="card">
@@ -558,44 +627,23 @@
                             <div id="table" class="table-editable">
                                 <table class="table table-bordered table-responsive-md table-striped text-center">
                                     <tr>
-                                        <th scope="col">Allgergies</th>
+                                        <th scope="col">Eczma</th>
                                         <th scope="col">Asthma</th>
-                                        <th scope="col">Arthritis</th>
-                                        <th scope="col">Glaucoma</th>
                                         <th scope="col">Cancer</th>
-                                        <th scope="col">Tuberculosis</th>
                                         <th scope="col">Diabetes</th>
-                                        <th scope="col">Heart Problems</th>
+                                        <th scope="col">Heart Disease</th>
                                         <th scope="col">High Blood Pressure</th>
-                                        <th scope="col">Stroke</th>
-                                        <th scope="col">Epilepsy</th>
-                                        <th scope="col">Substance Abuse</th>
-                                        <th scope="col">Depression</th>
-                                        <th scope="col">Emotional Problems</th>
-                                        <th scope="col">Suicide</th>
-                                        <th scope="col">Tidney Trouble</th>
-                                        <th scope="col">Thyroid Disease</th>
                                         <th scope="col">Last Modified</th>
+                                        <th scope="col">Edit</th>
                                     </tr>
                                     {% for family in familyhistory %}
                                         <tr>
-                                            <td class="pt-3-half">{{ family.allgergies }}</td>
+                                            <td class="pt-3-half">{{ family.eczma }}</td>
                                             <td class="pt-3-half">{{ family.asthma }}</td>
-                                            <td class="pt-3-half">{{ family.arthritis }}</td>
-                                            <td class="pt-3-half">{{ family.glaucoma }}</td>
                                             <td class="pt-3-half">{{ family.cancer }}</td>
-                                            <td class="pt-3-half">{{ family.tuberculosis }}</td>
                                             <td class="pt-3-half">{{ family.diabetes }}</td>
-                                            <td class="pt-3-half">{{ family.hearttrouble }}</td>
+                                            <td class="pt-3-half">{{ family.heartdisease }}</td>
                                             <td class="pt-3-half">{{ family.highbloodpressure }}</td>
-                                            <td class="pt-3-half">{{ family.stroke }}</td>
-                                            <td class="pt-3-half">{{ family.epilepsy }}</td>
-                                            <td class="pt-3-half">{{ family.substanceabuse }}</td>
-                                            <td class="pt-3-half">{{ family.depression }}</td>
-                                            <td class="pt-3-half">{{ family.emotionalproblems }}</td>
-                                            <td class="pt-3-half">{{ family.suicide }}</td>
-                                            <td class="pt-3-half">{{ family.kidneytrouble }}</td>
-                                            <td class="pt-3-half">{{ family.thyroiddisease }}</td>
                                             <td class="pt-3-half">{{ family.lastmodified }}</td>
                                             <td>
                                                 {% if request.user|in_group:"Doctor" %}
@@ -631,131 +679,69 @@
                     {% endif %}
                 </div>
 
-                {# Diagnosis History #}
-                <div class="tab-pane fade" id="list-diagnosishistory" role="tabpanel" aria-labelledby="list-diagnosishistory-list">
-                    <h4>Diagnosis History</h4>
-                    {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-diag-hist' id=patient_list.id %}">Add Diagnosis</a>
-                    {% endif %}
-                    {% if diagnosis|length > 0 %}
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="table" class="table-editable">
-                                <table class="table table-bordered table-responsive-md table-striped text-center">
-                                    <tr>
-                                        <th scope="col">Previous Diagnosis</th>
-                                        <th scope="col">Diagnosed Date/Time</th>
-                                        <th scope="col">Treatment</th>
-                                        <th scope="col">Treatment Date/Time</th>
-                                        <th scope="col">Result</th>
-                                        <th scope="col">Last Modified</th>
-                                        <th scope="col">Edit</th>
-                                    </tr>
-                                    {% for diag in diagnosis %}
-                                        <tr>
-                                            <td class="pt-3-half">{{ diag.previousdiagnosis }}</td>
-                                            <td class="pt-3-half">{{ diag.diagnoseddatetime }}</td>
-                                            <td class="pt-3-half">{{ diag.treatment }}</td>
-                                            <td class="pt-3-half">{{ diag.treatmentdatetime }}</td>
-                                            <td class="pt-3-half">{{ diag.result }}</td>
-                                            <td class="pt-3-half">{{ diag.lastmodified }}</td>
-                                            <td>
-                                                {% if request.user|in_group:"Doctor" %}
-                                                    <a class="btn btn-primary btn" href="{% url 'add-diag-hist' diagnosis=diag.id id=patient_list.id %}">Edit</a>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="pagination">
-                            <span class="step-links">
-                                {% if diagnosis.has_previous %}
-                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
-                                    <a href="?page={{ diagnosis.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
-                                {% endif %}
-
-                                <span class="current">
-                                    Page {{ diagnosis.number }} of {{ diagnosis.paginator.num_pages }}.
-                                </span>
-
-                                {% if familyhistory.has_next %}
-                                    <a href="?page={{ familyhistory.next_page_number }}"><i class="fas fa-angle-right"></i></a>
-                                    <a href="?page={{ familyhistory.paginator.num_pages }}"><i class="fas fa-angle-double-left"></i></a>
-                                {% endif %}
-                            </span>
-                        </div>
-                    </div>
-                    {% else %}
-                        <p>Diagnosis history</p>
-                    {% endif %}
-                </div>
-
                 {# National Early Warning System #}
                 <div class="tab-pane fade" id="list-news" role="tabpanel" aria-labelledby="list-news-list">
                     <h4>Nation Early Warning Score</h4>
                     {% if request.user|in_group:"Doctor" %}
-                        <a class="btn btn-primary btn-lg" href="{% url 'add-news' id=patient_list.id %}">Add N.E.W.S</a>
+                        <a class="btn btn-primary btn mb-2" href="{% url 'add-news' id=patient_list.id %}">Add N.E.W.S</a>
                     {% endif %}
                     {% if news|length > 0 %}
                         <div class="card">
-                        <div class="card-body">
-                            <div id="table" class="table-editable">
-                                <table class="table table-bordered table-responsive-md table-striped text-center">
-                                    <tr>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Respiration Rate</th>
-                                        <th scope="col">Oxygen Saturation</th>
-                                        <th scope="col">Systolic Blood Pressure</th>
-                                        <th scope="col">Heart Rate</th>
-                                        <th scope="col">Temperature</th>
-                                        <th scope="col">Last Modified</th>
-                                        <th scope="col">Edit</th>
-                                    </tr>
-                                    {% for n in news %}
+                            <div class="card-body">
+                                <div id="table" class="table-editable">
+                                    <table class="table table-bordered table-responsive-md table-striped text-center">
                                         <tr>
-                                            <td class="pt-3-half">{{ n.date }}</td>
-                                            <td class="pt-3-half">{{ n.respirationrate }}</td>
-                                            <td class="pt-3-half">{{ n.oxygensaturation }}</td>
-                                            <td class="pt-3-half">{{ n.bloodpressure }}</td>
-                                            <td class="pt-3-half">{{ n.heartrate }}</td>
-                                            <td class="pt-3-half">{{ n.temperature }}</td>
-                                            <td class="pt-3-half">{{ n.lastmodified }}</td>
-                                            <td>
-                                                {% if request.user|in_group:"Doctor" %}
-                                                    <a class="btn btn-primary btn" href="{% url 'add-news' news=n.id id=patient_list.id %}">Edit</a>
-                                                {% endif %}
-                                            </td>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Respiration Rate</th>
+                                            <th scope="col">Oxygen Saturation</th>
+                                            <th scope="col">Systolic Blood Pressure</th>
+                                            <th scope="col">Heart Rate</th>
+                                            <th scope="col">Temperature</th>
+                                            <th scope="col">Last Modified</th>
+                                            <th scope="col">Edit</th>
                                         </tr>
-                                    {% endfor %}
-                                </table>
+                                        {% for n in news %}
+                                            <tr>
+                                                <td class="pt-3-half">{{ n.date }}</td>
+                                                <td class="pt-3-half">{{ n.respirationrate }}</td>
+                                                <td class="pt-3-half">{{ n.oxygensaturation }}</td>
+                                                <td class="pt-3-half">{{ n.bloodpressure }}</td>
+                                                <td class="pt-3-half">{{ n.heartrate }}</td>
+                                                <td class="pt-3-half">{{ n.temperature }}</td>
+                                                <td class="pt-3-half">{{ n.lastmodified }}</td>
+                                                <td>
+                                                    {% if request.user|in_group:"Doctor" %}
+                                                        <a class="btn btn-primary btn" href="{% url 'add-news' news=n.id id=patient_list.id %}">Edit</a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="pagination">
+                                <span class="step-links">
+                                    {% if news.has_previous %}
+                                        <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                                        <a href="?page={{ news.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        Page {{ news.number }} of {{ news.paginator.num_pages }}.
+                                    </span>
+
+                                    {% if familyhistory.has_next %}
+                                        <a href="?page={{ news.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                                        <a href="?page={{ news.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                                    {% endif %}
+                                </span>
                             </div>
                         </div>
-
-                        <div class="pagination">
-                            <span class="step-links">
-                                {% if news.has_previous %}
-                                    <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
-                                    <a href="?page={{ news.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
-                                {% endif %}
-
-                                <span class="current">
-                                    Page {{ news.number }} of {{ news.paginator.num_pages }}.
-                                </span>
-
-                                {% if familyhistory.has_next %}
-                                    <a href="?page={{ news.next_page_number }}"><i class="fas fa-angle-right"></i></a>
-                                    <a href="?page={{ news.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
-                                {% endif %}
-                            </span>
-                        </div>
-                    </div>
-                </div>
                 {% else %}
                     <p>No National early warning score history</p>
                 {% endif %}
+                </div>
             </div>
         </div>
     </div>

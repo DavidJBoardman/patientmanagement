@@ -1,10 +1,11 @@
+import requests
 from django import forms
 #
-from django.forms import fields, ModelForm
+from django.forms import fields, ModelForm, ModelMultipleChoiceField, CheckboxSelectMultiple
 
 from mysite.widgets import ListTextWidget
 from users.models import PersonalDetails, NotesAndScans, GuardianDetails, SocialDetails, FamilyHistory, \
-    DiagnosisHistory, AllergyDetails, Medication, Injection, Immunisation, NationalEarlyWarningScore
+    Diagnosis, AllergyDetails, Medication, Injection, Immunisation, NationalEarlyWarningScore
 
 
 class DateInput(forms.DateInput):
@@ -25,15 +26,17 @@ class DateForm(forms.Form):
         }
     ), required=False, )
 
+
 class AddPatientForm(ModelForm):
     class Meta:
         model = PersonalDetails
         fields = ['patienttitle', 'patientfirstname', 'patientlastname', 'patientpreferredname', 'dateofbirth',
-                      'gender', 'weight', 'height', 'address', 'bmi', 'phonenumber', 'email', 'dnr', 'wardlocation',
+                      'gender', 'weight', 'height', 'address', 'postcode', 'city', 'county', 'country', 'bmi', 'phonenumber', 'email', 'dnr', 'wardlocation',
                       'photo']
         widgets = {
                      'dateofbirth': DateInput(),
                  }
+
 
 class AddNotesForm(ModelForm):
     class Meta:
@@ -58,21 +61,24 @@ class AddSocialDetailsForm(ModelForm):
 class AddFamilyHistoryForm(ModelForm):
     class Meta:
         model = FamilyHistory
-        fields = ['allgergies', 'asthma', 'arthritis', 'glaucoma', 'cancer', 'tuberculosis',
-                  'diabetes', 'hearttrouble', 'highbloodpressure', 'stroke', 'epilepsy', 'substanceabuse',
-                  'depression', 'emotionalproblems', 'suicide', 'kidneytrouble', 'thyroiddisease']
+        fields = ['eczma', 'asthma', 'cancer', 'diabetes', 'heartdisease', 'highbloodpressure']
 
 
-class AddDiagnosisHistoryForm(ModelForm):
+class AddDiagnosisForm(ModelForm):
     class Meta:
-        model = DiagnosisHistory
-        fields = ['previousdiagnosis', 'diagnoseddatetime', 'treatment', 'treatmentdatetime', 'result']
+        model = Diagnosis
+        fields = ['diagnosis', 'symptoms', 'diagnoseddatetime', 'treatment', 'treatmentdatetime', 'result']
 
         widgets = {
-        'diagnoseddatetime': DateTimeInput(),
-        'treatmentdatetime': DateTimeInput(),
+        'diagnoseddatetime': DateInput(),
+        'treatmentdatetime': DateInput()
         }
 
+    def __init__(self, *args, **kwargs):
+        _diagnosis_list = kwargs.pop('diagnosis_list', None)
+        super(AddDiagnosisForm, self).__init__(*args, **kwargs)
+
+        self.fields['symptoms'].widget = ListTextWidget(data_list=_diagnosis_list, name='diagnosis-list')
 
 
 class AddAllergyDetailsForm(ModelForm):
@@ -81,8 +87,14 @@ class AddAllergyDetailsForm(ModelForm):
         fields = ['allergytype', 'allergyagent', 'allergyreaction', 'reactionseverity', 'allergyinfosource', 'allergystatus', 'allergyrecorddatetime']
 
         widgets = {
-            'allergyrecorddatetime': DateTimeInput(),
+            'allergyrecorddatetime': DateInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        _allergy_list = kwargs.pop('allergy_list', None)
+        super(AddAllergyDetailsForm, self).__init__(*args, **kwargs)
+
+        self.fields['allergyreaction'].widget = ListTextWidget(data_list=_allergy_list, name='allergy-list')
 
 
 class AddMedicationForm(ModelForm):
@@ -96,8 +108,8 @@ class AddMedicationForm(ModelForm):
                   'schedule']
 
         widgets = {
-            'medstartdatetime': DateTimeInput(),
-            'medenddatetime': DateTimeInput(),
+            'medstartdatetime': DateInput(),
+            'medenddatetime': DateInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -113,14 +125,8 @@ class AddInjectionForm(ModelForm):
         fields = ['injectionname', 'injectiondatetime', 'injectionreason', 'injectiondose', 'injectionpriority']
 
         widgets = {
-            'injectiondatetime': DateTimeInput(),
+            'injectiondatetime': DateInput(),
         }
-
-    def __init__(self, *args, **kwargs):
-        _medication_list = kwargs.pop('data_list', None)
-        super(AddInjectionForm, self).__init__(*args, **kwargs)
-
-        self.fields['injectionname'].widget = ListTextWidget(data_list=_medication_list, name='injection-list')
 
 
 class AddImmunisationForm(ModelForm):
@@ -129,8 +135,14 @@ class AddImmunisationForm(ModelForm):
         fields = ['vaccinename', 'vaccinedatetime', 'vaccinedose', 'vaccinereason', 'immunisationpriority']
 
         widgets = {
-            'vaccinedatetime': DateTimeInput(),
+            'vaccinedatetime': DateInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        _medication_list = kwargs.pop('data_list', None)
+        super(AddImmunisationForm, self).__init__(*args, **kwargs)
+
+        self.fields['vaccinename'].widget = ListTextWidget(data_list=_medication_list, name='vaccine-list')
 
 
 class AddNewsForm(ModelForm):
@@ -139,5 +151,5 @@ class AddNewsForm(ModelForm):
         fields = ['date', 'respirationrate', 'oxygensaturation', 'bloodpressure', 'heartrate', 'temperature']
 
         widgets = {
-            'date': DateTimeInput(),
+            'date': DateInput(),
         }

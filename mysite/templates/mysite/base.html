@@ -37,8 +37,7 @@
 
                 <div class="navbar-nav">
                     {% if user.is_authenticated %}
-                        <span class="navbar-text">Signed in as: {{ user.username }}</span>
-                        <a class="nav-item nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i></a>
+                        <a class="nav-item nav-link" href="{% url 'logout' %}">Signed in as: {{ user.username }} <i class="fas fa-sign-out-alt"></i></a>
                     {% else %}
                         <a class="nav-item nav-link" href="{% url 'login' %}"><i class="fas fa-sign-out-alt"></i></a>
                         <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>

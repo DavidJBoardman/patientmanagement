@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, TemplateView
 
 from mysite.forms import AddPatientForm, AddNotesForm, AddGuardianForm, AddSocialDetailsForm, AddFamilyHistoryForm, \
-    AddDiagnosisHistoryForm, AddAllergyDetailsForm, AddMedicationForm, AddInjectionForm, AddImmunisationForm, \
+    AddDiagnosisForm, AddAllergyDetailsForm, AddMedicationForm, AddInjectionForm, AddImmunisationForm, \
     AddNewsForm, DateForm
 from users.models import *
 import requests
@@ -81,15 +81,15 @@ class Patient(LoginRequiredMixin, DetailView):
         context = super(Patient, self).get_context_data(**kwargs)
         page = self.request.GET.get('page')
         medication = Paginator(Medication.objects.filter(personaldetails_id=id_).order_by('-medstartdatetime'), 10)
-        notesandscans = Paginator(NotesAndScans.objects.filter(personaldetails_id=id_), 10)
+        notesandscans = Paginator(NotesAndScans.objects.filter(personaldetails_id=id_).order_by('-date'), 10)
         guardian = Paginator(GuardianDetails.objects.filter(personaldetails_id=id_), 10)
         social = Paginator(SocialDetails.objects.filter(personaldetails_id=id_), 10)
         familyhistory = Paginator(FamilyHistory.objects.filter(personaldetails_id=id_), 10)
-        diagnosis = Paginator(DiagnosisHistory.objects.filter(personaldetails_id=id_), 10)
-        allergies = Paginator(AllergyDetails.objects.filter(personaldetails_id=id_), 10)
-        injection = Paginator(Injection.objects.filter(personaldetails_id=id_), 10)
-        immunisation = Paginator(Immunisation.objects.filter(personaldetails_id=id_), 10)
-        news = Paginator(NationalEarlyWarningScore.objects.filter(personaldetails_id=id_), 10)
+        diagnosis = Paginator(Diagnosis.objects.filter(personaldetails_id=id_).order_by('-diagnoseddatetime'), 10)
+        allergies = Paginator(AllergyDetails.objects.filter(personaldetails_id=id_).order_by('-allergyrecorddatetime'), 10)
+        injection = Paginator(Injection.objects.filter(personaldetails_id=id_).order_by('-injectiondatetime'), 10)
+        immunisation = Paginator(Immunisation.objects.filter(personaldetails_id=id_).order_by('-vaccinedatetime'), 10)
+        news = Paginator(NationalEarlyWarningScore.objects.filter(personaldetails_id=id_).order_by('-date'), 10)
         context['notesandscans'] = notesandscans.get_page(page)
         context['guardian'] = guardian.get_page(page)
         context['social'] = social.get_page(page)
@@ -126,14 +126,11 @@ def edit_medication(request, id, medication=None):
     medication = get_object_or_404(Medication, id=medication) if medication else None
     type = 'Edit'
     response = requests.get('https://api.fda.gov/drug/label.json?api_key=VUzB7rGRVZJvhrEWwXSAF4daTF4sWoVz8l703qiI&count=openfda.brand_name.exact')
-
     reaction_data = response.json()
-
     xy = reaction_data['results']
     reaction_list = []
     for x in xy:
-        reaction_list.append(x['term'])
-
+        reaction_list.append(x['term'].capitalize())
 
     if medication is None:
         type = 'Add'
@@ -229,12 +226,23 @@ def edit_family_history_view(request, id, family_history=None):
 
 @login_required()
 def edit_diagnosis_view(request, id, diagnosis=None):
-    diagnosis = get_object_or_404(DiagnosisHistory, id=diagnosis) if diagnosis else None
+    diagnosis = get_object_or_404(Diagnosis, id=diagnosis) if diagnosis else None
     type = 'Edit'
+
+    response = requests.get(
+        'https://api.fda.gov/drug/event.json?api_key=VUzB7rGRVZJvhrEWwXSAF4daTF4sWoVz8l703qiI&search='
+        'patient.drug.openfda.pharm_class_epc:"nonsteroidal+'
+        'anti-inflammatory+drug"&count=patient.reaction.reactionmeddrapt.exact')
+    reaction_data = response.json()
+    xy = reaction_data['results']
+    reaction_list = []
+    for x in xy:
+        reaction_list.append(x['term'].capitalize())
+
     if diagnosis is None:
         type = 'Add'
     if request.method == "POST":
-        form = AddDiagnosisHistoryForm(request.POST, request.FILES, instance=diagnosis)
+        form = AddDiagnosisForm(request.POST, request.FILES, instance=diagnosis, diagnosis_list=reaction_list)
         if form.is_valid():
             diagnosiss = form.save(commit=False)
             diagnosiss.patient = diagnosis
@@ -242,7 +250,7 @@ def edit_diagnosis_view(request, id, diagnosis=None):
             diagnosiss.save()
             return redirect('patient-list', id=id)
     else:
-        form = AddDiagnosisHistoryForm(instance=diagnosis)
+        form = AddDiagnosisForm(instance=diagnosis, diagnosis_list=reaction_list)
     return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Diagnosis', 'type': type})
 
 
@@ -250,10 +258,19 @@ def edit_diagnosis_view(request, id, diagnosis=None):
 def edit_allergy_view(request, id, allergy=None):
     allergy = get_object_or_404(AllergyDetails, id=allergy) if allergy else None
     type = 'Edit'
+    response = requests.get('https://api.fda.gov/drug/event.json?api_key=VUzB7rGRVZJvhrEWwXSAF4daTF4sWoVz8l703qiI&search='
+                            'patient.drug.openfda.pharm_class_epc:"nonsteroidal+'
+                            'anti-inflammatory+drug"&count=patient.reaction.reactionmeddrapt.exact')
+    reaction_data = response.json()
+    xy = reaction_data['results']
+    reaction_list = []
+    for x in xy:
+        reaction_list.append(x['term'].capitalize())
+
     if allergy is None:
         type = 'Add'
     if request.method == "POST":
-        form = AddAllergyDetailsForm(request.POST, request.FILES, instance=allergy)
+        form = AddAllergyDetailsForm(request.POST, request.FILES, instance=allergy, allergy_list=reaction_list)
         if form.is_valid():
             allergys = form.save(commit=False)
             allergys.patient = allergy
@@ -261,7 +278,7 @@ def edit_allergy_view(request, id, allergy=None):
             allergys.save()
             return redirect('patient-list', id=id)
     else:
-        form = AddAllergyDetailsForm()
+        form = AddAllergyDetailsForm(allergy_list=reaction_list)
     return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Allergy', 'type': type})
 
 
@@ -269,10 +286,15 @@ def edit_allergy_view(request, id, allergy=None):
 def edit_immunisation_view(request, id, immunisation=None):
     immunisation = get_object_or_404(Immunisation, id=immunisation) if immunisation else None
     type = 'Edit'
+
+    VACCINE_LIST_CHOICES = ['BCG', 'Hepatitis A', 'Hepatitis B', 'Rotavirus', 'Diphtheria-Tetanus-Pertussis',
+                            'Pneumococcal', 'Poliovirus', 'Influenza', 'Measles-Mumps-Rubella', 'Other']
+
     if immunisation is None:
         type = 'Add'
     if request.method == "POST":
-        form = AddImmunisationForm(request.POST, request.FILES, instance=immunisation)
+
+        form = AddImmunisationForm(request.POST, request.FILES, instance=immunisation, data_list=VACCINE_LIST_CHOICES)
         if form.is_valid():
             immunisations = form.save(commit=False)
             immunisations.patient = immunisation
@@ -280,7 +302,7 @@ def edit_immunisation_view(request, id, immunisation=None):
             immunisations.save()
             return redirect('patient-list', id=id)
     else:
-        form = AddImmunisationForm(instance=immunisation)
+        form = AddImmunisationForm(instance=immunisation, data_list=VACCINE_LIST_CHOICES)
     return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Immunisation', 'type': type})
 
 
@@ -300,6 +322,7 @@ def edit_news_view(request, id, news=None):
             return redirect('patient-list', id=id)
     else:
         form = AddNewsForm(instance=news)
+
     return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'NEWS', 'type': type})
 
 

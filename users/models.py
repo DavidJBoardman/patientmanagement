@@ -97,21 +97,6 @@ VACCINE_DISTRIBUTION_CHOICES = (
     ('7-10 Years', '7-10 Years')
 )
 
-# TODO: Ability to add other vaccines.
-VACCINE_LIST_CHOICES = (
-    ('BCG', 'BCG'),
-    ('Hepatitis A', 'Hepatitis A'),
-    ('Hepatitis B', 'Hepatitis B'),
-    ('Rotavirus', 'Rotavirus'),
-    ('Diphtheria-Tetanus-Pertussis', 'Diphtheria-Tetanus-Pertussis'),
-    ('Pneumococcal', 'Pneumococcal'),
-    ('Poliovirus', 'Poliovirus'),
-    ('Influenza', 'Influenza'),
-    ('Measles-Mumps-Rubella', 'Measles-Mumps-Rubella'),
-    ('Other', 'Other')
-)
-
-
 MED_USES_CHOICES = (
     ('With Food', 'With Food'),
     ('Without Food', 'Without Food'),
@@ -169,11 +154,11 @@ class PersonalDetails(models.Model):
     gender = models.CharField(max_length=256, choices=GENDER_CHOICES, verbose_name='Gender')
     weight = models.CharField(max_length=256, blank=True, verbose_name='Weight (kg)')
     height = models.CharField(max_length=256, blank=True, verbose_name='Height (cm)')
-    address = models.CharField(max_length=256, verbose_name='Address')
-    postcode = models.CharField(max_length=256, verbose_name='Post Code')
-    city = models.CharField(max_length=256, verbose_name='City')
-    county = models.CharField(max_length=256, verbose_name='County')
-    country = models.CharField(max_length=256, verbose_name='Country')
+    address = models.CharField(max_length=256, verbose_name='Address', default='')
+    postcode = models.CharField(max_length=256, verbose_name='Post Code', default='')
+    city = models.CharField(max_length=256, verbose_name='City', default='')
+    county = models.CharField(max_length=256, verbose_name='County', default='')
+    country = models.CharField(max_length=256, verbose_name='Country', default='')
     bmi = models.CharField(max_length=256, blank=True, verbose_name='BMI')
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message="Phone number must be entered in the format: '+999999999'. 9 to 15 digits allowed.")
@@ -285,19 +270,18 @@ class FamilyHistory(models.Model):
 class Diagnosis(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     diagnosis = models.CharField(max_length=256, verbose_name='Diagnosis')
-    symptons = models.CharField(max_length=256, verbose_name='Symptons')
-    previousdiagnosis = models.CharField(max_length=256, verbose_name='Previous Diagnosis')
-    diagnoseddatetime = models.DateTimeField(verbose_name='Diagnosis Date')
-    treatment = models.CharField(max_length=256, verbose_name='Treatment administered')
-    treatmentdatetime = models.DateTimeField(verbose_name='Treatment Date')
-    result = models.CharField(max_length=256)
+    symptoms = models.CharField(max_length=256, verbose_name='Symptoms')
+    previousdiagnosis = models.CharField(max_length=256, verbose_name='Diagnosis', blank=True)
+    diagnoseddatetime = models.DateTimeField(verbose_name='Diagnosis Date', default=date.today)
+    treatment = models.CharField(max_length=256, verbose_name='Treatment administered', blank=True)
+    treatmentdatetime = models.DateTimeField(verbose_name='Treatment Date', default=date.today)
+    result = models.CharField(max_length=256, blank=True)
     lastmodified = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.patientid
 
 
-# TODO: Add other please specifcy feild to allergy_type_choices form
 # Medication Information Allergies -------------------------
 class AllergyDetails(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
@@ -345,7 +329,7 @@ class Injection(models.Model):
 
 class Immunisation(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    vaccinename = models.CharField(max_length=256, verbose_name='Vaccine Name', choices=VACCINE_LIST_CHOICES)
+    vaccinename = models.CharField(max_length=256, verbose_name='Vaccine Name')
     vaccinedatetime = models.DateTimeField(default=date.today, verbose_name='Vaccine date administered')
     vaccinedose = models.CharField(max_length=256, verbose_name='Vaccine dose (mg)')
     vaccinereason = models.CharField(max_length=256, blank=True, verbose_name='Vaccine Reason')
@@ -358,12 +342,12 @@ class Immunisation(models.Model):
 
 class NationalEarlyWarningScore(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
-    date = models.DateTimeField()
+    date = models.DateTimeField(default=date.today)
     respirationrate = models.CharField(max_length=256, blank=True, verbose_name='Respiration Rate (Breaths per minute)')
     oxygensaturation = models.CharField(max_length=256, blank=True, verbose_name='Oxygen Saturation Levels (%)')
-    bloodpressure = models.CharField(max_length=256, blank=True, verbose_name='Blood Pressure')
-    heartrate = models.CharField(max_length=256, blank=True, verbose_name='Heart rate')
-    temperature = models.CharField(max_length=256, blank=True, verbose_name='Temperature')
+    bloodpressure = models.CharField(max_length=256, blank=True, verbose_name='Blood Pressure (mmHg)')
+    heartrate = models.CharField(max_length=256, blank=True, verbose_name='Heart rate (bpm)')
+    temperature = models.CharField(max_length=256, blank=True, verbose_name='Temperature (c)')
     bm = models.CharField(max_length=256, blank=True, verbose_name='Blood Monitoring Glucose (Diabetic)')
     lastmodified = models.DateField(auto_now=True)
 
