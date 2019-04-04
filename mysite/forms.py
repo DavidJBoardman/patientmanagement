@@ -116,6 +116,12 @@ class AddInjectionForm(ModelForm):
             'injectiondatetime': DateTimeInput(),
         }
 
+    def __init__(self, *args, **kwargs):
+        _medication_list = kwargs.pop('data_list', None)
+        super(AddInjectionForm, self).__init__(*args, **kwargs)
+
+        self.fields['injectionname'].widget = ListTextWidget(data_list=_medication_list, name='injection-list')
+
 
 class AddImmunisationForm(ModelForm):
     class Meta:
