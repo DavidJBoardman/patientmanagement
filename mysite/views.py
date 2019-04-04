@@ -124,10 +124,11 @@ class AddPatientView(LoginRequiredMixin, TemplateView):
 def edit_medication(request, id, medication=None):
     medication = get_object_or_404(Medication, id=medication) if medication else None
     type = 'Edit'
+    medication_list = ('Acetaminophen', 'Adderall', 'Alprazolam', 'Amitriptyline', 'Ciprofloxacin', 'Citalopram', 'Cymbalta', 'Doxycycline', 'Gabapentin')
     if medication is None:
         type = 'Add'
     if request.method == 'POST':
-        form = AddMedicationForm(request.POST, request.FILES, instance=medication)
+        form = AddMedicationForm(request.POST, request.FILES, instance=medication, data_list=medication_list)
 
         if form.is_valid():
             medications = form.save(commit=False)
@@ -136,7 +137,7 @@ def edit_medication(request, id, medication=None):
             medications.save()
             return redirect('patient-list', id=id)
     else:
-        form = AddMedicationForm(instance=medication)
+        form = AddMedicationForm(instance=medication, data_list=medication_list)
     return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Medication', 'type': type})
 
 @login_required()

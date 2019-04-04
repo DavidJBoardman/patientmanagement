@@ -363,8 +363,8 @@ class Immunisation(models.Model):
 class NationalEarlyWarningScore(models.Model):
     personaldetails = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
     date = models.DateTimeField()
-    respirationrate = models.CharField(max_length=256, blank=True, verbose_name='Respiration Rate')
-    oxygensaturation = models.CharField(max_length=256, blank=True, verbose_name='Oxygen Saturation Levels')
+    respirationrate = models.CharField(max_length=256, blank=True, verbose_name='Respiration Rate (Breaths per minute)')
+    oxygensaturation = models.CharField(max_length=256, blank=True, verbose_name='Oxygen Saturation Levels (%)')
     bloodpressure = models.CharField(max_length=256, blank=True, verbose_name='Blood Pressure')
     heartrate = models.CharField(max_length=256, blank=True, verbose_name='Heart rate')
     temperature = models.CharField(max_length=256, blank=True, verbose_name='Temperature')

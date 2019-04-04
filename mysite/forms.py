@@ -2,6 +2,7 @@ from django import forms
 #
 from django.forms import fields, ModelForm
 
+from mysite.widgets import ListTextWidget
 from users.models import PersonalDetails, NotesAndScans, GuardianDetails, SocialDetails, FamilyHistory, \
     DiagnosisHistory, AllergyDetails, Medication, Injection, Immunisation, NationalEarlyWarningScore
 
@@ -98,6 +99,12 @@ class AddMedicationForm(ModelForm):
             'medstartdatetime': DateTimeInput(),
             'medenddatetime': DateTimeInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        _medication_list = kwargs.pop('data_list', None)
+        super(AddMedicationForm, self).__init__(*args, **kwargs)
+
+        self.fields['medicationname'].widget = ListTextWidget(data_list=_medication_list, name='medication-list')
 
 
 class AddInjectionForm(ModelForm):

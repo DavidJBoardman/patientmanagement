@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'pms.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 import os
 
