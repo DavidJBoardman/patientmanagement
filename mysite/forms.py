@@ -1,7 +1,7 @@
 import requests
 from django import forms
 #
-from django.forms import fields, ModelForm, ModelMultipleChoiceField, CheckboxSelectMultiple
+from django.forms import fields, ModelForm, ModelMultipleChoiceField, CheckboxSelectMultiple, FileInput
 
 from mysite.widgets import ListTextWidget
 from users.models import PersonalDetails, NotesAndScans, GuardianDetails, SocialDetails, FamilyHistory, \
@@ -35,6 +35,7 @@ class AddPatientForm(ModelForm):
                       'photo']
         widgets = {
                      'dateofbirth': DateInput(),
+                     'photo': FileInput(),
                  }
 
 
