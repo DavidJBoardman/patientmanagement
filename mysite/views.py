@@ -278,7 +278,7 @@ def edit_allergy_view(request, id, allergy=None):
             allergys.save()
             return redirect('patient-list', id=id)
     else:
-        form = AddAllergyDetailsForm(allergy_list=reaction_list)
+        form = AddAllergyDetailsForm(instance=allergy, allergy_list=reaction_list)
     return render(request, 'mysite/add_edit_details.html', {'form': form, 'tab': 'Allergy', 'type': type})
 
 

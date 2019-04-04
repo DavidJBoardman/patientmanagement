@@ -34,45 +34,45 @@
 
     <hr>
         <div class="col-sm-12">
-            <ul class="nav nav-tabs nav-fill">
+            <ul class="nav nav-tabs nav-fill"id="myTab">
                 <li class="nav-item">
-                    <a class="nav-link active" id="list-diagnosis-list" data-toggle="list" href="#list-diagnosis" role="tab"
+                    <a class="nav-link active" id="list-diagnosis-list" data-toggle="tab" href="#list-diagnosis" role="tab"
                        aria-controls="Diagnosis">Diagnosis<i class="fas fa-diagnoses"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-medication-list" data-toggle="list" href="#list-medication" role="tab"
+                    <a class="nav-link" id="list-medication-list" data-toggle="tab" href="#list-medication" role="tab"
                        aria-controls="Medication">Medication <i class="fas fa-pills"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-injections-list" data-toggle="list" href="#list-injections" role="tab"
+                    <a class="nav-link" id="list-injections-list" data-toggle="tab" href="#list-injections" role="tab"
                        aria-controls="Injections">Injections <i class="fas fa-crutch"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-immunisations-list" data-toggle="list" href="#list-immunisations" role="tab"
+                    <a class="nav-link" id="list-immunisations-list" data-toggle="tab" href="#list-immunisations" role="tab"
                        aria-controls="Immunisations">Immunisations <i class="fas fa-syringe"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-allergies-list" data-toggle="list" href="#list-allergies" role="tab"
+                    <a class="nav-link" id="list-allergies-list" data-toggle="tab" href="#list-allergies" role="tab"
                        aria-controls="Allergies">Allergies <i class="fas fa-allergies"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-guardian-list" data-toggle="list" href="#list-guardian" role="tab"
+                    <a class="nav-link" id="list-guardian-list" data-toggle="tab" href="#list-guardian" role="tab"
                        aria-controls="Guardian">Guardian Details <i class="fas fa-user-shield"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-notes-list" data-toggle="list" href="#list-notes" role="tab"
+                    <a class="nav-link" id="list-notes-list" data-toggle="tab" href="#list-notes" role="tab"
                        aria-controls="Notes">Notes <i class="fas fa-book-medical"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-social-list" data-toggle="list" href="#list-social" role="tab"
+                    <a class="nav-link" id="list-social-list" data-toggle="tab" href="#list-social" role="tab"
                        aria-controls="Social">Social History <i class="fas fa-laptop-medical"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-familyhist-list" data-toggle="list" href="#list-familyhist" role="tab"
+                    <a class="nav-link" id="list-familyhist-list" data-toggle="tab" href="#list-familyhist" role="tab"
                        aria-controls="Family">Family History <i class="fas fa-users"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="list-news-list" data-toggle="list" href="#list-news" role="tab"
+                    <a class="nav-link" id="list-news-list" data-toggle="tab" href="#list-news" role="tab"
                        aria-controls="News">N.E.W.S <i class="fas fa-user-nurse"></i></a>
                 </li>
             </ul>
@@ -746,6 +746,24 @@
             </div>
         </div>
     </div>
+    <script>$(document).ready(function(){
+
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+
+    });
+
+    var activeTab = localStorage.getItem('activeTab');
+
+    if(activeTab){
+
+        $('#myTab a[href="' + activeTab + '"]').tab('show');
+
+    }
+
+});</script>
+
 {% endblock content %}
 
 
