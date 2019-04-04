@@ -17,17 +17,18 @@
             <p><b>Contact Number:</b> {{ patient_list.phonenumber }}</p>
             <p><b>Height(cm):</b> {{ patient_list.height }}</p>
             <p><b>Weight(kg):</b> {{ patient_list.weight }}</p>
-            <p><b>Address:</b> {{ patient_list.address }}</p>
-            <p><b>Postcode:</b> {{ patient_list.postcode }}</p>
-            <p><b>City:</b> {{ patient_list.city }}</p>
-            <p><b>County:</b> {{ patient_list.county }}</p>
-            <p><b>Country:</b> {{ patient_list.country }}</p>
             <p><b>Email:</b> {{ patient_list.email }}</p>
             <p><b>Ward Location:</b> {{ patient_list.wardlocation }}</p>
             <p><b>Last modified:</b> {{ patient_list.lastmodified }}</p>  county
         </div>
+        <div class="col-sm-2">
+            <p><b>Address:</b> {{ patient_list.address }}</p>
+            <p><b>Postcode:</b> {{ patient_list.postcode }}</p>
+            <p><b>City:</b> {{ patient_list.city }}</p>
+            <p><b>County:</b> {{ patient_list.county }}</p>
+            <p><b>Country:</b> {{ patient_list.country }}</p></div>
         <div class="col-sm-2"><p class="font-weight-bold">Allergies:</p> {% for al in allergies %}<span class="badge badge-warning">{{ al.allergyagent }}</span>{% endfor %}</div>
-        <div class="col-sm-3"><a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit Details</a></div>
+        <div class="col-sm-2"><a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit Details</a></div>
 
     </div>
 
