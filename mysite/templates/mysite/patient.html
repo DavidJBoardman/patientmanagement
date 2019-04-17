@@ -27,7 +27,19 @@
             <p><b>City:</b> {{ patient_list.city }}</p>
             <p><b>County:</b> {{ patient_list.county }}</p>
             <p><b>Country:</b> {{ patient_list.country }}</p></div>
-        <div class="col-sm-2"><p class="font-weight-bold">Allergies:</p> {% for al in allergies %}<span class="badge badge-warning">{{ al.allergyagent }}</span>{% endfor %}</div>
+            <div class="col-sm-2">
+            {% if patient_list.dnr == True %}
+                <p class="font-weight-bold">DNR: <span class="badge badge-danger">Yes</span></p>
+            {% elif patient_list.dnr == False%}
+                <p class="font-weight-bold">DNR: <span class="badge badge-success">No</span></p>
+            {% elif patient_list.dnr == None %}
+                <p class="font-weight-bold">DNR: <span class="badge badge-warning">Unknown</span></p>
+            {% endif %}
+                <p class="font-weight-bold">Allergies:</p>
+                {% for al in allergies %}
+                    <span class="badge badge-warning">{{ al.allergyagent }}</span>
+                {% endfor %}
+            </div>
         <div class="col-sm-2"><a class="btn btn-primary btn" href="{% url 'edit-profile' id=patient_list.id %}">Edit Details</a></div>
 
     </div>

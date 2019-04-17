@@ -27,6 +27,11 @@ class DateForm(forms.Form):
     ), required=False, )
 
 
+DNR_CHOICES = (
+            (None, "Unknown"),
+            (True, "Yes"),
+            (False, "No"),
+           )
 class AddPatientForm(ModelForm):
     class Meta:
         model = PersonalDetails
@@ -35,6 +40,7 @@ class AddPatientForm(ModelForm):
                       'photo']
         widgets = {
                      'dateofbirth': DateInput(),
+                     'dnr': forms.Select(choices=DNR_CHOICES),
                      'photo': FileInput(),
                  }
 
